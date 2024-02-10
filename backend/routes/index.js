@@ -10,6 +10,7 @@ const router = express.Router();
 // });
 
 //Auth me 1: add API ROUTER
+//finished the error-handling--forgot where I was
 const apiRouter = require('./api');
 
 router.use('/api', apiRouter);
