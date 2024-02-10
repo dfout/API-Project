@@ -3,8 +3,22 @@ const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs')
 const { setTokenCookie, restoreUser } = require('../../utils/auth');
 const { User } = require('../../db/models')
+const { check } = require('express-validator');
+const { handleValidationErrors } = require('../../utils/validation');
 
 const router = express.Router();
+
+const validateLogin = [
+    check('credential')
+        .exists({checkFalsy:true})
+        .notEmpty()
+        .withMessage('Please provide a valid email or username.'),
+    check('password')
+        .exists({checkFalsy:true})
+        .withMessage('Please provide a password.'),
+        handleValidationErrors
+];
+
 
 router.get('/', (req,res)=>{
     const { user } = req;
@@ -38,7 +52,7 @@ router.delete('/', async(req,res)=>{
 //   }).then(res => res.json()).then(data => console.log(data));
 
 
-router.post('/', async(req,res, next)=>{
+router.post('/', validateLogin, async(req,res, next)=>{
     const { credential, password } = req.body;
 
     const user = await User.unscoped().findOne({
@@ -68,6 +82,17 @@ router.post('/', async(req,res, next)=>{
         user:safeUser
     });
 });
+
+ //! Test validateLogin
+
+//  fetch('/api/session', {
+//     method: 'POST',
+//     headers: {
+//       "Content-Type": "application/json",
+//       "XSRF-TOKEN": "i9yzwFyU-g1tB6hil7xckrI21v9WBYA-X2QY"
+//     },
+//     body: JSON.stringify({ credential: 'Demo-lition', password: '' })
+//   }).then(res => res.json()).then(data => console.log(data));
 
 // user: {id: 1, email: 'demo@user.io', username: 'Demo-lition'};
 
