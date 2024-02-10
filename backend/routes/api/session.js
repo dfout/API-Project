@@ -17,7 +17,7 @@ router.delete('/', async(req,res)=>{
 //     method: 'DELETE',
 //     headers: {
 //       "Content-Type": "application/json",
-//       "XSRF-TOKEN": "5dd1lyT1-KksmLu6idBRb7sFthw_TSYdDZO8"
+//       "XSRF-TOKEN": "SGoh3CJz-34by-zE6R_z6ZaNkhyqc9GTClMA"
 //     }
 //   }).then(res => res.json()).then(data => console.log(data));
 
