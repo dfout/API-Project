@@ -6,6 +6,22 @@ const { User } = require('../../db/models')
 
 const router = express.Router();
 
+
+router.delete('/', async(req,res)=>{
+    res.clearCookie('token');
+    return res.json({message:'success'});
+})
+
+//!TEST:
+// fetch('/api/session', {
+//     method: 'DELETE',
+//     headers: {
+//       "Content-Type": "application/json",
+//       "XSRF-TOKEN": "5dd1lyT1-KksmLu6idBRb7sFthw_TSYdDZO8"
+//     }
+//   }).then(res => res.json()).then(data => console.log(data));
+
+
 router.post('/', async(req,res, next)=>{
     const { credential, password } = req.body;
 
@@ -72,5 +88,6 @@ router.post('/', async(req,res, next)=>{
 //     },
 //     body: JSON.stringify({ credential: 'Demo-lition', password: 'Hello World!' })
 //   }).then(res => res.json()).then(data => console.log(data));
-
+//!PASSED:
+// {title: 'Login failed', message: 'Login failed', errors: {…}, stack: 'Error: Login failed\n    at /Users/andrewfout/project-one/backend/routes/api/session.js:21:21'}
 module.exports = router;
