@@ -9,6 +9,7 @@ const router = express.Router();
 //   res.send('Hello World!');
 // });
 
+//Auth me 1: add API ROUTER
 const apiRouter = require('./api');
 
 router.use('/api', apiRouter);
