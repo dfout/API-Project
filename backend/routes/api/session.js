@@ -25,12 +25,15 @@ router.get('/', (req,res)=>{
     if (user) {
         const safeUser = {
             id:user.id,
+            firstName:user.firstName,
+            lastName:user.lastName,
             email:user.email,
             username: user.username
         };
         return res.json({
             user:safeUser
         });
+        //CONFIRMED THAT user:null if there is no logged in user
     } else return res.json({user:null});
 });
 
@@ -73,6 +76,8 @@ router.post('/', validateLogin, async(req,res, next)=>{
 
     const safeUser = {
         id:user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
         username: user.username,
     };
