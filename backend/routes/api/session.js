@@ -94,7 +94,7 @@ router.post('/', validateLogin, async(req,res, next)=>{
 //     method: 'POST',
 //     headers: {
 //       "Content-Type": "application/json",
-//       "XSRF-TOKEN": "i9yzwFyU-g1tB6hil7xckrI21v9WBYA-X2QY"
+//       "XSRF-TOKEN": "J3MHvCav-Ut-6634Ss-3wBFEFLH8RS8wkGdk"
 //     },
 //     body: JSON.stringify({ credential: 'Demo-lition', password: '' })
 //   }).then(res => res.json()).then(data => console.log(data));
