@@ -10,7 +10,9 @@
     "sequelize-cli": "npm run --prefix backend sequelize-cli",
     "start": "npm start --prefix backend",
     "build": "npm run --prefix backend build",
-    "dev:backend": "npm install --prefix backend start"
+    "dev:backend": "npm install --prefix backend start",
+    "db-reset": "npx dotenv sequelize db:seed:undo:all && npx dotenv sequelize db:migrate:undo:all && npx dotenv sequelize db:migrate && npx dotenv sequelize db:seed:all"
+
   },
   "repository": {
     "type": "git",
