@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Booking.belongsTo(models.Spot,{foreignKey:'spotId'});
+      //Would like to have many people added to the booking at some point
+      //for a new feature. So a join table or something might be necessary.
+      Booking.belongsTo(models.User,{foreignKey: 'userId'})
 
     }
   }
