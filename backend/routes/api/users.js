@@ -14,15 +14,22 @@ const validateSignup = [
     check('email')
         .exists({checkFalsy:true})
         .isEmail()
-        .withMessage('Please provide a valid email'),
+        .withMessage('Invalid email'),
     check('username')
         .exists({checkFalsy:true})
-        .isLength({min:4})
-        .withMessage('Please provide a username with at least 4 characters.'),
+        .isLength({min:4, max:1}).withMessage('Please provide a username with at least 4 characters.'),
+    check('username')
+        .exists({values: 'undefined'}).withMessage('Username is required'),
     check('username')
         .not()
         .isEmail()
         .withMessage('Username cannot be an email'),
+    check('firstName')
+        .notEmpty()
+        .withMessage('First Name is required'),
+    check('lastName')
+        .notEmpty()
+        .withMessage('Last Name is required'),
     check('password')
         .exists({checkFalsy:true})
         .isLength({min:6})
@@ -33,7 +40,9 @@ const validateSignup = [
 
 router.post('/', validateSignup, async (req,res)=>{
     const { firstName, lastName, email, password, username } = req.body;
+    console.log(username)
     const hashedPassword = bcrypt.hashSync(password);
+
 
     const usernameExists = await User.findOne({
         where: {
