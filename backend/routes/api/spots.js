@@ -15,6 +15,16 @@ const router = express.Router();
 
 // }
 
+//*Helper Function for DeepAuth:
+function deepAuth(userId,spot){
+    //if the userId matches the ownerId on the spot,
+    //then send back a true
+    if (spot.ownerId === userId) return true
+    else{return false}
+
+    //else, send back false then send an error message
+}
+
 //* GET ALL SPOTS
 
 router.get('/', async(req,res,next)=>{
@@ -59,8 +69,8 @@ router.get('/:spotId', async(req,res,next)=>{
 })
 
 
-//? VALIDATE SPOT CREATOR
-//! TITLE OF BAD REQUEST STILL SHOWS UP
+
+//? TITLE OF BAD REQUEST STILL SHOWS UP
 const validateSpot = [
     check('address')
         .exists().notEmpty()
@@ -97,6 +107,7 @@ const validateSpot = [
 //* ADD AN IMAGE TO A SPOT
 
 router.post('/:spotId/images', requireAuth, async(req,res,next)=>{
+    const currId = req.user.dataValues.id;
     const { spotId } = req.params;
     const { url, preview } = req.body;
     const spot = await Spot.findByPk(spotId)
@@ -105,20 +116,27 @@ router.post('/:spotId/images', requireAuth, async(req,res,next)=>{
         return res.json({
             message: "Spot couldn't be found"
         })
-    }
-    const newImage = await SpotImage.create({url,spotId, preview});
+    }else if(!deepAuth(currId,spot)){
+        res.status(403);
+        return res.json({
+            message: "Forbidden"
+        })
+    }else{
+        const newImage = await SpotImage.create({url,spotId, preview});
 
-    const response = {
-        id: newImage.id,
-        url: newImage.url,
-        preview: newImage.preview
+        const response = {
+            id: newImage.id,
+            url: newImage.url,
+            preview: newImage.preview
+        }
+        return res.json(response)
     }
-    return res.json(response)
+
 })
 
 //* CREATE A SPOT
-//! MADE AVG RATING AND PREVIEW IMAGE DEFAULT TO UNDEFINED ON MODEL
-//! SO THAT IT DOESN'T SHOW UP UNLESS THEY MAKE IT.
+//? MADE AVG RATING AND PREVIEW IMAGE DEFAULT TO UNDEFINED ON MODEL
+//? SO THAT IT DOESN'T SHOW UP UNLESS THEY MAKE IT.
 
 router.post('/', requireAuth, validateSpot, async(req,res,next)=>{
     const {address, city, state, country, lat, lng, name, description, price} = req.body;
@@ -132,7 +150,11 @@ router.post('/', requireAuth, validateSpot, async(req,res,next)=>{
 //*EDIT A SPOT
 //*IT CHANGED IT YAY!
 
+
+
+
 router.put('/:spotId', requireAuth,validateSpot,async(req,res,next)=>{
+    const currId = req.user.dataValues.id;
     const {spotId} = req.params;
     const spot = await Spot.findByPk(spotId);
     if (spot === null){
@@ -140,33 +162,57 @@ router.put('/:spotId', requireAuth,validateSpot,async(req,res,next)=>{
         return res.json({
             message: "Spot couldn't be found"
         });
-    }else{
-        const { address, city, state, country, lat, lng, name, description, price} = req.body;
+    }else if (!deepAuth(currId,spot)){
+            res.status(403);
+            return res.json({
+                message:"Forbidden"
+            })
+        }else{
+            const { address, city, state, country, lat, lng, name, description, price} = req.body;
 
-        await spot.update({
-            address,
-            city,
-            state,
-            country,
-            lat,
-            lng,
-            name,
-            description,
-            price
-        })
-
-
-        //? NEED TO CHECK TO MAKE SURE THE EDITS ARE
-        //? OKAY BEFORE WE PUSH THEM TO THE DB
-
-        return res.json(spot)
-
+            await spot.update({
+                address,
+                city,
+                state,
+                country,
+                lat,
+                lng,
+                name,
+                description,
+                price
+            })
 
 
-    }
+            //? NEED TO CHECK TO MAKE SURE THE EDITS ARE
+            //? OKAY BEFORE WE PUSH THEM TO THE DB
 
+            return res.json(spot)
+        }
 });
 
+
+router.delete('/:spotId',requireAuth, async(req,res,next)=>{
+    const currId = req.user.dataValues.id;
+    const {spotId} = req.params;
+    const spot = await Spot.findByPk(spotId);
+    if (spot === null){
+        res.status(404);
+        return res.json({
+            message: "Spot couldn't be found"
+        });
+    }else if (!deepAuth(currId,spot)){
+        res.status(403);
+        return res.json({
+            message:"Forbidden"
+        })
+    }else{
+        await spot.destroy();
+        res.status(200);
+        return res.json({
+            message:"Successfully deleted"
+        })
+    }
+})
 
 
 
