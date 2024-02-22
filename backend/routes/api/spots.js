@@ -2,7 +2,7 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
-const {Spot} = require('../../db/models');
+const {Spot, SpotImage, User, Review, Booking} = require('../../db/models');
 
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
@@ -34,4 +34,28 @@ router.get('/current', requireAuth, async(req,res,next)=>{
 //!THIS WORKS BUT I NEED TO ADDRESS AN ON DELETE
 //! CASADE FOR WHEN A USER IS DELETED,
 //! THEN THEIR SPOTS ARE DELETED.
+
+
+//* GET ALL SPOTS FROM ID
+
+router.get('/:spotId', async(req,res,next)=>{
+    const { spotId } = req.params;
+    const spot = await Spot.findByPk(spotId,{
+        include: [{model:SpotImage},{model:User, as: 'Owner'}]
+    });
+    if (spot === null){
+        res.status(404)
+        return res.json({
+            message: "Spot couldn't be found"
+        })
+    }
+    return res.json(spot);
+
+})
+
+
+
+
+
+
 module.exports = router;
