@@ -55,6 +55,7 @@ router.get('/:spotId', async(req,res,next)=>{
 
 
 //? VALIDATE SPOT CREATOR
+//! TITLE OF BAD REQUEST STILL SHOWS UP
 const validateSpot = [
     check('address')
         .exists().notEmpty()
@@ -88,6 +89,28 @@ const validateSpot = [
 ];
 
 
+//* ADD AN IMAGE TO A SPOT
+
+router.post('/:spotId/images', requireAuth, async(req,res,next)=>{
+    const { spotId } = req.params;
+    const { url, preview } = req.body;
+    const spot = await Spot.findByPk(spotId)
+    if (spot === null){
+        res.status(404);
+        return res.json({
+            message: "Spot couldn't be found"
+        })
+    }
+    const newImage = await SpotImage.create({url,spotId, preview});
+
+    const response = {
+        id: newImage.id,
+        url: newImage.url,
+        preview: newImage.preview
+    }
+    return res.json(response)
+})
+
 //* CREATE A SPOT
 //! MADE AVG RATING AND PREVIEW IMAGE DEFAULT TO UNDEFINED ON MODEL
 //! SO THAT IT DOESN'T SHOW UP UNLESS THEY MAKE IT.
@@ -99,7 +122,9 @@ router.post('/', requireAuth, validateSpot, async(req,res,next)=>{
     const newSpot = await Spot.create({ownerId, address, city, state, country, lat, lng, name, description, price});
 
     return res.json(newSpot)
-})
+});
+
+
 
 
 
