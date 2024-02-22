@@ -54,6 +54,53 @@ router.get('/:spotId', async(req,res,next)=>{
 })
 
 
+//? VALIDATE SPOT CREATOR
+const validateSpot = [
+    check('address')
+        .exists().notEmpty()
+        .withMessage('Street address is required'),
+    check('city')
+        .exists().notEmpty()
+        .withMessage("City is required"),
+    check('state')
+        .exists().notEmpty()
+        .withMessage("State is required"),
+    check('country').notEmpty()
+        .exists()
+        .withMessage("Country is required"),
+    //? HOW TO DEFAULT LAT AND LNG?
+    check('lat')
+        .exists().isFloat({min: -90, max: 90})
+        .withMessage("Latitude must be within -90 and 90"),
+    check('lng')
+        .exists().isFloat({min: -180, max: 180})
+        .withMessage("Longitude must be within -180 and 180"),
+    check('name')
+        .exists().notEmpty().isLength({max:50})
+        .withMessage("Name must be less than 50 characters"),
+    check('description')
+        .exists().notEmpty()
+        .withMessage("Description is required"),
+    check('price')
+        .exists().isInt({gt: 0})
+        .withMessage("Price per day must be a positive number"),
+    handleValidationErrors
+];
+
+
+//* CREATE A SPOT
+//! MADE AVG RATING AND PREVIEW IMAGE DEFAULT TO UNDEFINED ON MODEL
+//! SO THAT IT DOESN'T SHOW UP UNLESS THEY MAKE IT.
+
+router.post('/', requireAuth, validateSpot, async(req,res,next)=>{
+    const {address, city, state, country, lat, lng, name, description, price} = req.body;
+    const ownerId = req.user.dataValues.id
+
+    const newSpot = await Spot.create({ownerId, address, city, state, country, lat, lng, name, description, price});
+
+    return res.json(newSpot)
+})
+
 
 
 
