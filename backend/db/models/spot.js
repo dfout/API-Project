@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Spot.belongsTo(models.User,{foreignKey:'ownerId'});
+      Spot.belongsTo(models.User,{foreignKey:'ownerId', as: 'Owner'});
       Spot.hasMany(models.Review, {foreignKey:'spotId'});
       Spot.hasMany(models.Booking,{foreignKey: 'spotId'});
       Spot.hasMany(models.SpotImage,{foreignKey: 'spotId'})
@@ -27,7 +27,9 @@ module.exports = (sequelize, DataTypes) => {
     lng: DataTypes.STRING,
     name: DataTypes.STRING,
     description: DataTypes.STRING,
-    price: DataTypes.FLOAT
+    price: DataTypes.FLOAT,
+    avgRating: DataTypes.FLOAT,
+    previewImage: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Spot',

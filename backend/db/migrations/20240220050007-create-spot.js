@@ -43,6 +43,14 @@ module.exports = {
       price: {
         type: Sequelize.FLOAT
       },
+      avgRating:{
+        type:Sequelize.FLOAT,
+        defaultValue: undefined
+      },
+      previewImage:{
+        type:Sequelize.STRING,
+        defaultValue: undefined
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

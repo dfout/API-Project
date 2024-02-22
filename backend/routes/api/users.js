@@ -81,7 +81,7 @@ router.post('/', validateSignup, async (req,res)=>{
         return res.json(err)
     }
 
-    console.log("VALIDATION ERRORS",handleValidationErrors)
+
     const user = await User.create ({ firstName, lastName, email, username, hashedPassword });
 
     const safeUser = {
