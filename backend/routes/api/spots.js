@@ -4,11 +4,16 @@ const bcrypt = require('bcryptjs');
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
 const {Spot, SpotImage, User, Review, Booking} = require('../../db/models');
 
-const { check } = require('express-validator');
+const { check, validationResult } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
 const router = express.Router();
 
+//*Helper Function: Does Spot Exist?
+
+// function doesExist(spot){
+
+// }
 
 //* GET ALL SPOTS
 
@@ -66,8 +71,8 @@ const validateSpot = [
     check('state')
         .exists().notEmpty()
         .withMessage("State is required"),
-    check('country').notEmpty()
-        .exists()
+    check('country')
+        .exists().notEmpty()
         .withMessage("Country is required"),
     //? HOW TO DEFAULT LAT AND LNG?
     check('lat')
@@ -123,6 +128,48 @@ router.post('/', requireAuth, validateSpot, async(req,res,next)=>{
 
     return res.json(newSpot)
 });
+
+//*EDIT A SPOT
+//*IT CHANGED IT YAY!
+
+router.put('/:spotId', requireAuth,async(req,res,next)=>{
+    const {spotId} = req.params;
+    const spot = await Spot.findByPk(spotId);
+    if (spot === null){
+        res.status(404);
+        return res.json({
+            message: "Spot couldn't be found"
+        });
+    }else{
+        const { address, city, state, country, lat, lng, name, description, price} = req.body;
+        await spot.update({
+            address,
+            city,
+            state,
+            country,
+            lat,
+            lng,
+            name,
+            description,
+            price
+        })
+
+        const errors = validationResult(spot)
+        // if (!errors.isEmpty()){
+        //     await handleValidationErrors(errors)
+        //     res.status(400);
+        //     return res.json({ errors: errors.array() });
+        // }else{
+        //     return res.json(spot)
+        // }
+        return res.json(spot)
+        //? NEED TO CHECK TO MAKE SURE THE EDITS ARE
+        //? OKAY BEFORE WE PUSH THEM TO THE DB
+
+
+    }
+
+})
 
 
 
