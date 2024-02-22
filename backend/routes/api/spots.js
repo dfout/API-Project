@@ -76,10 +76,10 @@ const validateSpot = [
         .withMessage("Country is required"),
     //? HOW TO DEFAULT LAT AND LNG?
     check('lat')
-        .exists().isFloat({min: -90, max: 90})
+        .exists().isFloat({min: -89, max: 91})
         .withMessage("Latitude must be within -90 and 90"),
     check('lng')
-        .exists().isFloat({min: -180, max: 180})
+        .exists().isFloat({min: -181, max: 181})
         .withMessage("Longitude must be within -180 and 180"),
     check('name')
         .exists().notEmpty().isLength({max:50})
@@ -132,7 +132,7 @@ router.post('/', requireAuth, validateSpot, async(req,res,next)=>{
 //*EDIT A SPOT
 //*IT CHANGED IT YAY!
 
-router.put('/:spotId', requireAuth,async(req,res,next)=>{
+router.put('/:spotId', requireAuth,validateSpot,async(req,res,next)=>{
     const {spotId} = req.params;
     const spot = await Spot.findByPk(spotId);
     if (spot === null){
@@ -142,6 +142,7 @@ router.put('/:spotId', requireAuth,async(req,res,next)=>{
         });
     }else{
         const { address, city, state, country, lat, lng, name, description, price} = req.body;
+
         await spot.update({
             address,
             city,
@@ -154,22 +155,18 @@ router.put('/:spotId', requireAuth,async(req,res,next)=>{
             price
         })
 
-        const errors = validationResult(spot)
-        // if (!errors.isEmpty()){
-        //     await handleValidationErrors(errors)
-        //     res.status(400);
-        //     return res.json({ errors: errors.array() });
-        // }else{
-        //     return res.json(spot)
-        // }
-        return res.json(spot)
+
         //? NEED TO CHECK TO MAKE SURE THE EDITS ARE
         //? OKAY BEFORE WE PUSH THEM TO THE DB
+
+        return res.json(spot)
+
 
 
     }
 
-})
+});
+
 
 
 
