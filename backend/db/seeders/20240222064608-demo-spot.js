@@ -22,6 +22,8 @@ module.exports = {
         name: 'Beautiful Spot 1',
         description: 'A lovely spot with a great view.',
         price: 100.00,
+        avgRating: 3.0,
+        previewImage: "789"
       },
       {
         ownerId: 2,
@@ -34,6 +36,8 @@ module.exports = {
         name: 'Cozy Retreat',
         description: 'Perfect spot for a weekend getaway.',
         price: 150.00,
+        avgRating: 4.5,
+        previewImage: "1234"
       }
     ], {validate :true})
     /**
@@ -51,7 +55,7 @@ module.exports = {
     options.tableName = 'Spots';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      username: { [Op.in]: ['456 Oak Ave', '123 Main Street'] }
+      address: { [Op.in]: ['456 Oak Ave', '123 Main Street'] }
     }, {});
     /**
      * Add commands to revert seed here.

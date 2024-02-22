@@ -6,6 +6,7 @@ const {Spot} = require('../../db/models');
 
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
+
 const router = express.Router();
 
 
@@ -16,4 +17,21 @@ router.get('/', async(req,res,next)=>{
     return res.json(allSpots)
 })
 
+//*GET ALL SPOTS OWNED BY CURR USER
+//* REQUIRE AUTHENTICATION
+router.get('/current', requireAuth, async(req,res,next)=>{
+    const currId = req.user.dataValues.id
+    const ownedSpots = {};
+
+    let Spots = await Spot.findAll({
+        where: {ownerId: currId}
+    })
+    ownedSpots.Spots = Spots;
+    // console.log(ownedSpots);
+    return res.json(ownedSpots)
+})
+
+//!THIS WORKS BUT I NEED TO ADDRESS AN ON DELETE
+//! CASADE FOR WHEN A USER IS DELETED,
+//! THEN THEIR SPOTS ARE DELETED.
 module.exports = router;
