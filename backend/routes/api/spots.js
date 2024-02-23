@@ -2,7 +2,7 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
-const {Spot, SpotImage, User, Review, Booking} = require('../../db/models');
+const {Spot, SpotImage, User, Review, ReviewImage, Booking} = require('../../db/models');
 
 const { check, validationResult } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
@@ -24,6 +24,35 @@ function deepAuth(userId,spot){
 
     //else, send back false then send an error message
 }
+
+
+// //*Get all Reviews by Spot's Id:
+
+router.get('/:spotId/reviews', async(req,res,next)=>{
+    const {spotId} = req.params;
+    const spot = await Spot.findByPk(spotId);
+    console.log(spot)
+    if (!spot || spot === null){
+        res.status(404);
+        return res.json({
+            message: "Spot couldn't be found"
+        })
+    }else{
+        const allReviews = {};
+
+        const Reviews = await Review.findAll({
+            where:{spotId:spotId},
+            include:[{model:ReviewImage}]
+        })
+        allReviews.Reviews = Reviews;
+        return res.json(allReviews)
+
+    };
+
+});
+
+
+
 
 //* GET ALL SPOTS
 
