@@ -14,15 +14,22 @@ const validateSignup = [
     check('email')
         .exists({checkFalsy:true})
         .isEmail()
-        .withMessage('Please provide a valid email'),
+        .withMessage('Invalid email'),
     check('username')
         .exists({checkFalsy:true})
-        .isLength({min:4})
-        .withMessage('Please provide a username with at least 4 characters.'),
+        .isLength({min:4}).withMessage('Please provide a username with at least 4 characters.'),
+    check('username')
+        .exists({values: 'undefined'}).withMessage('Username is required'),
     check('username')
         .not()
         .isEmail()
         .withMessage('Username cannot be an email'),
+    check('firstName')
+        .notEmpty()
+        .withMessage('First Name is required'),
+    check('lastName')
+        .notEmpty()
+        .withMessage('Last Name is required'),
     check('password')
         .exists({checkFalsy:true})
         .isLength({min:6})
@@ -31,10 +38,51 @@ const validateSignup = [
 ];
 
 
+
 router.post('/', validateSignup, async (req,res)=>{
-    const { email, password, username, firstName, lastName } = req.body;
+    const { firstName, lastName, email, password, username } = req.body;
+
     const hashedPassword = bcrypt.hashSync(password);
-    const user = await User.create ({ email, username,firstName, lastName, hashedPassword });
+
+
+    const usernameExists = await User.findOne({
+        where: {
+            username: username
+        }
+    });
+
+    // let errors = {};
+
+    const emailExists = await User.findOne({
+        where:{
+            email:email
+        }
+    })
+
+    const emailBool = emailExists !==null;
+    const usernameBool = usernameExists !== null;
+    if (emailBool || usernameBool){
+        let err = new Error();
+        let errors = {};
+        err.message = 'User already Exists'
+        if (emailBool){
+            errors.email = 'User with that email already exists';
+            console.log(errors)
+        }
+       if (usernameBool){
+            console.log(errors)
+            errors.username = 'User with that username already exists'
+       }
+        err.errors = errors;
+
+        // err.title = undefined;
+
+        res.status(500);
+        return res.json(err)
+    }
+
+
+    const user = await User.create ({ firstName, lastName, email, username, hashedPassword });
 
     const safeUser = {
         id:user.id,
