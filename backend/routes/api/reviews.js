@@ -50,9 +50,7 @@ router.post('/:reviewId/images', requireAuth, async (req,res,next)=>{
     }
     //deep auth: review must belong to the current user
     const isDeepAuth = deepAuth(currId, review)
-    console.log("\n\n\n\n\nCURRID", currId)
-    console.log(review.userId)
-    console.log("\n\n\nisDEEPAUTH", isDeepAuth)
+
     if(!isDeepAuth){
         res.status(403);
         return res.json({
@@ -104,20 +102,30 @@ router.post('/:reviewId/images', requireAuth, async (req,res,next)=>{
 
 router.put('/:reviewId', requireAuth, async(req,res,next)=>{
     const { reviewId } = req.params;
+    const currId = req.user.id;
     //! SEQUELIZE AUTOMATICALLY HAS AN ERROR HANDLING FOR IF A REVIEW ID INTEGER DOES NOT GET INPUT
-    if(typeof reviewId !== 'number'){
-        res.status(404)
-        return res.json({
-            message: "Error: Page not found"
-        })
-    }
-    const reviewObj = Review.findByPk(reviewId);
+    // if(typeof reviewId !== 'number'){
+    //     res.status(404)
+    //     return res.json({
+    //         message: "Error: Page not found"
+    //     })
+    // }
+    const reviewObj = await Review.findByPk(reviewId);
     if (!reviewObj){
         res.status(404);
         return res.json({
             message: "Review could not be found"
         })
     }
+
+    const isDeepAuth = deepAuth(currId, reviewObj);
+    if(!isDeepAuth){
+        res.status(403);
+        return res.json({
+            message: "Forbidden"
+        })
+    };
+
     const { review, stars } = req.body;
 
     //Body Validation Errors
@@ -126,23 +134,23 @@ router.put('/:reviewId', requireAuth, async(req,res,next)=>{
         errors.review = 'Review text is required'
     };
 
-    if (!stars || (stars < 1 || stars > 5)|| isNumber(stars)){
+    if (!stars || (stars < 1 || stars > 5)|| typeof stars !== 'number'){
         errors.stars = 'Stars must be an integer from 1 to 5'
     }
 
     // Body Validation Errors
     if(errors.review || errors.stars){
         e = new Error()
-        e.errors = errors;
         e.message = "Bad Request"
+        e.errors = errors;
         res.status(400);
         return res.json(e)
     }
-
-    reviewObj.update(
+    console.log("HERE")
+    await reviewObj.update({
         review,
         stars
-    );
+    });
 
 
 
