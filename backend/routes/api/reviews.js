@@ -146,7 +146,7 @@ router.put('/:reviewId', requireAuth, async(req,res,next)=>{
         res.status(400);
         return res.json(e)
     }
-    console.log("HERE")
+
     await reviewObj.update({
         review,
         stars
@@ -157,6 +157,33 @@ router.put('/:reviewId', requireAuth, async(req,res,next)=>{
     return res.json(reviewObj);
 });
 
+
+router.delete('/:reviewId', requireAuth, async(req,res,next)=>{
+    const { reviewId } = req.params;
+    const reviewObj = await Review.findByPk(reviewId);
+    if(!reviewObj){
+        res.status(404);
+        return res.json({
+            message: "Review could not be found"
+        })
+    }
+    const currId = req.user.id;
+    const isDeepAuth = deepAuth(currId, reviewObj);
+    if(!isDeepAuth){
+        res.status(403);
+        return res.json({
+            message: "Forbidden"
+        })
+    };
+
+    await reviewObj.destroy()
+
+
+    res.status(200);
+    return res.json({
+        message: "Successfully deleted"
+    })
+})
 
 
 
