@@ -2,9 +2,10 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
-const {Spot, SpotImage, User, Review, Booking} = require('../../db/models');
+const {Spot, SpotImage, User, Review, ReviewImage, Booking} = require('../../db/models');
 
 const { check, validationResult } = require('express-validator');
+// const { validateReview } = require('./reviewValidator.js')
 const { handleValidationErrors } = require('../../utils/validation');
 
 const router = express.Router();
@@ -24,6 +25,35 @@ function deepAuth(userId,spot){
 
     //else, send back false then send an error message
 }
+
+
+// //*Get all Reviews by Spot's Id:
+
+router.get('/:spotId/reviews', async(req,res,next)=>{
+    const {spotId} = req.params;
+    const spot = await Spot.findByPk(spotId);
+    console.log(spot)
+    if (!spot || spot === null){
+        res.status(404);
+        return res.json({
+            message: "Spot couldn't be found"
+        })
+    }else{
+        const allReviews = {};
+
+        const Reviews = await Review.findAll({
+            where:{spotId:spotId},
+            include:[{model:ReviewImage}]
+        })
+        allReviews.Reviews = Reviews;
+        return res.json(allReviews)
+
+    };
+
+});
+
+
+
 
 //* GET ALL SPOTS
 
@@ -138,6 +168,66 @@ router.post('/:spotId/images', requireAuth, async(req,res,next)=>{
 //? MADE AVG RATING AND PREVIEW IMAGE DEFAULT TO UNDEFINED ON MODEL
 //? SO THAT IT DOESN'T SHOW UP UNLESS THEY MAKE IT.
 
+//*!POST api/spot/:spotId/reviews:
+//! Create a Review for a Spot based on the Spot's Id
+router.post('/:spotId/reviews', requireAuth, async(req,res,next)=>{
+    const { spotId } = req.params;
+
+    const spot = await Spot.findByPk(spotId)
+
+    if (!spot){
+        res.status(404)
+        return res.json({
+            message:"Spot couldn't be found"
+        })
+    }
+    const  userId  = req.user.id;
+
+
+    const { review, stars } = req.body;
+
+    //Body Validation Errors
+    let errors = {};
+
+    if(!review){
+        errors.review = 'Review text is required'
+    };
+    // if the stars are less than 1 or more than 5 or if in general the type of stars is not a number then
+    // throw this error
+
+    if ((stars < 1 || stars > 5) || typeof stars !== 'number'){
+        errors.stars = 'Stars must be an integer from 1 to 5'
+    }
+    if(errors.review || errors.stars){
+        e = new Error()
+        e.message = "Bad Request"
+        e.errors = errors;
+
+        res.status(400)
+        return res.json(e)
+    }
+
+
+
+    const isAlreadyReview = await Review.findOne({
+        where: {
+            userId:userId,
+            spotId:spotId
+        }
+    })
+    if(isAlreadyReview) {
+        res.status(500)
+        return res.json({message: "User already has a review for this spot"})
+    }
+
+    const newReviewForSpot = await Review.create({userId,spotId,review,stars})
+    res.status(201);
+    return res.json(newReviewForSpot)
+
+});
+
+
+
 router.post('/', requireAuth, validateSpot, async(req,res,next)=>{
     const {address, city, state, country, lat, lng, name, description, price} = req.body;
     const ownerId = req.user.dataValues.id
@@ -213,9 +303,6 @@ router.delete('/:spotId',requireAuth, async(req,res,next)=>{
         })
     }
 })
-
-
-
 
 
 
