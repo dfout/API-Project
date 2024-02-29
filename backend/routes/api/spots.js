@@ -5,6 +5,7 @@ const { setTokenCookie, requireAuth } = require('../../utils/auth');
 const {Spot, SpotImage, User, Review, ReviewImage, Booking} = require('../../db/models');
 
 const { check, validationResult } = require('express-validator');
+// const { validateReview } = require('./reviewValidator.js')
 const { handleValidationErrors } = require('../../utils/validation');
 
 const router = express.Router();
@@ -167,6 +168,53 @@ router.post('/:spotId/images', requireAuth, async(req,res,next)=>{
 //? MADE AVG RATING AND PREVIEW IMAGE DEFAULT TO UNDEFINED ON MODEL
 //? SO THAT IT DOESN'T SHOW UP UNLESS THEY MAKE IT.
 
+//*!POST api/spot/:spotId/reviews:
+//! Create a Review for a Spot based on the Spot's Id
+router.post('/:spotId/reviews', requireAuth, async(req,res,next)=>{
+    const { spotId } = req.params;
+    const { userId } = req.user.dataValues.id;
+    const { review, stars } = req.body;
+    const errors = {};
+    if(!review){
+        errors.review = 'Review text is required'
+    };
+
+    if (!stars || (stars < 1 || stars > 5)|| isNumber(stars)){
+        errors.stars = 'Stars must be an integer from 1 to 5'
+    }
+
+    if(errors.review || errors.stars){
+        e = new Error()
+        e.errors = errors;
+        return res.json(e)
+    }
+
+    const spot = Spot.findByPk(spotId)
+    if (!spot ){
+        res.status(404)
+        return res.json({
+            message:"Spot couldn't be found"
+        })
+    }
+    const isAlreadyReview = Review.findOne({
+        where: {
+            userId:userId,
+            spotId:spotId
+        }
+    })
+    if(isAlreadyReview) {
+        res.status(500)
+        return res.json({"message": "User already has a review for this spot"})
+    }
+
+    const newReviewForSpot = await Review.create({userId,spotId,review,stars})
+    res.status(201);
+    return res.json(newReviewForSpot)
+
+});
+
+
+
 router.post('/', requireAuth, validateSpot, async(req,res,next)=>{
     const {address, city, state, country, lat, lng, name, description, price} = req.body;
     const ownerId = req.user.dataValues.id
@@ -242,9 +290,6 @@ router.delete('/:spotId',requireAuth, async(req,res,next)=>{
         })
     }
 })
-
-
-
 
 
 
