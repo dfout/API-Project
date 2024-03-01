@@ -230,7 +230,7 @@ router.post('/:spotId/reviews', requireAuth, async(req,res,next)=>{
 
 router.post('/', requireAuth, validateSpot, async(req,res,next)=>{
     const {address, city, state, country, lat, lng, name, description, price} = req.body;
-    const ownerId = req.user.dataValues.id
+    const ownerId = req.user.id;
 
     const newSpot = await Spot.create({ownerId, address, city, state, country, lat, lng, name, description, price});
 
