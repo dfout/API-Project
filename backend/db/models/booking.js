@@ -26,6 +26,11 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Booking',
+    hideUserScope:{
+      attributes:{
+        exclude: ['userId', 'createdAt','updatedAt']
+      }
+    }
   });
   return Booking;
 };

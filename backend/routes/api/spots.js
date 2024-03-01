@@ -52,6 +52,41 @@ router.get('/:spotId/reviews', async(req,res,next)=>{
 
 });
 
+//Get all Bookings for a Spot based on the Spot's Id
+//RequireAuth
+
+router.get('/:spotId/bookings', requireAuth, async(req,res,next)=>{
+    const userId = req.user.id
+    const { spotId } = req.params;
+    const spot = Spot.findByPk(spotId)
+    if (!spot){
+        res.status(404);
+        return res.json({
+            message: "Spot couldn't be found"
+        });
+    }
+
+    const isOwner = deepAuth(userId, spot)
+
+    //Response for if you own the spot
+    if(isOwner){
+        //do not include the userId's
+        const allBookings = Booking.findAll({
+            where: {spotId:spotId},
+            include: [{model:User}]
+        });
+        return res.json(allBookings)
+
+    }else{
+    //Response for if you do NOT own the spot
+    const allBookings = Booking.scope('hideUserScope').findAll({
+        where:{spotId:spotId},
+    });
+    return res.json({Bookings:allBookings})
+
+    };
+})
+
 
 
 
