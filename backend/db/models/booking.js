@@ -4,6 +4,15 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Booking extends Model {
+
+    static hideUserScope() {
+      return {
+        attributes: {
+          exclude: ['userId', 'createdAt', 'updatedAt']
+        }
+      };
+    }
+
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -26,10 +35,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Booking',
-    hideUserScope:{
-      attributes:{
-        exclude: ['userId', 'createdAt','updatedAt']
-      }
+    scopes:{
+      hideUser: Booking.hideUserScope
     }
   });
   return Booking;

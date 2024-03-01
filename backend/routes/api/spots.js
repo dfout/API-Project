@@ -79,7 +79,7 @@ router.get('/:spotId/bookings', requireAuth, async(req,res,next)=>{
 
     }else{
     //Response for if you do NOT own the spot
-    const allBookings = Booking.scope('hideUserScope').findAll({
+    const allBookings = Booking.scope('hideUser').findAll({
         where:{spotId:spotId},
     });
     return res.json({Bookings:allBookings})
