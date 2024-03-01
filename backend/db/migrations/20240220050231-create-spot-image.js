@@ -23,7 +23,8 @@ module.exports = {
         {
           model: 'Spots',
           key: 'id'
-        }
+        },
+        onDelete:"CASCADE"
       },
       preview: {
         type: Sequelize.BOOLEAN
