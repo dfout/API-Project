@@ -282,10 +282,10 @@ router.put('/:spotId', requireAuth,validateSpot,async(req,res,next)=>{
 
 
 router.delete('/:spotId',requireAuth, async(req,res,next)=>{
-    const currId = req.user.dataValues.id;
+    const currId = req.user.id;
     const {spotId} = req.params;
     const spot = await Spot.findByPk(spotId);
-    if (spot === null){
+    if (!spot){
         res.status(404);
         return res.json({
             message: "Spot couldn't be found"
