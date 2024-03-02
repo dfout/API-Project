@@ -129,7 +129,9 @@ router.put('/:bookingId', requireAuth, async(req,res,next)=>{
     //If there are no conflicts:
     const updatedBooking = await booking.update(req.body)
     return res.json(updatedBooking)
-})
+});
+
+
 
 
 
