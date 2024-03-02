@@ -1,5 +1,6 @@
 // backend/routes/api/users.js
 const express = require('express');
+const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
 const {Spot, SpotImage, User, Review, ReviewImage, Booking} = require('../../db/models');
@@ -10,6 +11,39 @@ const { handleValidationErrors } = require('../../utils/validation');
 
 const router = express.Router();
 
+
+//? TITLE OF BAD REQUEST STILL SHOWS UP
+const validateSpot = [
+    check('address')
+        .exists().notEmpty()
+        .withMessage('Street address is required'),
+    check('city')
+        .exists().notEmpty()
+        .withMessage("City is required"),
+    check('state')
+        .exists().notEmpty()
+        .withMessage("State is required"),
+    check('country')
+        .exists().notEmpty()
+        .withMessage("Country is required"),
+    //? HOW TO DEFAULT LAT AND LNG?
+    check('lat')
+        .exists().isFloat({min: -89, max: 91})
+        .withMessage("Latitude must be within -90 and 90"),
+    check('lng')
+        .exists().isFloat({min: -181, max: 181})
+        .withMessage("Longitude must be within -180 and 180"),
+    check('name')
+        .exists().notEmpty().isLength({max:50})
+        .withMessage("Name must be less than 50 characters"),
+    check('description')
+        .exists().notEmpty()
+        .withMessage("Description is required"),
+    check('price')
+        .exists().isInt({gt: 0})
+        .withMessage("Price per day must be a positive number"),
+    handleValidationErrors
+];
 //*Helper Function: Does Spot Exist?
 
 // function doesExist(spot){
@@ -87,7 +121,112 @@ router.get('/:spotId/bookings', requireAuth, async(req,res,next)=>{
     };
 })
 
+//Create a booking from a spot based on the Spot's Id
+//Require Auth
+//DeepAuth must be false
+router.post('/:spotId/bookings', requireAuth, async(req,res,next)=>{
+    const userId = req.user.id;
+    const { spotId } = req.params;
 
+    //Ensure Spot exists
+    const spot = Spot.findByPk(spotId);
+    if (!spot){
+        res.status(404);
+        return res.json({
+            message: "Spot couldn't be found"
+        });
+    }
+    //Ensure user is not the owner
+    const isOwner = deepAuth(userId, spot);
+    if (!isOwner){
+        res.status(403);
+        return res.json({
+            message:"Forbidden"
+        });
+    };
+
+    const { newStartDate, newEndDate } = req.body;
+
+    //Check for any Validation Errors
+    const errors = {};
+
+    //Ensure that the startDate is not in the past
+    if (newStartDate < Date.now){
+        errors.startDate = "startDate cannot be in the past"
+
+    };
+    //Ensure that the endDate is not the same as or before the startDate
+    if (newEndDate === newStartDate || newEndDate < newStartDate){
+        errors.endDate = "endDate cannot be on or before startDate"
+    };
+    if (errors.startDate || errors.endDate){
+        res.status(400);
+        const e = new Error()
+        e.message = "Bad Request";
+        e.errors = errors;
+        return res.json(e)
+    }
+    //? What about if a user does not input any dates
+
+    //?HOW TO SEARCH FOR BOOKING TIMEFRAMES?
+
+    // query for all dates
+    // once you find a booking and its dates
+    // look to see if the start date or end date is included.
+    //
+    const isConflictingStart = Booking.findOne({
+        //find where the date range might inc
+        where: {
+            startDate:{
+                [Op.between]:[newStartDate, newEndDate]
+            }
+
+        }
+
+    });
+
+    const isConflictingEnd = Booking.findOne({
+        where:{
+            endDate:{
+                [Op.between]:[newStartDate,newEndDate]
+            }
+        }
+    });
+
+
+    //Check for Booking conflicts
+    const bookingErrors = {};
+
+
+    //Conflicts:
+    // start date is included in a date range (inclusive date range)
+    if(isConflictingStart){
+        bookingErrors.startDate = "Start date conflicts with an existing booking"
+    };
+    //endDate is included in a date range (inclusive date range)
+    if(isConflictingEnd){
+        bookingErrors.endDate = "End date conflicts with an existing booking"
+    };
+
+    if (bookingErrors.startDate || bookingErrors.endDate){
+        res.status(403);
+        const e = new Error()
+        e.message = "Sorry, this spot is already booked for the specified dates"
+        e.errors = bookingErrors;
+        return res.json(e)
+    }
+
+    //If there are no errors/conflicts
+
+    const newBooking = await Booking.create({
+        spotId:spotId,
+        userId:userId,
+        startDate:newStartDate,
+        endDate:newEndDate
+    })
+
+    return res.json(newBooking)
+})
 
 
 //* GET ALL SPOTS
@@ -135,41 +274,10 @@ router.get('/:spotId', async(req,res,next)=>{
 
 
 
-//? TITLE OF BAD REQUEST STILL SHOWS UP
-const validateSpot = [
-    check('address')
-        .exists().notEmpty()
-        .withMessage('Street address is required'),
-    check('city')
-        .exists().notEmpty()
-        .withMessage("City is required"),
-    check('state')
-        .exists().notEmpty()
-        .withMessage("State is required"),
-    check('country')
-        .exists().notEmpty()
-        .withMessage("Country is required"),
-    //? HOW TO DEFAULT LAT AND LNG?
-    check('lat')
-        .exists().isFloat({min: -89, max: 91})
-        .withMessage("Latitude must be within -90 and 90"),
-    check('lng')
-        .exists().isFloat({min: -181, max: 181})
-        .withMessage("Longitude must be within -180 and 180"),
-    check('name')
-        .exists().notEmpty().isLength({max:50})
-        .withMessage("Name must be less than 50 characters"),
-    check('description')
-        .exists().notEmpty()
-        .withMessage("Description is required"),
-    check('price')
-        .exists().isInt({gt: 0})
-        .withMessage("Price per day must be a positive number"),
-    handleValidationErrors
-];
 
 
-//* ADD AN IMAGE TO A SPOT
+
+// ADD AN IMAGE TO A SPOT
 
 router.post('/:spotId/images', requireAuth, async(req,res,next)=>{
     const currId = req.user.dataValues.id;
@@ -199,7 +307,7 @@ router.post('/:spotId/images', requireAuth, async(req,res,next)=>{
 
 })
 
-//* CREATE A SPOT
+// CREATE A SPOT
 //? MADE AVG RATING AND PREVIEW IMAGE DEFAULT TO UNDEFINED ON MODEL
 //? SO THAT IT DOESN'T SHOW UP UNLESS THEY MAKE IT.
 
