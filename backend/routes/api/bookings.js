@@ -89,7 +89,7 @@ router.put('/:bookingId', requireAuth, async(req,res,next)=>{
     }
 
     //Booking Conflicts:
-    const isConflictingStart = Booking.findOne({
+    const isConflictingStart = await Booking.findOne({
         //find where the date range might inc
         where: {
             startDate:{
@@ -99,7 +99,7 @@ router.put('/:bookingId', requireAuth, async(req,res,next)=>{
         }
 
     });
-    const isConflictingEnd = Booking.findOne({
+    const isConflictingEnd = await Booking.findOne({
         where:{
             endDate:{
                 [Op.between]:[newStartDate,newEndDate]

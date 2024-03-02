@@ -46,15 +46,11 @@ const validateSpot = [
 ];
 //*Helper Function: Does Spot Exist?
 
-// function doesExist(spot){
-
-// }
-
-//*Helper Function for DeepAuth:
-function deepAuth(userId,spot){
+//*Helper Function for checking if user owns the spot:
+function isOwner(userId,spot){
     //if the userId matches the ownerId on the spot,
     //then send back a true
-    if (spot.ownerId === userId) return true
+    if (spot.ownerId == userId) return true
     else{return false}
 
     //else, send back false then send an error message
@@ -92,7 +88,7 @@ router.get('/:spotId/reviews', async(req,res,next)=>{
 router.get('/:spotId/bookings', requireAuth, async(req,res,next)=>{
     const userId = req.user.id
     const { spotId } = req.params;
-    const spot = Spot.findByPk(spotId)
+    const spot = await Spot.findByPk(spotId)
     if (!spot){
         res.status(404);
         return res.json({
@@ -100,36 +96,47 @@ router.get('/:spotId/bookings', requireAuth, async(req,res,next)=>{
         });
     }
 
-    const isOwner = deepAuth(userId, spot)
+    const owned = isOwner(userId, spot)
 
     //Response for if you own the spot
-    if(isOwner){
+    if(owned){
         //do not include the userId's
-        const allBookings = Booking.findAll({
-            where: {spotId:spotId},
-            include: [{model:User}]
+        const allBookings = await Booking.findAll({
+            include: [{
+                model:User,
+                attributes:{
+                    exclude: ['username','hashedPassword','email', 'createdAt','updatedAt']
+                }
+               // Want the scope used HERE!
+            }],
+            where: {spotId:spotId}
         });
-        return res.json(allBookings)
+        return res.json({Bookings:allBookings})
 
     }else{
+
     //Response for if you do NOT own the spot
-    const allBookings = Booking.scope('hideUser').findAll({
-        where:{spotId:spotId},
+    const allBookings = await Booking.scope('hideUser').findAll({
+        where:{
+            spotId:spotId
+        },
     });
+
     return res.json({Bookings:allBookings})
 
     };
 })
 
-//Create a booking from a spot based on the Spot's Id
+//*Create a booking from a spot based on the Spot's Id
 //Require Auth
-//DeepAuth must be false
+//isOwner must be false
 router.post('/:spotId/bookings', requireAuth, async(req,res,next)=>{
     const userId = req.user.id;
-    const { spotId } = req.params;
+    let { spotId } = req.params;
+    spotId = Number(spotId)
 
     //Ensure Spot exists
-    const spot = Spot.findByPk(spotId);
+    const spot = await Spot.findByPk(spotId);
     if (!spot){
         res.status(404);
         return res.json({
@@ -137,15 +144,18 @@ router.post('/:spotId/bookings', requireAuth, async(req,res,next)=>{
         });
     }
     //Ensure user is not the owner
-    const isOwner = deepAuth(userId, spot);
-    if (!isOwner){
+    const owned = isOwner(userId, spot);
+    //if user is owner, throw an error
+    if (owned){
         res.status(403);
         return res.json({
             message:"Forbidden"
         });
     };
 
-    const { newStartDate, newEndDate } = req.body;
+    const { startDate, endDate } = req.body;
+    const newStartDate = new Date(startDate);
+    const newEndDate = new Date(endDate);
 
     //Check for any Validation Errors
     let errors = {};
@@ -183,22 +193,34 @@ router.post('/:spotId/bookings', requireAuth, async(req,res,next)=>{
     // once you find a booking and its dates
     // look to see if the start date or end date is included.
     //
-    const isConflictingStart = Booking.findOne({
+    const isConflictingStart = await Booking.findOne({
         //find where the date range might inc
         where: {
             startDate:{
                 [Op.between]:[newStartDate, newEndDate]
-            }
+            },
+                // startDate: newStartDate,
+                // startDate:newEndDate
 
         }
 
     });
 
-    const isConflictingEnd = Booking.findOne({
+    //!Debugging:
+    // * Now, owner cannot book
+    //*if the start Date conflicts with an end date, that is going throwing error correctly
+
+    //*if you do not own spot, getting the booking is CORRECT
+    //*if you OWN the spot, getting the bookings is correct
+
+    const isConflictingEnd = await Booking.findOne({
+        //End date is in conflict when:
+        // It is between an already booked date range
+        // or it is on the exact last day of end date
         where:{
             endDate:{
-                [Op.between]:[newStartDate,newEndDate]
-            }
+                [Op.between]:[newStartDate, newEndDate],
+            },
         }
     });
 
@@ -206,7 +228,7 @@ router.post('/:spotId/bookings', requireAuth, async(req,res,next)=>{
     //Check for Booking conflicts
     const bookingErrors = {};
 
-
+    console.log(isConflictingStart, isConflictingEnd)
     //Conflicts:
     // start date is included in a date range (inclusive date range)
     if(isConflictingStart){
@@ -226,7 +248,6 @@ router.post('/:spotId/bookings', requireAuth, async(req,res,next)=>{
     }
 
     //If there are no errors/conflicts
-
     const newBooking = await Booking.create({
         spotId:spotId,
         userId:userId,
@@ -239,14 +260,12 @@ router.post('/:spotId/bookings', requireAuth, async(req,res,next)=>{
 
 
 //* GET ALL SPOTS
-
 router.get('/', async(req,res,next)=>{
     const allSpots = await Spot.findAll();
     return res.json(allSpots)
 })
 
 //*GET ALL SPOTS OWNED BY CURR USER
-//* REQUIRE AUTHENTICATION
 router.get('/current', requireAuth, async(req,res,next)=>{
     const currId = req.user.dataValues.id
     const ownedSpots = {};
@@ -265,7 +284,6 @@ router.get('/current', requireAuth, async(req,res,next)=>{
 
 
 //* GET ALL SPOTS FROM ID
-
 router.get('/:spotId', async(req,res,next)=>{
     const { spotId } = req.params;
     const spot = await Spot.findByPk(spotId,{
@@ -298,7 +316,7 @@ router.post('/:spotId/images', requireAuth, async(req,res,next)=>{
         return res.json({
             message: "Spot couldn't be found"
         })
-    }else if(!deepAuth(currId,spot)){
+    }else if(!isOwner(currId,spot)){
         res.status(403);
         return res.json({
             message: "Forbidden"
@@ -404,7 +422,7 @@ router.put('/:spotId', requireAuth,validateSpot,async(req,res,next)=>{
         return res.json({
             message: "Spot couldn't be found"
         });
-    }else if (!deepAuth(currId,spot)){
+    }else if (!isOwner(currId,spot)){
             res.status(403);
             return res.json({
                 message:"Forbidden"
@@ -442,7 +460,7 @@ router.delete('/:spotId',requireAuth, async(req,res,next)=>{
         return res.json({
             message: "Spot couldn't be found"
         });
-    }else if (!deepAuth(currId,spot)){
+    }else if (!isOwner(currId,spot)){
         res.status(403);
         return res.json({
             message:"Forbidden"

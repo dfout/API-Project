@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     static hideUserScope() {
       return {
         attributes: {
-          exclude: ['userId', 'createdAt', 'updatedAt']
+          exclude: ['id','userId', 'createdAt', 'updatedAt']
         }
       };
     }
