@@ -131,6 +131,54 @@ router.put('/:bookingId', requireAuth, async(req,res,next)=>{
     return res.json(updatedBooking)
 });
 
+// *DELETE a booking
+router.delete('/:bookingId', requireAuth, async(req,res,next)=>{
+    const userId = req.user.id;
+    const { bookingId } = req.params;
+
+    // *Does booking exist?
+    const booking = await Booking.findByPk(bookingId)
+    if (!booking){
+        res.status(404);
+        return res.json({
+            message: "Booking couldn't be found"
+        })
+    };
+
+    //*Are they the owner of the booking?
+    const isOwner = deepAuth(userId, booking)
+    if(!isOwner){
+        res.status(403);
+        return res.json({
+            message:"Forbidden"
+        });
+    };
+
+
+    //* Bookings that have started cannot be deleted
+    //Current Date:
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Add 1 because months are zero-indexed
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`;
+    //Compare dates
+    if(booking.startDate < formattedDate){
+        res.status(403);
+        return res.json({
+            message: "Bookings that have been started can't be deleted"
+        })
+    };
+    //if no errors are thrown,
+    //* Return a successfully deleted message
+
+    await booking.destroy();
+    return res.json({
+        message: "Successfully deleted"
+    });
+
+});
+
 
 
 
