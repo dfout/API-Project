@@ -148,10 +148,19 @@ router.post('/:spotId/bookings', requireAuth, async(req,res,next)=>{
     const { newStartDate, newEndDate } = req.body;
 
     //Check for any Validation Errors
-    const errors = {};
+    let errors = {};
+
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Add 1 because months are zero-indexed
+    const day = String(currentDate.getDate()).padStart(2, '0');
+
+    const formattedDate = `${year}-${month}-${day}`;
+
+
 
     //Ensure that the startDate is not in the past
-    if (newStartDate < Date.now){
+    if (newStartDate < formattedDate){
         errors.startDate = "startDate cannot be in the past"
 
     };
