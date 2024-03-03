@@ -56,6 +56,11 @@ function isOwner(userId,spot){
     //else, send back false then send an error message
 }
 
+const bookingOwner = function(userId, booking){
+    if (booking.userId === userId) return true
+    else{return false}
+};
+
 
 // //*Get all Reviews by Spot's Id:
 
@@ -193,14 +198,19 @@ router.post('/:spotId/bookings', requireAuth, async(req,res,next)=>{
     // once you find a booking and its dates
     // look to see if the start date or end date is included.
     //
+ //! New Goal:
+
+ //Query for all and then do the comparisons:
+
+//! Come Back to this later for more efficiency
+
+
     const isConflictingStart = await Booking.findOne({
         //find where the date range might inc
         where: {
             startDate:{
                 [Op.between]:[newStartDate, newEndDate]
             },
-                // startDate: newStartDate,
-                // startDate:newEndDate
 
         }
 
@@ -234,10 +244,12 @@ router.post('/:spotId/bookings', requireAuth, async(req,res,next)=>{
     if(isConflictingStart){
         bookingErrors.startDate = "Start date conflicts with an existing booking"
     };
+    console.log(bookingErrors)
     //endDate is included in a date range (inclusive date range)
     if(isConflictingEnd){
         bookingErrors.endDate = "End date conflicts with an existing booking"
     };
+    console.log(bookingErrors)
 
     if (bookingErrors.startDate || bookingErrors.endDate){
         res.status(403);
@@ -300,8 +312,84 @@ router.get('/:spotId', async(req,res,next)=>{
 })
 
 
+//*Edit a Booking:
+// Require isOwner
+router.put('/:bookingId', requireAuth, async(req,res,next)=>{
+    const { bookingId } = req.params;
+    const { userId }= req.user.id;
+
+    const booking = await Booking.findByPk(bookingId);
+    if(!booking){
+        res.status(404)
+        return res.json({
+            message: "Booking couldn't be found"
+        })
+    };
 
 
+
+    //Throw an error if the editor does not own the booking
+    const owned = bookingOwner(userId, booking)
+    //if not owned
+    if(!owned){
+        res.status(403);
+        return res.json({
+            message:"Forbidden"
+        });
+    };
+    const {startDate, endDate} = req.body;
+    const newStartDate = new Date(startDate);
+    const newEndDate = new Date(endDate);
+
+    //Past bookings cannot be modified. Check the current date against the
+    // end date.
+    // if the current date is greater than the end date,
+    if(booking.endDate < newEndDate){
+        res.status(403);
+        return res.json({
+            message: "Past bookings can't be modified"
+        })
+    }
+
+
+    //Check for any Validation Errors
+    let errors = {};
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Add 1 because months are zero-indexed
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`;
+    //Ensure that the startDate is not in the past
+    if (newStartDate < formattedDate){
+        errors.startDate = "startDate cannot be in the past"
+    };
+    //Ensure that the endDate is not the same as or before the startDate
+    if (newEndDate === newStartDate || newEndDate < newStartDate){
+        errors.endDate = "endDate cannot be on or before startDate"
+    };
+    if (errors.startDate || errors.endDate){
+        res.status(400);
+        const e = new Error()
+        e.message = "Bad Request";
+        e.errors = errors;
+        return res.json(e)
+    }
+
+
+    //!BOOKING CONFLICTS COME BACK TO THIS:
+    //insert code here:
+
+
+
+    //!
+    const updatedBooking = await booking.update({
+        startDate,
+        endDate,
+        userId
+    });
+
+
+})
 
 
 // ADD AN IMAGE TO A SPOT
