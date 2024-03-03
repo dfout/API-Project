@@ -81,31 +81,18 @@ router.put('/:bookingId', requireAuth, async(req,res,next)=>{
     }
 
     //Cannot edit a booking that's past the end date
-    if(formattedDate > newEndDate){
+    if(formattedDate > booking.endDate){
         res.status(403);
         return res.json({
             message: "Past bookings can't be modified"
         })
     }
 
-    //Booking Conflicts:
-    const isConflictingStart = await Booking.findOne({
-        //find where the date range might inc
-        where: {
-            startDate:{
-                [Op.between]:[newStartDate, newEndDate]
-            }
+    //!Booking Conflicts:
+   // code here:
 
-        }
 
-    });
-    const isConflictingEnd = await Booking.findOne({
-        where:{
-            endDate:{
-                [Op.between]:[newStartDate,newEndDate]
-            }
-        }
-    });
+    //!
 
     //Check for Booking conflicts
     const bookingErrors = {};
