@@ -159,8 +159,14 @@ router.post('/:spotId/bookings', requireAuth, async(req,res,next)=>{
     };
 
     const { startDate, endDate } = req.body;
-    const newStartDate = new Date(startDate);
-    const newEndDate = new Date(endDate);
+    let newStartDate = new Date(startDate);
+    let newEndDate = new Date(endDate);
+
+
+    newStartDate = newStartDate.toISOString().split('T')[0];
+    newEndDate= newEndDate.toISOString().split('T')[0];
+
+
 
     //Check for any Validation Errors
     let errors = {};

@@ -53,6 +53,9 @@ router.put('/:bookingId', requireAuth, async(req,res,next)=>{
      newStartDate = new Date(newStartDate);
      newEndDate = new Date(newEndDate);
 
+     newStartDate = newStartDate.toISOString().split('T')[0];
+     newEndDate= newEndDate.toISOString().split('T')[0];
+
     //Check for any Validation Errors
     let errors = {};
 
