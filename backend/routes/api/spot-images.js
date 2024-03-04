@@ -19,7 +19,7 @@ const isOwner = function(userId, spot){
 //Spot must belong to curr User
 router.delete('/:imageId', requireAuth, async(req,res,next)=>{
     const {imageId} = req.params;
-    const imageObj = await SpotImage.findByPK(imageId);
+    const imageObj = await SpotImage.findByPk(imageId);
     if(!imageObj){
         res.status(404);
         return res.json({
@@ -27,7 +27,7 @@ router.delete('/:imageId', requireAuth, async(req,res,next)=>{
         })
     }
     const spotId = imageObj.spotId;
-    const spot = await Spot.findByPK(spotId);
+    const spot = await Spot.findByPk(spotId);
 
     const userId = req.user.id;
     const owned = isOwner(userId,spot);

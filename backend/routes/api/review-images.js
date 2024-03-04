@@ -22,14 +22,15 @@ const isOwner = function(userId, review){
 router.delete('/:imageId', requireAuth, async(req,res,next)=>{
     const { imageId } = req.params;
     const userId = req.user.id;
-    const reviewImageObj = await ReviewImage.findByPK(imageId);
+    const reviewImageObj = await ReviewImage.findByPk(imageId);
     if (!reviewImageObj){
         res.status(404);
         return res.json({
             message: "Review Image couldn't be found"
         });
     };
-    const review = reviewImageObj.reviewId;
+    const reviewId = reviewImageObj.reviewId;
+    const review = await Review.findByPk(reviewId);
     const owned = isOwner(userId, review)
     if(!owned){
         res.status(403);

@@ -67,7 +67,7 @@ const bookingOwner = function(userId, booking){
 router.get('/:spotId/reviews', async(req,res,next)=>{
     const {spotId} = req.params;
     const spot = await Spot.findByPk(spotId);
-    console.log(spot)
+
     if (!spot || spot === null){
         res.status(404);
         return res.json({
@@ -238,18 +238,18 @@ router.post('/:spotId/bookings', requireAuth, async(req,res,next)=>{
     //Check for Booking conflicts
     const bookingErrors = {};
 
-    console.log(isConflictingStart, isConflictingEnd)
+
     //Conflicts:
     // start date is included in a date range (inclusive date range)
     if(isConflictingStart){
         bookingErrors.startDate = "Start date conflicts with an existing booking"
     };
-    console.log(bookingErrors)
+
     //endDate is included in a date range (inclusive date range)
     if(isConflictingEnd){
         bookingErrors.endDate = "End date conflicts with an existing booking"
     };
-    console.log(bookingErrors)
+
 
     if (bookingErrors.startDate || bookingErrors.endDate){
         res.status(403);
@@ -270,84 +270,238 @@ router.post('/:spotId/bookings', requireAuth, async(req,res,next)=>{
     return res.json(newBooking)
 });
 
-
+const validateQueryFilters = [
+    check('page')
+        .exists({checkFalsy:true})
+        .isEmail()
+        .withMessage('Invalid email'),
+    check('size')
+        .exists({checkFalsy:true})
+        .isLength({min:4}).withMessage('Please provide a username with at least 4 characters.'),
+    check('maxLat')
+        .exists({values: 'undefined'}).withMessage('Username is required'),
+    check('minLat')
+        .not()
+        .isEmail()
+        .withMessage('Username cannot be an email'),
+    check('minLng')
+        .notEmpty()
+        .withMessage('First Name is required'),
+    check('maxLng')
+        .notEmpty()
+        .withMessage('Last Name is required'),
+    check('minPrice')
+        .exists({checkFalsy:true})
+        .isLength({min:6})
+        .withMessage('Password must be 6 characters or more.'),
+        check('minPrice')
+        .exists({checkFalsy:true})
+        .isLength({min:6})
+        .withMessage('Password must be 6 characters or more.'),
+    handleValidationErrors
+];
 //* GET ALL SPOTS
+//! FOR Getting All Spots I should Calculate the AvgRating
 router.get('/', async(req,res)=>{
-    const {
+    let {
         page = 1,
         size = 20,
-        minLat,
-        maxLat,
-        minLng,
-        maxLng,
-        minPrice,
-        maxPrice
+        minLat = null,
+        maxLat = null,
+        minLng = null,
+        maxLng = null,
+        minPrice = null,
+        maxPrice = null
     } = req.query;
 
     const filter = {
-        where: {
-          lat: {
-            [Op.between]: [minLat, maxLat],
-          },
-          lng: {
-            [Op.between]: [minLng, maxLng],
-          },
-          price: {
-            [Op.between]: [minPrice, maxPrice],
-          },
-        },
+        where: {},
         limit: size,
         offset: (page - 1) * size,
     };
 
     const queryValidErrors = {};
 
-    if(page < 1 || typeof page !== "integer"){
+    function isNumeric(str) {
+        return /^\d+$/.test(str);
+    }
+
+
+    //*Check Page and Size
+
+
+    if(!isNumeric(page)){
+        queryValidErrors.page = "Page must be an integer"
+
+    }else if(page < 1){
         queryValidErrors.page = "Page must be greater than or equal to 1"
-
-    }
-    if(page > 10 || typeof page !== "integer"){
+    }else if(page >10){
         queryValidErrors.page = "Page must be less than or equal to 10"
-
     }
-    if(size < 1 || typeof size !== "integer"){
+    //Check size
+    if(!isNumeric(size)){
+        queryValidErrors.size = "Size must be an integer"
+    }else if(size < 1){
         queryValidErrors.size = "Size must be greater than or equal to 1"
-
-    }
-    if(size > 20|| typeof size !== "integer"){
+    }else if(size > 20){
         queryValidErrors.size = "Size must be less than or equal to 20"
-
-    }
-    if((maxLat!== null && typeof maxLat!== "float") || (maxLat!== null && (maxLat > 90.00 || maxLat < -90.00))){
-        queryValidErrors.maxLat = "Maximum latitude is invalid"
-    }
-    if((minLat !== null && typeof minLat !== "float") || (minLat!== null && (minLat > 90.00 || minLat < -90.00))){
-        queryValidErrors.minLat = "Minimum latitude is invalid"
-    }
-    if((minLng !== null && typeof minLng !== "float") || (minLng!== null && (minLng > 180.00 || minLng < -180.00))){
-        queryValidErrors.minLng = "Minimum longitude is invalid"
-    }
-    if((maxLng !== null && typeof maxLng !== "float") || (maxLng!== null && (minLat > 180.00 || maxLng < -180.00))){
-        queryValidErrors.maxLng = "Maximum longitude is invalid"
-    }
-    if((minPrice!== null && typeof minPrice !== "float") || (minPrice!== null && minPrice < 0.00)){
-        queryValidErrors.minPrice = "Minimum price must be greater than or equal to 0"
-    }
-    if((maxPrice!== null && typeof maxPrice !== "float") || (maxPrice!== null && maxPrice < 0.00)){
-        queryValidErrors.maxPrice = "Maximum price must be greater than or equal to 0"
 
     };
 
-    const keysList = Object.keys(queryValidErrors)
-    if(!keysList.length){
+
+    //Check Lat
+    if(maxLat !== null){
+        //if it is not null, then it was put in.
+        //Make it into a number incase it is negative
+        //Now it is either a number or NaN
+        const isNotNumber = isNaN(maxLat)
+        if(isNotNumber){
+            queryValidErrors.maxLat = "Maximum Latitude is invalid"
+        }else if(!isNotNumber){
+            maxLat = Number(maxLat);
+            if((maxLat > 180.00 || maxLat < -180.00)){
+                queryValidErrors.maxLat = "Maximum Latitude is invalid";
+            }
+        }
+    };
+    if(minLat !== null){
+        //if it is not null, then it was put in.
+        //Make it into a number incase it is negative
+        //Now it is either a number or NaN
+        const isNotNumber = isNaN(minLat)
+        if(isNotNumber){
+            queryValidErrors.minLat = "Minimum Latitude is invalid"
+        }else if(!isNotNumber){
+            minLat = Number(minLat);
+            if((minLat > 180.00 || minLat < -180.00)){
+                queryValidErrors.minLat = "Minimum Latitude is invalid";
+            }
+        }
+    };
+
+    //Check Lng
+    if(minLng !== null){
+        //if it is not null, then it was put in.
+        //Make it into a number incase it is negative
+        //Now it is either a number or NaN
+        const isNotNumber = isNaN(minLng)
+        if(isNotNumber){
+            queryValidErrors.minLng = "Minimum longitude is invalid"
+        }else if(!isNotNumber){
+            minLng = Number(minLng);
+            if((minLng > 180.00 || minLng < -180.00)){
+                queryValidErrors.minLng = "Minimum longitude is invalid";
+            }
+        }
+    };
+    if(maxLng !== null){
+        //if it is not null, then it was put in.
+        //Make it into a number incase it is negative
+        //Now it is either a number or NaN
+        const isNotNumber = isNaN(maxLng)
+        if(isNotNumber){
+            queryValidErrors.maxLng = "Maximum longitude is invalid"
+        }else if(!isNotNumber){
+            maxLng = Number(maxLng);
+            if((maxLng > 180.00 || maxLng < -180.00)){
+                queryValidErrors.maxLng = "Maximum longitude is invalid";
+            }
+        }
+    };
+
+    if(minPrice !== null){
+        const isNotNumber = isNaN(minPrice)
+        if(isNotNumber){
+            queryValidErrors.minPrice = "Minimum price is invalid"
+        }else if(!isNotNumber){
+            minPrice = Number(minPrice);
+            if(minPrice < 0){
+                queryValidErrors.minPrice = "Minimum price must be greater than or equal to 0"
+            }
+        }
+
+    };
+    if(maxPrice !== null){
+        const isNotNumber = isNaN(maxPrice)
+        if(isNotNumber){
+            queryValidErrors.maxPrice = "Maximum price is invalid"
+        }else if(!isNotNumber){
+            maxPrice = Number(maxPrice);
+            if(maxPrice < 0){
+                queryValidErrors.maxPrice = "Maximum price must be greater than or equal to 0"
+            }
+        }
+
+    };
+
+    if(queryValidErrors.page ||queryValidErrors.size || queryValidErrors.minLat || queryValidErrors.maxLat || queryValidErrors.minLng || queryValidErrors.maxLng ||queryValidErrors.minPrice || queryValidErrors.maxPrice ){
         res.status(400);
         const e = new Error()
         e.message = "Bad Request"
         e.errors = queryValidErrors;
         return res.json(e)
     }
+    // const avgRating = reviews.reduce((acc, curr) => acc + curr.stars, 0) / reviews.length;
 
-    const allSpots = await Spot.findAll(filter);
+    // spot.dataValues.avgRating = avgRating;
+    if (minLat && maxLat) {
+        filter.where.lat = {
+            [Op.between]: [parseFloat(minLat), parseFloat(maxLat)],
+        };
+    }
+
+    if (minLng && maxLng) {
+        filter.where.lng = {
+            [Op.between]: [parseFloat(minLng), parseFloat(maxLng)],
+        };
+    }
+
+    if (minLat){
+        filter.where.lat = {
+            [Op.gte]: parseFloat(minLat)
+        }
+    }
+
+    if (maxLat){
+        filter.where.lat = {
+            [Op.lte]: parseFloat(maxLat)
+        }
+    }
+
+    if (minLng){
+         filter.where.lng = {
+            [Op.gte]: parseFloat(minLng)
+        }
+    }
+
+    if (maxLng){
+         filter.where.lng = {
+            [Op.lte]: parseFloat(maxLng)
+        }
+    }
+
+    if (minPrice){
+        filter.where.price = {
+            [Op.gte]: parseFloat(minPrice)
+        }
+    }
+
+    if (maxPrice){
+        filter.where.price = {
+            [Op.lte]: parseFloat(maxPrice)
+        }
+    }
+
+
+    if (minPrice && maxPrice) {
+        filter.where.price = {
+            [Op.between]: [parseFloat(minPrice), parseFloat(maxPrice)],
+        };
+    }
+
+
+    const allSpots = await Spot.findAll({...filter});
+
     return res.json({
         Spots: allSpots,
         page: parseInt(page),
@@ -364,12 +518,12 @@ router.get('/current', requireAuth, async(req,res,next)=>{
         where: {ownerId: currId}
     })
     ownedSpots.Spots = Spots;
-    // console.log(ownedSpots);
+
     return res.json(ownedSpots)
 })
 
 //!THIS WORKS BUT I NEED TO ADDRESS AN ON DELETE
-//! CASADE FOR WHEN A USER IS DELETED,
+//! CASCADE FOR WHEN A USER IS DELETED,
 //! THEN THEIR SPOTS ARE DELETED.
 
 
@@ -498,7 +652,6 @@ router.post('/', requireAuth, validateSpot, async(req,res,next)=>{
 
 //*EDIT A SPOT
 //*IT CHANGED IT YAY!
-
 
 
 
