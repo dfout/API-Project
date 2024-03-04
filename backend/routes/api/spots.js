@@ -1,6 +1,6 @@
 // backend/routes/api/users.js
 const express = require('express');
-const { Op } = require('sequelize');
+const { Op, FLOAT } = require('sequelize');
 const bcrypt = require('bcryptjs');
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
 const {Spot, SpotImage, User, Review, ReviewImage, Booking} = require('../../db/models');
@@ -265,17 +265,95 @@ router.post('/:spotId/bookings', requireAuth, async(req,res,next)=>{
         userId:userId,
         startDate:newStartDate,
         endDate:newEndDate
-    })
+    });
 
     return res.json(newBooking)
-})
+});
 
 
 //* GET ALL SPOTS
-router.get('/', async(req,res,next)=>{
-    const allSpots = await Spot.findAll();
-    return res.json(allSpots)
-})
+router.get('/', async(req,res)=>{
+    const {
+        page = 1,
+        size = 20,
+        minLat,
+        maxLat,
+        minLng,
+        maxLng,
+        minPrice,
+        maxPrice
+    } = req.query;
+
+    const filter = {
+        where: {
+          lat: {
+            [Op.between]: [minLat, maxLat],
+          },
+          lng: {
+            [Op.between]: [minLng, maxLng],
+          },
+          price: {
+            [Op.between]: [minPrice, maxPrice],
+          },
+        },
+        limit: size,
+        offset: (page - 1) * size,
+    };
+
+    const queryValidErrors = {};
+
+    if(page < 1 || typeof page !== "integer"){
+        queryValidErrors.page = "Page must be greater than or equal to 1"
+
+    }
+    if(page > 10 || typeof page !== "integer"){
+        queryValidErrors.page = "Page must be less than or equal to 10"
+
+    }
+    if(size < 1 || typeof size !== "integer"){
+        queryValidErrors.size = "Size must be greater than or equal to 1"
+
+    }
+    if(size > 20|| typeof size !== "integer"){
+        queryValidErrors.size = "Size must be less than or equal to 20"
+
+    }
+    if((maxLat!== null && typeof maxLat!== "float") || (maxLat!== null && (maxLat > 90.00 || maxLat < -90.00))){
+        queryValidErrors.maxLat = "Maximum latitude is invalid"
+    }
+    if((minLat !== null && typeof minLat !== "float") || (minLat!== null && (minLat > 90.00 || minLat < -90.00))){
+        queryValidErrors.minLat = "Minimum latitude is invalid"
+    }
+    if((minLng !== null && typeof minLng !== "float") || (minLng!== null && (minLng > 180.00 || minLng < -180.00))){
+        queryValidErrors.minLng = "Minimum longitude is invalid"
+    }
+    if((maxLng !== null && typeof maxLng !== "float") || (maxLng!== null && (minLat > 180.00 || maxLng < -180.00))){
+        queryValidErrors.maxLng = "Maximum longitude is invalid"
+    }
+    if((minPrice!== null && typeof minPrice !== "float") || (minPrice!== null && minPrice < 0.00)){
+        queryValidErrors.minPrice = "Minimum price must be greater than or equal to 0"
+    }
+    if((maxPrice!== null && typeof maxPrice !== "float") || (maxPrice!== null && maxPrice < 0.00)){
+        queryValidErrors.maxPrice = "Maximum price must be greater than or equal to 0"
+
+    };
+
+    const keysList = Object.keys(queryValidErrors)
+    if(!keysList.length){
+        res.status(400);
+        const e = new Error()
+        e.message = "Bad Request"
+        e.errors = queryValidErrors;
+        return res.json(e)
+    }
+
+    const allSpots = await Spot.findAll(filter);
+    return res.json({
+        Spots: allSpots,
+        page: parseInt(page),
+        size: parseInt(size),
+    });
+});
 
 //*GET ALL SPOTS OWNED BY CURR USER
 router.get('/current', requireAuth, async(req,res,next)=>{
@@ -341,7 +419,7 @@ router.post('/:spotId/images', requireAuth, async(req,res,next)=>{
             preview: newImage.preview
         }
         return res.json(response)
-    }
+    };
 
 })
 
