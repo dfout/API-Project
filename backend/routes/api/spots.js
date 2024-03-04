@@ -163,8 +163,8 @@ router.post('/:spotId/bookings', requireAuth, async(req,res,next)=>{
     let newEndDate = new Date(endDate);
 
 
-    newStartDate = newStartDate.toISOString().split('T')[0];
-    newEndDate= newEndDate.toISOString().split('T')[0];
+    const bnewStartDate = newStartDate.toISOString().split('T')[0];
+    const bnewEndDate= newEndDate.toISOString().split('T')[0];
 
 
 
@@ -179,12 +179,12 @@ router.post('/:spotId/bookings', requireAuth, async(req,res,next)=>{
     const formattedDate = `${year}-${month}-${day}`;
 
     //Ensure that the startDate is not in the past
-    if (newStartDate < formattedDate){
+    if (bnewStartDate < formattedDate){
         errors.startDate = "startDate cannot be in the past"
 
     };
     //Ensure that the endDate is not the same as or before the startDate
-    if (newEndDate === newStartDate || newEndDate < newStartDate){
+    if (bnewEndDate === bnewStartDate || bnewEndDate < bnewStartDate){
         errors.endDate = "endDate cannot be on or before startDate"
     };
     if (errors.startDate || errors.endDate){
@@ -198,10 +198,10 @@ router.post('/:spotId/bookings', requireAuth, async(req,res,next)=>{
         where:{
             [Op.or]:{
                 startDate: {
-                    [Op.between]:[newStartDate,newEndDate]
+                    [Op.between]:[bnewStartDate,bnewEndDate]
                 },
                 endDate: {
-                    [Op.between]:[newStartDate,newEndDate]
+                    [Op.between]:[bnewStartDate,bnewEndDate]
                 }
             }
         }
@@ -210,33 +210,38 @@ router.post('/:spotId/bookings', requireAuth, async(req,res,next)=>{
     const bookingErrors = {};
 
     if(isConflict){
-        const sd = isConflict.startDate;
-        const ed = isConflict.endDate;
-        if(sd === newStartDate || ed === newStartDate){
+        let sd = isConflict.startDate;
+        let ed = isConflict.endDate;
+        sd= sd.toISOString().split('T')[0];
+        ed= ed.toISOString().split('T')[0];
+        console.log(sd,ed)
+        console.log(bnewStartDate,bnewEndDate)
+
+        if(sd === bnewStartDate || ed === bnewStartDate){
             bookingErrors.startDate = "Start date conflicts with an existing booking";
         }
-        if (sd == newEndDate || (newStartDate < sd && newEndDate < ed)){
+        if (sd == bnewEndDate || (bnewStartDate < sd && bnewEndDate < ed)){
             bookingErrors.endDate = "End date conflicts with an existing booking";
         }
-        if (newStartDate < sd && ed == newEndDate){
+        if (bnewStartDate < sd && ed == bnewEndDate){
             bookingErrors.endDate = "End date conflicts with an existing booking";
         }
-        if(newStartDate < sd && ed < newEndDate){
-            bookingErrors.startDate = "Start date conflicts with an existing booking";
-            bookingErrors.endDate = "End date conflicts with an existing booking";
-        }
-        if (sd == newStartDate && ed == newEndDate){
-            bookingErrors.startDate = "Start date conflicts with an existing booking";
-            bookingErrors.endDate = "End date conflicts with an existing booking";
-        }
-        if ((sd == newStartDate || sd < newStartDate) && ed < newEndDate){
-            bookingErrors.startDate = "Start date conflicts with an existing booking";
-        }
-        if ((sd == newStartDate || sd < newStartDate) && newEndDate < ed){
+        if(bnewStartDate < sd && ed < bnewEndDate){
             bookingErrors.startDate = "Start date conflicts with an existing booking";
             bookingErrors.endDate = "End date conflicts with an existing booking";
         }
-        if(sd < newStartDate && ed == newEndDate){
+        if (sd == bnewStartDate && ed == bnewEndDate){
+            bookingErrors.startDate = "Start date conflicts with an existing booking";
+            bookingErrors.endDate = "End date conflicts with an existing booking";
+        }
+        if ((sd == bnewStartDate || sd < bnewStartDate) && ed < bnewEndDate){
+            bookingErrors.startDate = "Start date conflicts with an existing booking";
+        }
+        if ((sd == bnewStartDate || sd < bnewStartDate) && bnewEndDate < ed){
+            bookingErrors.startDate = "Start date conflicts with an existing booking";
+            bookingErrors.endDate = "End date conflicts with an existing booking";
+        }
+        if(sd < bnewStartDate && ed == bnewEndDate){
             bookingErrors.startDate = "Start date conflicts with an existing booking";
             bookingErrors.endDate = "End date conflicts with an existing booking";
         }
@@ -255,8 +260,8 @@ router.post('/:spotId/bookings', requireAuth, async(req,res,next)=>{
     const newBooking = await Booking.create({
         spotId:spotId,
         userId:userId,
-        startDate:newStartDate,
-        endDate:newEndDate
+        startDate:bnewStartDate,
+        endDate:bnewEndDate
     });
 
     return res.json(newBooking)
