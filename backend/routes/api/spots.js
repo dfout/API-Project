@@ -11,69 +11,6 @@ const { handleValidationErrors } = require('../../utils/validation');
 
 const router = express.Router();
 
-//*Conflicting Booking Helper Func
-//CASES:
-
-                     //* Double Sandwich// Both
-                    // sd nsd ned ed
-                    // sdnsd edned
-                    //sdnsd ned ed
-                    // sd nsd neded
-
-                    // nsd  sd  ed ned
-                    // nsd sd ned ed
-                    //* StartDates //NSD
-                    // sdnsd ed ned
-                    //*NewStart Date + ED //NST
-                    // nsded ed
-                    //* SD + NewEndDate// NED
-                    //nsd sdned ed
-                    //*NewEndDate + SD //NED
-                    // nsd nedsd
-
-//more recent dates are greater
-// 1   2    3    4   5   6   7   8   9  10
-//past dates are lower
-// right now, I am not interpreting results, only finding the first conflict.
-//then I will interpret the results and put out the right error messages
-/**Easy Cases:
-    startDate == newStartDate  //off to the wrong start --likely has endDate conflict too
-    startDate == newEndDate   //endDate
-
-    endDate == newStartDate    //startDate
-    endDate == newEndDate      //off to the wrong start ---likely has startDate conflict too
-
-
-        b            |-------------|          b
-    startDate < newStartDate && newEndDate < endDate    //start and end
-
-        b             |-------------b----------|
-    startDate < newStartDate && endDate < newEndDate    //start and end
-
-        |----------------b-------------|       b
-    newStartDate < startDate && newEndDate < endDate    //end date
-        |----------------b----------b---------|
-    newStartDate < startDate && endDate < newEndDate   //end date
-
-
-***/
-const findConflictingBooking = async (spotId, newStartDate, newEndDate)=>{
-    const conflictingBooking = await Booking.findOne({
-        where: {
-            spotId,
-            [Op.or]: [{startDate: newStartDate},
-                {endDate:newEndDate},
-                    {[Op.or]: [
-                        {startDate:newEndDate},
-                        {endDate: newStartDate}
-                    ]},
-
-            ]
-        },
-    })
-    return [conflictingBooking.startDate, conflictingBooking.endDate]
-};
-
 
 //? TITLE OF BAD REQUEST STILL SHOWS UP
 const validateSpot = [
@@ -265,28 +202,6 @@ router.post('/:spotId/bookings', requireAuth, async(req,res,next)=>{
     })
 
     const bookingErrors = {};
-
-    /**Easy Cases:
-    startDate == newStartDate  //off to the wrong start --likely has endDate conflict too D
-    startDate == newEndDate   //endDate D
-
-    endDate == newStartDate    //startDate D
-
-    endDate == newEndDate      //off to the wrong start ---likely has startDate conflict too D
-
-        b            |-------------|          b
-    startDate < newStartDate && newEndDate < endDate    //start and end D
-
-        b             |-------------b----------|
-    startDate < newStartDate && endDate < newEndDate    //start and end D
-
-
-
-        |----------------b-------------|       b
-    newStartDate < startDate && newEndDate < endDate    //end date D
-
-        |----------------b----------b---------|
-    newStartDate < startDate && endDate < newEndDate       both conflict here D **/
 
     if(isConflict){
         const sd = isConflict.startDate;
@@ -652,8 +567,8 @@ router.post('/:spotId/images', requireAuth, async(req,res,next)=>{
 //? MADE AVG RATING AND PREVIEW IMAGE DEFAULT TO UNDEFINED ON MODEL
 //? SO THAT IT DOESN'T SHOW UP UNLESS THEY MAKE IT.
 
-//*!POST api/spot/:spotId/reviews:
-//! Create a Review for a Spot based on the Spot's Id
+//*POST api/spot/:spotId/reviews:
+// Create a Review for a Spot based on the Spot's Id
 router.post('/:spotId/reviews', requireAuth, async(req,res,next)=>{
     const { spotId } = req.params;
 

@@ -62,8 +62,7 @@ router.put('/:bookingId', requireAuth, async(req,res,next)=>{
     const formattedDate = `${year}-${month}-${day}`;
 
 
-
-    //Ensure that the startDate is not in the past
+        //Ensure that the startDate is not in the past
     if (newStartDate < formattedDate){
         errors.startDate = "startDate cannot be in the past"
 
@@ -79,32 +78,54 @@ router.put('/:bookingId', requireAuth, async(req,res,next)=>{
         e.errors = errors;
         return res.json(e)
     }
+    const isConflict = await Booking.findOne({
+        where:{
+            [Op.or]:{
+                startDate: {
+                    [Op.between]:[newStartDate,newEndDate]
+                },
+                endDate: {
+                    [Op.between]:[newStartDate,newEndDate]
+                }
+            }
+        }
+    })
 
-    //Cannot edit a booking that's past the end date
-    if(formattedDate > booking.endDate){
-        res.status(403);
-        return res.json({
-            message: "Past bookings can't be modified"
-        })
-    }
-
-    //!Booking Conflicts:
-   // code here:
-
-
-    //!
-
-    //Check for Booking conflicts
     const bookingErrors = {};
-     Conflicts:
-    // start date is included in a date range (inclusive date range)
-    if(isConflictingStart){
-        bookingErrors.startDate = "Start date conflicts with an existing booking"
+
+    if(isConflict){
+        const sd = isConflict.startDate;
+        const ed = isConflict.endDate;
+        if(sd === newStartDate || ed === newStartDate){
+            bookingErrors.startDate = "Start date conflicts with an existing booking";
+        }
+        if (sd == newEndDate || (newStartDate < sd && newEndDate < ed)){
+            bookingErrors.endDate = "End date conflicts with an existing booking";
+        }
+        if (newStartDate < sd && ed == newEndDate){
+            bookingErrors.endDate = "End date conflicts with an existing booking";
+        }
+        if(newStartDate < sd && ed < newEndDate){
+            bookingErrors.startDate = "Start date conflicts with an existing booking";
+            bookingErrors.endDate = "End date conflicts with an existing booking";
+        }
+        if (sd == newStartDate && ed == newEndDate){
+            bookingErrors.startDate = "Start date conflicts with an existing booking";
+            bookingErrors.endDate = "End date conflicts with an existing booking";
+        }
+        if ((sd == newStartDate || sd < newStartDate) && ed < newEndDate){
+            bookingErrors.startDate = "Start date conflicts with an existing booking";
+        }
+        if ((sd == newStartDate || sd < newStartDate) && newEndDate < ed){
+            bookingErrors.startDate = "Start date conflicts with an existing booking";
+            bookingErrors.endDate = "End date conflicts with an existing booking";
+        }
+        if(sd < newStartDate && ed == newEndDate){
+            bookingErrors.startDate = "Start date conflicts with an existing booking";
+            bookingErrors.endDate = "End date conflicts with an existing booking";
+        }
     };
-    //endDate is included in a date range (inclusive date range)
-    if(isConflictingEnd){
-        bookingErrors.endDate = "End date conflicts with an existing booking"
-    };
+
 
     if (bookingErrors.startDate || bookingErrors.endDate){
         res.status(403);
@@ -112,7 +133,7 @@ router.put('/:bookingId', requireAuth, async(req,res,next)=>{
         e.message = "Sorry, this spot is already booked for the specified dates"
         e.errors = bookingErrors;
         return res.json(e)
-    }
+    };
     //If there are no conflicts:
     const updatedBooking = await booking.update(req.body)
     return res.json(updatedBooking)
