@@ -11,6 +11,69 @@ const { handleValidationErrors } = require('../../utils/validation');
 
 const router = express.Router();
 
+//*Conflicting Booking Helper Func
+//CASES:
+
+                     //* Double Sandwich// Both
+                    // sd nsd ned ed
+                    // sdnsd edned
+                    //sdnsd ned ed
+                    // sd nsd neded
+
+                    // nsd  sd  ed ned
+                    // nsd sd ned ed
+                    //* StartDates //NSD
+                    // sdnsd ed ned
+                    //*NewStart Date + ED //NST
+                    // nsded ed
+                    //* SD + NewEndDate// NED
+                    //nsd sdned ed
+                    //*NewEndDate + SD //NED
+                    // nsd nedsd
+
+//more recent dates are greater
+// 1   2    3    4   5   6   7   8   9  10
+//past dates are lower
+// right now, I am not interpreting results, only finding the first conflict.
+//then I will interpret the results and put out the right error messages
+/**Easy Cases:
+    startDate == newStartDate  //off to the wrong start --likely has endDate conflict too
+    startDate == newEndDate   //endDate
+
+    endDate == newStartDate    //startDate
+    endDate == newEndDate      //off to the wrong start ---likely has startDate conflict too
+
+
+        b            |-------------|          b
+    startDate < newStartDate && newEndDate < endDate    //start and end
+
+        b             |-------------b----------|
+    startDate < newStartDate && endDate < newEndDate    //start and end
+
+        |----------------b-------------|       b
+    newStartDate < startDate && newEndDate < endDate    //end date
+        |----------------b----------b---------|
+    newStartDate < startDate && endDate < newEndDate   //end date
+
+
+***/
+const findConflictingBooking = async (spotId, newStartDate, newEndDate)=>{
+    const conflictingBooking = await Booking.findOne({
+        where: {
+            spotId,
+            [Op.or]: [{startDate: newStartDate},
+                {endDate:newEndDate},
+                    {[Op.or]: [
+                        {startDate:newEndDate},
+                        {endDate: newStartDate}
+                    ]},
+
+            ]
+        },
+    })
+    return [conflictingBooking.startDate, conflictingBooking.endDate]
+};
+
 
 //? TITLE OF BAD REQUEST STILL SHOWS UP
 const validateSpot = [
@@ -172,8 +235,6 @@ router.post('/:spotId/bookings', requireAuth, async(req,res,next)=>{
 
     const formattedDate = `${year}-${month}-${day}`;
 
-
-
     //Ensure that the startDate is not in the past
     if (newStartDate < formattedDate){
         errors.startDate = "startDate cannot be in the past"
@@ -190,64 +251,74 @@ router.post('/:spotId/bookings', requireAuth, async(req,res,next)=>{
         e.errors = errors;
         return res.json(e)
     }
-    //? What about if a user does not input any dates
-
-    //?HOW TO SEARCH FOR BOOKING TIMEFRAMES?
-
-    // query for all dates
-    // once you find a booking and its dates
-    // look to see if the start date or end date is included.
-    //
- //! New Goal:
-
- //Query for all and then do the comparisons:
-
-//! Come Back to this later for more efficiency
-
-
-    const isConflictingStart = await Booking.findOne({
-        //find where the date range might inc
-        where: {
-            startDate:{
-                [Op.between]:[newStartDate, newEndDate]
-            },
-
-        }
-
-    });
-
-    //!Debugging:
-    // * Now, owner cannot book
-    //*if the start Date conflicts with an end date, that is going throwing error correctly
-
-    //*if you do not own spot, getting the booking is CORRECT
-    //*if you OWN the spot, getting the bookings is correct
-
-    const isConflictingEnd = await Booking.findOne({
-        //End date is in conflict when:
-        // It is between an already booked date range
-        // or it is on the exact last day of end date
+    const isConflict = await Booking.findOne({
         where:{
-            endDate:{
-                [Op.between]:[newStartDate, newEndDate],
-            },
+            [Op.or]:{
+                startDate: {
+                    [Op.between]:[newStartDate,newEndDate]
+                },
+                endDate: {
+                    [Op.between]:[newStartDate,newEndDate]
+                }
+            }
         }
-    });
+    })
 
-
-    //Check for Booking conflicts
     const bookingErrors = {};
 
+    /**Easy Cases:
+    startDate == newStartDate  //off to the wrong start --likely has endDate conflict too D
+    startDate == newEndDate   //endDate D
 
-    //Conflicts:
-    // start date is included in a date range (inclusive date range)
-    if(isConflictingStart){
-        bookingErrors.startDate = "Start date conflicts with an existing booking"
-    };
+    endDate == newStartDate    //startDate D
 
-    //endDate is included in a date range (inclusive date range)
-    if(isConflictingEnd){
-        bookingErrors.endDate = "End date conflicts with an existing booking"
+    endDate == newEndDate      //off to the wrong start ---likely has startDate conflict too D
+
+        b            |-------------|          b
+    startDate < newStartDate && newEndDate < endDate    //start and end D
+
+        b             |-------------b----------|
+    startDate < newStartDate && endDate < newEndDate    //start and end D
+
+
+
+        |----------------b-------------|       b
+    newStartDate < startDate && newEndDate < endDate    //end date D
+
+        |----------------b----------b---------|
+    newStartDate < startDate && endDate < newEndDate       both conflict here D **/
+
+    if(isConflict){
+        const sd = isConflict.startDate;
+        const ed = isConflict.endDate;
+        if(sd === newStartDate || ed === newStartDate){
+            bookingErrors.startDate = "Start date conflicts with an existing booking";
+        }
+        if (sd == newEndDate || (newStartDate < sd && newEndDate < ed)){
+            bookingErrors.endDate = "End date conflicts with an existing booking";
+        }
+        if (newStartDate < sd && ed == newEndDate){
+            bookingErrors.endDate = "End date conflicts with an existing booking";
+        }
+        if(newStartDate < sd && ed < newEndDate){
+            bookingErrors.startDate = "Start date conflicts with an existing booking";
+            bookingErrors.endDate = "End date conflicts with an existing booking";
+        }
+        if (sd == newStartDate && ed == newEndDate){
+            bookingErrors.startDate = "Start date conflicts with an existing booking";
+            bookingErrors.endDate = "End date conflicts with an existing booking";
+        }
+        if ((sd == newStartDate || sd < newStartDate) && ed < newEndDate){
+            bookingErrors.startDate = "Start date conflicts with an existing booking";
+        }
+        if ((sd == newStartDate || sd < newStartDate) && newEndDate < ed){
+            bookingErrors.startDate = "Start date conflicts with an existing booking";
+            bookingErrors.endDate = "End date conflicts with an existing booking";
+        }
+        if(sd < newStartDate && ed == newEndDate){
+            bookingErrors.startDate = "Start date conflicts with an existing booking";
+            bookingErrors.endDate = "End date conflicts with an existing booking";
+        }
     };
 
 
@@ -270,36 +341,36 @@ router.post('/:spotId/bookings', requireAuth, async(req,res,next)=>{
     return res.json(newBooking)
 });
 
-const validateQueryFilters = [
-    check('page')
-        .exists({checkFalsy:true})
-        .isEmail()
-        .withMessage('Invalid email'),
-    check('size')
-        .exists({checkFalsy:true})
-        .isLength({min:4}).withMessage('Please provide a username with at least 4 characters.'),
-    check('maxLat')
-        .exists({values: 'undefined'}).withMessage('Username is required'),
-    check('minLat')
-        .not()
-        .isEmail()
-        .withMessage('Username cannot be an email'),
-    check('minLng')
-        .notEmpty()
-        .withMessage('First Name is required'),
-    check('maxLng')
-        .notEmpty()
-        .withMessage('Last Name is required'),
-    check('minPrice')
-        .exists({checkFalsy:true})
-        .isLength({min:6})
-        .withMessage('Password must be 6 characters or more.'),
-        check('minPrice')
-        .exists({checkFalsy:true})
-        .isLength({min:6})
-        .withMessage('Password must be 6 characters or more.'),
-    handleValidationErrors
-];
+// const validateQueryFilters = [
+//     check('page')
+//         .exists({checkFalsy:true})
+//         .isEmail()
+//         .withMessage('Invalid email'),
+//     check('size')
+//         .exists({checkFalsy:true})
+//         .isLength({min:4}).withMessage('Please provide a username with at least 4 characters.'),
+//     check('maxLat')
+//         .exists({values: 'undefined'}).withMessage('Username is required'),
+//     check('minLat')
+//         .not()
+//         .isEmail()
+//         .withMessage('Username cannot be an email'),
+//     check('minLng')
+//         .notEmpty()
+//         .withMessage('First Name is required'),
+//     check('maxLng')
+//         .notEmpty()
+//         .withMessage('Last Name is required'),
+//     check('minPrice')
+//         .exists({checkFalsy:true})
+//         .isLength({min:6})
+//         .withMessage('Password must be 6 characters or more.'),
+//         check('minPrice')
+//         .exists({checkFalsy:true})
+//         .isLength({min:6})
+//         .withMessage('Password must be 6 characters or more.'),
+//     handleValidationErrors
+// ];
 //* GET ALL SPOTS
 //! FOR Getting All Spots I should Calculate the AvgRating
 router.get('/', async(req,res)=>{
