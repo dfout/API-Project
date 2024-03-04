@@ -49,7 +49,9 @@ router.put('/:bookingId', requireAuth, async(req,res,next)=>{
         });
     };
     //Validation Errors:
-    const { newStartDate, newEndDate } = req.body;
+    let { newStartDate, newEndDate } = req.body;
+     newStartDate = new Date(newStartDate);
+     newEndDate = new Date(newEndDate);
 
     //Check for any Validation Errors
     let errors = {};
