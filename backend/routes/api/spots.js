@@ -253,8 +253,8 @@ router.post('/:spotId/bookings', requireAuth, validateBooking, async (req, res)=
         return res.status(403).json({message: 'Forbidden'})
     }
 
-})
 
+})
 
 // const validateQueryFilters = [
 //     check('page')
