@@ -227,8 +227,8 @@ router.post('/:spotId/bookings', requireAuth, validateBooking, async (req, res)=
             endDate
         })
 
-        let formatedStartDate = newBooking.startDate.toISOString().split('T')[0];
-        let formatedEndDate = newBooking.endDate.toISOString().split('T')[0];
+        let formattedStartDate = newBooking.startDate.toISOString().split('T')[0];
+        let formattedEndDate = newBooking.endDate.toISOString().split('T')[0];
 
 
     let createdAtDate = new Date(newBooking.createdAt);
@@ -238,17 +238,17 @@ router.post('/:spotId/bookings', requireAuth, validateBooking, async (req, res)=
     let updatedAtD = updatedAtDate.toISOString().replace('T', ' ').split('.')[0];
 
 
-        let formattedReponse = {
+        let formattedResponse = {
             id: newBooking.id,
             userId: newBooking.userId,
             spotId: newBooking.spotId,
-            startDate: formatedStartDate,
-            endDate: formatedEndDate,
+            startDate: formattedStartDate,
+            endDate: formattedEndDate,
             createdAt: createdAtD,
             updatedAt: updatedAtD
         }
 
-        return res.status(200).json(formattedReponse)
+        return res.status(200).json(formattedResponse)
     }else {
         return res.status(403).json({message: 'Forbidden'})
     }
