@@ -68,18 +68,21 @@ router.post('/', validateSignup, async (req,res)=>{
         err.message = 'User already Exists'
         if (emailBool){
             errors.email = 'User with that email already exists';
-            console.log(errors)
+
         }
        if (usernameBool){
-            console.log(errors)
+
             errors.username = 'User with that username already exists'
        }
         err.errors = errors;
 
-        // err.title = undefined;
+
+        err.stack = undefined;
+        err.title = undefined;
 
         res.status(500);
-        return res.json(err)
+        console.log({message: err.message,errors: err.errors})
+        return res.json({message: err.message,errors: err.errors})
     }
 
 
