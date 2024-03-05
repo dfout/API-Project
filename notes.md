@@ -43,6 +43,8 @@
     newStartDate < startDate && endDate < newEndDate   //end date
 
 
+
+
 ***/
 // const findConflictingBooking = async (spotId, newStartDate, newEndDate)=>{
 //     const conflictingBooking = await Booking.findOne({
@@ -60,3 +62,41 @@
 //     })
 //     return [conflictingBooking.startDate, conflictingBooking.endDate]
 // };
+
+
+    if(isConflict){
+        let sd = isConflict.startDate;
+        let ed = isConflict.endDate;
+        // console.log(sd,ed)
+
+        if(sd === newStartDate ){
+            bookingErrors.startDate = "Start date conflicts with an existing booking";
+        }else if(ed === newStartDate){
+            bookingErrors.startDate = "Start date conflicts with an existing booking"
+        }
+        else if (sd === newStartDate || (sd < newStartDate && ed === newStartDate)) {
+            bookingErrors.startDate = "Start date conflicts with an existing booking";
+        }
+        else if (sd === newStartDate && newStartDate < ed) {
+            bookingErrors.startDate = "Start date conflicts with an existing booking";
+          }
+        else if (sd == newEndDate || (newStartDate < sd && newEndDate < ed)){
+            bookingErrors.endDate = "End date conflicts with an existing booking";
+        }else if (newStartDate < sd && ed == newEndDate){
+            bookingErrors.endDate = "End date conflicts with an existing booking";
+        }else if(newStartDate < sd && ed < newEndDate){
+            bookingErrors.startDate = "Start date conflicts with an existing booking";
+            bookingErrors.endDate = "End date conflicts with an existing booking";
+        }else if (sd == newStartDate && ed == newEndDate){
+            bookingErrors.startDate = "Start date conflicts with an existing booking";
+            bookingErrors.endDate = "End date conflicts with an existing booking";
+        }else if ((sd == newStartDate || sd < newStartDate) && ed < newEndDate){
+            bookingErrors.startDate = "Start date conflicts with an existing booking";
+        }else if ((sd == newStartDate || sd < newStartDate) && newEndDate < ed){
+            bookingErrors.startDate = "Start date conflicts with an existing booking";
+            bookingErrors.endDate = "End date conflicts with an existing booking";
+        }else if(sd < newStartDate && ed == newEndDate){
+            bookingErrors.startDate = "Start date conflicts with an existing booking";
+            bookingErrors.endDate = "End date conflicts with an existing booking";
+        }
+    };
