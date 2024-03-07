@@ -217,7 +217,12 @@ router.post('/:spotId/bookings', requireAuth, validateBooking, async (req, res)=
         return res.status(404).json({message: "Spot couldn't be found"})
     }
 
-
+    if (spot.ownerId === currUser.id){
+        res.status(403);
+        return res.json({
+            message:"Forbidden"
+        })
+    }
     if (spot.ownerId !== currUser.id ){
 
         let newBooking = await Booking.create({
@@ -249,9 +254,10 @@ router.post('/:spotId/bookings', requireAuth, validateBooking, async (req, res)=
         }
 
         return res.status(200).json(formattedResponse)
-    }else {
-        return res.status(403).json({message: 'Forbidden'})
     }
+    // }else {
+    //     return res.status(403).json({message: 'Forbidden'})
+    // }
 
 
 })
@@ -345,7 +351,7 @@ router.get('/', async(req,res)=>{
             queryValidErrors.maxLat = "Maximum Latitude is invalid"
         }else if(!isNotNumber){
             maxLat = Number(maxLat);
-            if((maxLat > 180.00 || maxLat < -180.00)){
+            if((maxLat > 90.00 || maxLat < -90.00)){
                 queryValidErrors.maxLat = "Maximum Latitude is invalid";
             }
         }
@@ -359,7 +365,7 @@ router.get('/', async(req,res)=>{
             queryValidErrors.minLat = "Minimum Latitude is invalid"
         }else if(!isNotNumber){
             minLat = Number(minLat);
-            if((minLat > 180.00 || minLat < -180.00)){
+            if((minLat > 90.00 || minLat < -90.00)){
                 queryValidErrors.minLat = "Minimum Latitude is invalid";
             }
         }
@@ -513,11 +519,11 @@ router.get('/current', requireAuth, async(req,res,next)=>{
 //! THEN THEIR SPOTS ARE DELETED.
 
 
-//* GET ALL SPOTS FROM ID
+//* GET DETAILS OF A SPOT FROM AN ID
 router.get('/:spotId', async(req,res,next)=>{
     const { spotId } = req.params;
     const spot = await Spot.findByPk(spotId,{
-        include: [{model:SpotImage},{model:User, as: 'Owner'}]
+        include: [{model:SpotImage},{model:User, as: 'Owner', attributes: {exclude: ['username']}}]
     });
     if (spot === null){
         res.status(404)
@@ -637,8 +643,8 @@ router.post('/', requireAuth, validateSpot, async(req,res,next)=>{
     const ownerId = req.user.id;
 
     const newSpot = await Spot.create({ownerId, address, city, state, country, lat, lng, name, description, price});
-
-    return res.json(newSpot)
+    res.status(201);
+    return res.json(newSpot, {exclude: ['avgRating', 'previewImage']})
 });
 
 //*EDIT A SPOT

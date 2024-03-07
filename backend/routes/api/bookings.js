@@ -69,6 +69,12 @@ router.put('/:bookingId', requireAuth, validateBooking, async (req, res)=> {
 
     let queriedEndTime = new Date (booking.endDate).getTime()
 
+    //CHECK THE DATES OF THE EXISTING BOOKING:
+    // IF END DATE IS LESS THAN THE CURRENT DATE,
+    //THROW THE 403 ERROR:
+
+
+
 
     if (booking.userId !== currUser.id){
         return res.status(403).json({message: 'Forbidden'})
