@@ -644,7 +644,22 @@ router.post('/', requireAuth, validateSpot, async(req,res,next)=>{
 
     const newSpot = await Spot.create({ownerId, address, city, state, country, lat, lng, name, description, price});
     res.status(201);
-    return res.json(newSpot, {exclude: ['avgRating', 'previewImage']})
+    const formattedResponse = {
+        id: newSpot.id,
+        ownerId: newSpot.ownerId,
+        address: newSpot.address,
+        city: newSpot.city,
+        state: newSpot.state,
+        country: newSpot.country,
+        lat: newSpot.lat,
+        lng:newSpot.lng,
+        name: newSpot.name,
+        description: newSpot.description,
+        price: newSpot.price,
+        createdAt: newSpot.createdAt,
+        updatedAt: newSpot.updatedAt,
+    }
+    return res.json(formattedResponse)
 });
 
 //*EDIT A SPOT
