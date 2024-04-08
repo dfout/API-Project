@@ -5,7 +5,8 @@ import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 
 // Import Components
 import LoginFormPage from './components/LoginFormPage'
-import SignupFormPage from './components/SignupFormPage';
+import SignupFormPage from './components/SignupFormPage'
+import Navigation from './components/Navigation'
 
 // Import Actions
 import * as sessionActions from './store/session';
@@ -25,6 +26,7 @@ function Layout(){
 
   return(
     <>
+      <Navigation isLoaded={isLoaded} />
       {isLoaded && <Outlet/>}
     
     </>
