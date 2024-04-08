@@ -4,7 +4,7 @@ import { csrfFetch } from "./csrf";
 //* Case Methods
 const SET_USER = 'session/log-in';
 const LOG_OUT = 'session/log-out';
-const SIGN_UP = 'session/sign-up';
+
 
 
 
