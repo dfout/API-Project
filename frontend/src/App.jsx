@@ -5,7 +5,7 @@ import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 
 // Import Components
 import LoginFormPage from './components/LoginFormPage'
-import SignupFormPage from './components/SignupFormPage/SignupFormPage';
+import SignupFormPage from './components/SignupFormPage';
 
 // Import Actions
 import * as sessionActions from './store/session';
