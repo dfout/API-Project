@@ -1,15 +1,17 @@
-import { useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { NavLink, Navigate } from "react-router-dom";
 
-import * as sessionActions from '../../store/session'
+import { useSelector } from "react-redux"
+import { NavLink } from "react-router-dom";
+
+
 import './Navigation.css'
 import ProfileButton from "./ProfileButton";
+import OpenModalButton from '../OpenModalButton';
+import LoginFormModal from "../LoginFormModal/LoginFormModal";
 
 
 const Navigation = ({isLoaded})=>{
     const sessionUser = useSelector(state => state.session.user)
-    const dispatch = useDispatch()
+    // const dispatch = useDispatch()
     
     const navLinks = sessionUser ? (
             <li>
@@ -18,7 +20,7 @@ const Navigation = ({isLoaded})=>{
     ) : (
         <>
             <li>
-                <NavLink to='/login'>Log In</NavLink>
+                <OpenModalButton buttonText='Log In' modalComponent={<LoginFormModal/>}/>
             </li>
             <li>
                 <NavLink to='/signup'>Sign Up</NavLink>
@@ -29,7 +31,7 @@ const Navigation = ({isLoaded})=>{
 
     return (
         <ul>
-            <li Navigate to='/'>Home</li>
+            < NavLink to='/'>Home</NavLink>
             {isLoaded && navLinks}
         </ul>
     )

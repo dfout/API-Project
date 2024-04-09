@@ -1,13 +1,15 @@
 import { useState } from "react"
 import * as sessionActions from '../../store/session'
-import { useDispatch, useSelector } from "react-redux"
-import { Navigate } from "react-router-dom";
+import { useDispatch } from "react-redux"
+// import { Navigate } from "react-router-dom";
 // import { logInUserThunk } from "../../store/session";
-import './LoginFormPage.css'
+import {useModal} from '../../context/Modal'
+import './LoginForm.css'
 
 
 
-const LoginFormPage = ()=>{
+
+const LoginFormModal = ()=>{
     
     // const [username, setUsername] = useState('');
     // const [email, setEmail] = useState('');
@@ -16,15 +18,16 @@ const LoginFormPage = ()=>{
     const [errors, setErrors] = useState({})
 
     const dispatch = useDispatch();
-    const sessionUser = useSelector((state)=>state.session.user);
+    const {closeModal} = useModal()
+    // const sessionUser = useSelector((state)=>state.session.user);
 
-    if(sessionUser) return <Navigate to='/' replace={true} />
+    // if(sessionUser) return <Navigate to='/' replace={true} />
 
     const handleSubmit = async(e)=>{
         e.preventDefault();
         setErrors({});
 
-        return dispatch(sessionActions.logInUserThunk({credential, password})).catch(
+        return dispatch(sessionActions.logInUserThunk({credential, password})).then(closeModal).catch(
             async(res)=>{
                 const data = await res.json();
                 if(res.status == 401){
@@ -67,4 +70,4 @@ const LoginFormPage = ()=>{
 
 
 
-export default LoginFormPage
+export default LoginFormModal
