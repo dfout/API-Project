@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux"
 // import { logInUserThunk } from "../../store/session";
 import {useModal} from '../../context/Modal'
 import './LoginForm.css'
-import React from 'react';
+// import React from 'react';
 
 
 
@@ -59,8 +59,8 @@ const LoginFormModal = ()=>{
                 required
                 />
             </label>
-            {/* {errors.message && <p>{errors.message}</p>}
-            {errors.credential && <p>{errors.credential}</p>} */}
+            {errors.message && <p>{errors.message}</p>}
+            {errors.credential && <p>{errors.credential}</p>}
             <button type='submit'>Log In</button>
         </form>
         </>       
