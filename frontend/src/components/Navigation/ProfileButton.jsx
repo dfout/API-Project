@@ -4,7 +4,8 @@ import { useDispatch } from "react-redux"
 import * as sessionActions from '../../store/session'
 import './Navigation.css'
 
-import OpenModalButton from '../OpenModalButton';
+// import OpenModalButton from '../OpenModalButton';
+import OpenModalMenuItem from './OpenModalMenuItem'
 import LoginFormModal from "../LoginFormModal/LoginFormModal";
 import SignupFormModal from "../SignupFormPage";
 
@@ -74,10 +75,10 @@ const ProfileButton = ({user}) => {
                 ): (
                     <>
                     <li>
-                        <OpenModalButton buttonText='Log in' onButtonClick={closeMenu} modalComponent={<LoginFormModal/>}/>
+                        <OpenModalMenuItem itemText='Log in' onButtonClick={closeMenu} modalComponent={<LoginFormModal/>}/>
                     </li>
                     <li>
-                        <OpenModalButton buttonText='Sign up' onButtonClick={closeMenu} modalComponent={<SignupFormModal/>}/>
+                        <OpenModalMenuItem itemText='Sign up' onButtonClick={closeMenu} modalComponent={<SignupFormModal/>}/>
                     </li>
                         
                     </>
