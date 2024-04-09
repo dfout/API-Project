@@ -34,7 +34,7 @@ const SignupFormModal= () => {
                     const data = await res.json();
                     if(res.status !== 200){
                         setErrors(data)
-                        console.log(data)
+                        // console.log(data)
                     }
                 }
             )

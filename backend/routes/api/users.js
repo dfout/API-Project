@@ -81,7 +81,7 @@ router.post('/', validateSignup, async (req,res)=>{
         err.title = undefined;
 
         res.status(500);
-        console.log({message: err.message,errors: err.errors})
+        // console.log({message: err.message,errors: err.errors})
         return res.json({message: err.message,errors: err.errors})
     }
 

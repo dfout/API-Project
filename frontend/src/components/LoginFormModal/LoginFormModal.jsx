@@ -32,7 +32,7 @@ const LoginFormModal = ()=>{
                 const data = await res.json();
                 if(res.status == 401){
                     setErrors(data.message)
-                    console.log(errors)
+                    // console.log(errors)
                 }
             }
         )
