@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux"
 // import { logInUserThunk } from "../../store/session";
 import {useModal} from '../../context/Modal'
 import './LoginForm.css'
-
+import React from 'react';
 
 
 

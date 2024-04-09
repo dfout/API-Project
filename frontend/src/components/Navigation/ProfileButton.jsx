@@ -4,6 +4,11 @@ import { useDispatch } from "react-redux"
 import * as sessionActions from '../../store/session'
 import './Navigation.css'
 
+// import OpenModalButton from '../OpenModalButton';
+import OpenModalMenuItem from './OpenModalMenuItem'
+import LoginFormModal from "../LoginFormModal/LoginFormModal";
+import SignupFormModal from "../SignupFormPage";
+
 import { CgProfile } from "react-icons/cg";
 
 
@@ -31,6 +36,8 @@ const ProfileButton = ({user}) => {
         return ()=> document.removeEventListener('click', closeMenu);
     },[showMenu])
 
+    const closeMenu = () =>setShowMenu(false)
+
     // Create a callback that will stop any potential issues with the order of the listener and the click 
     // ? Still not exactly quite understanding what it is doing and what the issue it is trying to solve is. 
     // toggleMenu will replace the <button onClick={()=> setShowMenu(!showMenu)}
@@ -43,27 +50,43 @@ const ProfileButton = ({user}) => {
     const logout = (e)=> {
         e.preventDefault()
         dispatch(sessionActions.logOutUserThunk())
+        closeMenu()
     }
 
     const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
+
+
     // Add a style key directly if need be
     return(
         <>
-        <button onClick={toggleMenu}>
-            <CgProfile />
-        </button>
-        <ul className={ulClassName} ref={ulRef}>
-            <li>{user.username}</li>
-            <li>{user.firstName} {user.lastName}</li>
-            <li>{user.email}</li>
-            <li>
-                <button onClick={logout}>Log Out</button>
-            </li>
-        </ul>
+            <button onClick={toggleMenu}>
+                <CgProfile />
+            </button>
+            <ul className={ulClassName} ref={ulRef}>
+                {user ? (
+                    <>
+                        <li>{user.username}</li>
+                        <li>{user.firstName} {user.lastName}</li>
+                        <li>{user.email}</li>
+                        <li><button onClick={logout}>Log Out</button></li>
+                
+                    </>
+                ): (
+                    <>
+                    <li>
+                        <OpenModalMenuItem itemText='Log in' onButtonClick={closeMenu} modalComponent={<LoginFormModal/>}/>
+                    </li>
+                    <li>
+                        <OpenModalMenuItem itemText='Sign up' onButtonClick={closeMenu} modalComponent={<SignupFormModal/>}/>
+                    </li>
+                        
+                    </>
+                )}
+                
+            </ul>
         </>
     )
-
 }
 
 
