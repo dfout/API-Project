@@ -84,7 +84,15 @@ export const signUpUserThunk = (user) => async (dispatch)=>{
     return response
 }
 
+// Log_Out User Thunk
 
+export const logOutUserThunk = (user) => async(dispatch)=>{
+    const response = await csrfFetch('api/session',{
+        method: 'DELETE'
+    });
+    dispatch(removeUser())
+    return response
+}
 
 
 
