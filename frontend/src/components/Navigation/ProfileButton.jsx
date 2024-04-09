@@ -74,13 +74,8 @@ const ProfileButton = ({user}) => {
                     </>
                 ): (
                     <>
-                    <li>
                         <OpenModalMenuItem itemText='Log in' onButtonClick={closeMenu} modalComponent={<LoginFormModal/>}/>
-                    </li>
-                    <li>
                         <OpenModalMenuItem itemText='Sign up' onButtonClick={closeMenu} modalComponent={<SignupFormModal/>}/>
-                    </li>
-                        
                     </>
                 )}
                 

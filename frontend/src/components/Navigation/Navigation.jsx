@@ -22,9 +22,9 @@ const Navigation = ({isLoaded})=>{
                 <NavLink to='/'>Home</NavLink>
             </li>
             {isLoaded && (
-                <li>
-                    <ProfileButton user={sessionUser} />
-                </li>
+            <li>
+                <ProfileButton user={sessionUser} />
+            </li>
             )}
         </ul>
     )
