@@ -10,21 +10,11 @@ import ProfileButton from "./ProfileButton";
 const Navigation = ({isLoaded})=>{
     const sessionUser = useSelector(state => state.session.user)
     const dispatch = useDispatch()
-
-    const logout = (e)=> {
-        e.preventDefault()
-        dispatch(sessionActions.logOutUserThunk())
-    }
     
     const navLinks = sessionUser ? (
-        <>
             <li>
                 <ProfileButton user={sessionUser} />
             </li>
-            <li>
-                <button onClick={logout}>Log Out</button>
-            </li>
-        </>
     ) : (
         <>
             <li>
