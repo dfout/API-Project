@@ -7,6 +7,7 @@ import './Navigation.css'
 import ProfileButton from "./ProfileButton";
 import OpenModalButton from '../OpenModalButton';
 import LoginFormModal from "../LoginFormModal/LoginFormModal";
+import SignupFormModal from "../SignupFormPage";
 
 
 const Navigation = ({isLoaded})=>{
@@ -23,7 +24,7 @@ const Navigation = ({isLoaded})=>{
                 <OpenModalButton buttonText='Log In' modalComponent={<LoginFormModal/>}/>
             </li>
             <li>
-                <NavLink to='/signup'>Sign Up</NavLink>
+                <OpenModalButton buttonText='Sign up' modalComponent={<SignupFormModal/>}/>
             </li>
         </>
     )

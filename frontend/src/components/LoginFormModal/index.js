@@ -1,3 +1,3 @@
-import LogInFormPage from './LoginFormPage'
+import LogInFormModal from './LoginFormModal'
 
-export default LogInFormPage
+export default LogInFormModal
