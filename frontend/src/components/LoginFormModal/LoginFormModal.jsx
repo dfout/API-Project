@@ -31,14 +31,18 @@ const LoginFormModal = ()=>{
             async(res)=>{
                 const data = await res.json();
                 if(res.status == 401){
-                    setErrors(data.message)
-                    // console.log(errors)
+                    setErrors(data)
+                    console.log(errors)
                 }
             }
         )
     };
 
     const isFormValid = ()=> credential.length >=4 && password.length >=6
+
+    const demoUserLogIn = (e) =>{
+       return dispatch(sessionActions.logInUserThunk({credential:'Demo-lition', password: 'password'})).then(closeModal)
+    }
 
     return(
         <>
@@ -63,6 +67,7 @@ const LoginFormModal = ()=>{
             </label>
             {errors.message && <p>{errors.message}</p>}
             {errors.credential && <p>{errors.credential}</p>}
+            <button onClick={(e)=>demoUserLogIn(e)}>Demo User</button>
             <button type='submit' disabled={!isFormValid()}>Log In</button>
         </form>
         </>       

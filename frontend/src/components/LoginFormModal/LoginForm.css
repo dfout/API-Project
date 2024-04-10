@@ -1,0 +1,11 @@
+
+
+button:not([disabled]):hover{
+    cursor: pointer;
+}
+
+p{
+    color:red;
+    display:block;
+}
+
