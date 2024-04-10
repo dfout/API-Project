@@ -56,6 +56,7 @@ const ProfileButton = ({user}) => {
     }
 
     const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
+    
 
 
 
@@ -70,23 +71,31 @@ const ProfileButton = ({user}) => {
                 <FaUserCircle />
                 </span>
             </button>
-            <ul className={ulClassName} ref={ulRef}>
+            <div className={ulClassName} ref={ulRef}>
+               
                 {user ? (
-                    <>
-                        <li>{user.username}</li>
-                        <li>{user.firstName} {user.lastName}</li>
-                        <li>{user.email}</li>
-                        <li><button onClick={logout}>Log Out</button></li>
+                    <div id='user-info'>
+                        <span>{user.username}</span>
+                        <span>{user.firstName} {user.lastName}</span>
+                        <span>{user.email}</span>
+                        <span><button onClick={logout}>Log Out</button></span>
                 
-                    </>
+                    </div>
                 ): (
                     <>
-                        <OpenModalMenuItem itemText='Log in' onButtonClick={closeMenu} modalComponent={<LoginFormModal/>}/>
-                        <OpenModalMenuItem itemText='Sign up' onButtonClick={closeMenu} modalComponent={<SignupFormModal/>}/>
-                    </>
+                        <div id='log-in-sign-up'>
+                            <OpenModalMenuItem className='bolded-menu' itemText='Log in' onButtonClick={closeMenu} modalComponent={<LoginFormModal/>}/>
+                            <OpenModalMenuItem itemText='Sign up' className='menu-text'onButtonClick={closeMenu} modalComponent={<SignupFormModal/>}/>
+                        </div>
+                        <div className="extra-info">
+                            <span>Gift Cards</span>
+                            <span>Squatspot your home</span>
+                            <span>Help Center</span>
+                        </div>
+                        </>
                 )}
                 
-            </ul>
+            </div>
         </div>
     )
 }

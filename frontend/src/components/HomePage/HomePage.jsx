@@ -5,7 +5,7 @@ const HomePage =()=>{
 
 
     return(
-        <h1>Pop a Squat!</h1>
+        <h2>Pop a Squat!</h2>
     )
 }
 

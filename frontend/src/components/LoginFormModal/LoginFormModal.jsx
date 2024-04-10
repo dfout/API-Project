@@ -38,6 +38,8 @@ const LoginFormModal = ()=>{
         )
     };
 
+    const isFormValid = ()=> credential.length >=4 && password.length >=6
+
     return(
         <>
         <h1>Log In</h1>
@@ -53,7 +55,7 @@ const LoginFormModal = ()=>{
             <label>
                 Password 
                 <input
-                type='text'
+                type='password'
                 value={password}
                 onChange={(e)=>setPassword(e.target.value)}
                 required
@@ -61,7 +63,7 @@ const LoginFormModal = ()=>{
             </label>
             {errors.message && <p>{errors.message}</p>}
             {errors.credential && <p>{errors.credential}</p>}
-            <button type='submit'>Log In</button>
+            <button type='submit' disabled={!isFormValid()}>Log In</button>
         </form>
         </>       
     );

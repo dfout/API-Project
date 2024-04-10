@@ -19,7 +19,7 @@ const Navigation = ({isLoaded})=>{
     return(
         <ul id= 'Navigation'>
             <li id='logo'>
-                <NavLink to='/' className='logo-link'><h1>NEST AWAY</h1></NavLink>
+                <NavLink to='/' className='logo-link'><h1>squatspot</h1></NavLink>
                 
             </li>
             {isLoaded && (
