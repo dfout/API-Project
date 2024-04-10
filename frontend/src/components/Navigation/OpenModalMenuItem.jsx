@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import { useModal } from '../../context/Modal';
 
 function OpenModalMenuItem({
@@ -16,7 +16,7 @@ function OpenModalMenuItem({
   };
 
   return (
-    <li onClick={onClick}>{itemText}</li>
+    <span onClick={onClick}>{itemText}</span>
   );
 }
 

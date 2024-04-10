@@ -14,7 +14,7 @@ const validateSignup = [
     check('email')
         .exists({checkFalsy:true})
         .isEmail()
-        .withMessage('Invalid email'),
+        .withMessage('The provided email is invalid'),
     check('username')
         .exists({checkFalsy:true})
         .isLength({min:4}).withMessage('Please provide a username with at least 4 characters.'),
@@ -75,6 +75,7 @@ router.post('/', validateSignup, async (req,res)=>{
             errors.username = 'User with that username already exists'
        }
         err.errors = errors;
+       
 
 
         err.stack = undefined;
