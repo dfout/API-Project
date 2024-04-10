@@ -29,10 +29,14 @@ const SignupFormModal= () => {
         e.preventDefault();
         if (password === confirmPassword){
             setErrors({})
+            // const response = dispatch(signUpUserThunk({username, firstName, lastName, email, password}));
+            // console.log("AFTER DISPATCH", response)
+
             return dispatch(signUpUserThunk({username, firstName, lastName, email, password})).then(closeModal).catch(
                 async(res)=>{
                     const data = await res.json();
                     if(res.status !== 200){
+                        
                         setErrors(data.errors)
                       
                     }
@@ -65,9 +69,7 @@ const SignupFormModal= () => {
                 <label>Email
                     <input type='text' value={email} onChange={(e)=> setEmail(e.target.value)} required />
                 </label>
-                <div>
                 {errors.email && <p>{errors.email}</p>}
-                </div>
                 <label>Username
                     <input type='text' value={username} onChange={(e)=> setUsername(e.target.value)} required />
                 </label>
