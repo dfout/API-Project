@@ -3,13 +3,15 @@ import { useDispatch } from "react-redux"
 // import { Navigate } from "react-router-dom";
 import * as sessionActions from '../../store/session'
 import './Navigation.css'
+import './ProfileButton.css'
 
 // import OpenModalButton from '../OpenModalButton';
 import OpenModalMenuItem from './OpenModalMenuItem'
 import LoginFormModal from "../LoginFormModal/LoginFormModal";
 import SignupFormModal from "../SignupFormPage";
 
-import { CgProfile } from "react-icons/cg";
+import { FaUserCircle } from "react-icons/fa";
+import { IoIosMenu } from "react-icons/io";
 
 
 
@@ -59,9 +61,14 @@ const ProfileButton = ({user}) => {
 
     // Add a style key directly if need be
     return(
-        <>
-            <button onClick={toggleMenu}>
-                <CgProfile />
+        <div id= 'profile-bar'>
+            <button className='profile-button'onClick={toggleMenu}>
+                <span className='menu-icon'>
+                <IoIosMenu />
+                </span>
+                <span className="profile-icon">
+                <FaUserCircle />
+                </span>
             </button>
             <ul className={ulClassName} ref={ulRef}>
                 {user ? (
@@ -80,7 +87,7 @@ const ProfileButton = ({user}) => {
                 )}
                 
             </ul>
-        </>
+        </div>
     )
 }
 

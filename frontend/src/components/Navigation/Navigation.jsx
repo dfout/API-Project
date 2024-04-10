@@ -17,14 +17,24 @@ const Navigation = ({isLoaded})=>{
 
 
     return(
-        <ul>
-            <li>
-                <NavLink to='/'>Home</NavLink>
+        <ul id= 'Navigation'>
+            <li id='logo'>
+                <NavLink to='/' className='logo-link'><h1>NEST AWAY</h1></NavLink>
+                
             </li>
             {isLoaded && (
-            <li>
-                <ProfileButton user={sessionUser} />
-            </li>
+                <>
+                {sessionUser && (
+                        <li id='create-spot'>
+                        <NavLink to='/create-a-spot' className='create-link'><span>Got a spot for a squat?</span></NavLink>
+                        </li>
+
+                )}
+                    <li id= 'profile'>
+                        <ProfileButton user={sessionUser} className='profile-button' />
+                    </li>
+                </>
+
             )}
         </ul>
     )
