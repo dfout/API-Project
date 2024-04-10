@@ -67,8 +67,8 @@ const LoginFormModal = ()=>{
             </label>
             {errors.message && <p>{errors.message}</p>}
             {errors.credential && <p>{errors.credential}</p>}
-            <button onClick={(e)=>demoUserLogIn(e)}>Demo User</button>
             <button type='submit' disabled={!isFormValid()}>Log In</button>
+            <button id='demo-login' onClick={(e)=>demoUserLogIn(e)}>Demo User</button>
         </form>
         </>       
     );

@@ -85,7 +85,7 @@ const ProfileButton = ({user}) => {
                 ): (
                     <>
                         <div id='log-in-sign-up'>
-                            <OpenModalMenuItem className='bolded-menu' itemText='Log in' onButtonClick={closeMenu} modalComponent={<LoginFormModal/>}/>
+                            <OpenModalMenuItem className='modal' itemText='Log in' onButtonClick={closeMenu} modalComponent={<LoginFormModal/>}/>
                             <OpenModalMenuItem itemText='Sign up' className='menu-text'onButtonClick={closeMenu} modalComponent={<SignupFormModal/>}/>
                         </div>
                         <div className="extra-info">
