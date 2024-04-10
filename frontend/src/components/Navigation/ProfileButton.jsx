@@ -85,8 +85,8 @@ const ProfileButton = ({user}) => {
                 ): (
                     <>
                         <div id='log-in-sign-up'>
-                            <OpenModalMenuItem className='modal' itemText='Log in' onButtonClick={closeMenu} modalComponent={<LoginFormModal/>}/>
-                            <OpenModalMenuItem itemText='Sign up' className='menu-text'onButtonClick={closeMenu} modalComponent={<SignupFormModal/>}/>
+                            <OpenModalMenuItem className='modal-text bolded' itemText='Log in' onButtonClick={closeMenu} modalComponent={<LoginFormModal/>}/>
+                            <OpenModalMenuItem itemText='Sign up' className='modal-text'onButtonClick={closeMenu} modalComponent={<SignupFormModal/>}/>
                         </div>
                         <div className="extra-info">
                             <span>Gift Cards</span>
