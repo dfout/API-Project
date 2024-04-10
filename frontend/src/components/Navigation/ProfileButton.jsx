@@ -75,6 +75,7 @@ const ProfileButton = ({user}) => {
                
                 {user ? (
                     <div id='user-info'>
+                        <span>Hello, {user.firstName}</span>
                         <span>{user.username}</span>
                         <span>{user.firstName} {user.lastName}</span>
                         <span>{user.email}</span>
