@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "install":"npm --prefix backend  install backend",
+    "install": "npm --prefix backend  install backend",
     "sequelize": "npm run --prefix backend sequelize",
     "sequelize-cli": "npm run --prefix backend sequelize-cli",
     "start": "npm start --prefix backend",
@@ -23,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/jfout22/API-Project/issues"
   },
-  "homepage": "https://github.com/jfout22/API-Project#readme"
+  "homepage": "https://github.com/jfout22/API-Project#readme",
+  "dependencies": {
+    "reselect": "^5.1.0"
+  }
 }

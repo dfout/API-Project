@@ -57,7 +57,6 @@ const SignupFormModal= () => {
        }else{
         return false
        }
-
     }
 
 
