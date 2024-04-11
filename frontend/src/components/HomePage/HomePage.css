@@ -1,0 +1,13 @@
+
+
+.spot-tile{
+    display:flex;
+    height:fit-content;
+    width:fit-content;
+
+}
+
+.img{
+    height:100px;
+    width:200px;
+}
