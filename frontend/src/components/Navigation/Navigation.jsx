@@ -1,6 +1,7 @@
 
 import { useSelector } from "react-redux"
 import { NavLink } from "react-router-dom";
+import { PiStripeLogo } from "react-icons/pi";
 
 
 import './Navigation.css'

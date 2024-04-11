@@ -21,8 +21,8 @@ const HomePage =()=>{
         <>
             <h2>Pop a Squat</h2>
             <h3>Spot List:</h3>
-        {allSpots?.map(({previewImage, city, state, avgRating, price, name })=>(
-            <div className='spot-tile'>
+        {allSpots?.map(({id, previewImage, city, state, avgRating, price, name })=>(
+            <div className='spot-tile' key={id}>
                 <img src={previewImage} alt={`${name} in ${city, state}`} title={`${name} in ${city, state}`}/>
                 <div className='spot-info'>
                     <span>{city}, {state}</span>
