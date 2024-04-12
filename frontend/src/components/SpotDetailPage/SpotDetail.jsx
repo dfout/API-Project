@@ -73,7 +73,6 @@ const SpotDetail =()=>{
     
 
 
-
     return(
         <section className='spot-detail'>
             <div className= 'spot-title'> 
@@ -86,10 +85,10 @@ const SpotDetail =()=>{
                 </span>
                 {SpotImages?.length > 0 && (
                     <div className='other-images-container'>
-                        {SpotImages.map((imageObject) => (
+                        {SpotImages.map((imageObject, index) => (
                         imageObject.preview === false && (
-                            <img key={imageObject.url} src={imageObject.url} id='other-image' alt="" />
-                        )
+                            <img key={imageObject.url} src={imageObject.url} className='other-image' id={`image-${index + 1}`} alt="" />
+                        ) 
                         ))}
                     </div>
                 )}
