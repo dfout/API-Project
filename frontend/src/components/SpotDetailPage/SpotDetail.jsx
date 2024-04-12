@@ -33,22 +33,22 @@ const SpotDetail =()=>{
 
     const spot = useSelector((state)=> state.spots[spotId]);
     const closeMenu = useModal();
-
+    console.log(spot)
 
   
     const [timeCheck, setTimeCheck] = useState(true);
 
     useEffect(() => {
         let timeout;
-        if (!spot) {
+        if (!spot.Owner) {
             timeout = setTimeout(() => setTimeCheck(false), 3000);
         }
 
         return () => clearTimeout(timeout);
     }, [spot]);
 
-    if (!spot && timeCheck) return <h1>Loading...</h1>;
-    else if (!spot&& !timeCheck) return <h1>Sorry, please refresh the page</h1>;
+    if (!spot.Owner && timeCheck) return <h1>Loading...</h1>;
+    else if (!spot.Owner&& !timeCheck) return <h1>Sorry, please refresh the page</h1>;
 
     
 
@@ -87,7 +87,7 @@ const SpotDetail =()=>{
                     <div className='other-images-container'>
                         {SpotImages.map((imageObject, index) => (
                         imageObject.preview === false && (
-                            <img key={imageObject.url} src={imageObject.url} className='other-image' id={`image-${index + 1}`} alt="" />
+                            <img key={index} src={imageObject.url} className='other-image' id={`image-${index + 1}`} alt="" />
                         ) 
                         ))}
                     </div>
@@ -108,7 +108,7 @@ const SpotDetail =()=>{
                     <OpenModalButton id='reserve-button' buttonText='Reserve' onButtonClick={closeMenu} modalComponent={<FeatureComingModal/>}/>
                 </div>
             </div>
-            <SpotReviews spotId={spotId}/>
+            {/* <SpotReviews spotId={spotId}/> */}
         </section>
 
         
