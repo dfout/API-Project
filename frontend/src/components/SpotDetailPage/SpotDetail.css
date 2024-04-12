@@ -24,6 +24,7 @@
     /* width:100%; */
     flex-direction: row;
     max-width: 800px;
+    padding-bottom: 1%;
     
 }
 .first-image{
@@ -44,11 +45,26 @@
     flex-wrap:wrap;
     gap:1%;;
     padding-left:1%;
-    
-    
    
 }
 
+#spot-details{
+    display:flex;
+    flex-direction: row;
+    flex-wrap:wrap;
+  
+   height:fit-content;
+}
+
+.description{
+    padding-top:1%;
+}
+
+.reserve-box{
+    margin-left:auto;
+    border:1px solid black;
+    max-width: 100px;
+}
 
 
 
@@ -69,4 +85,9 @@
 
 #image-4{
     border-bottom-right-radius:10px;
+}
+
+
+#reserve-button{
+   color:none;
 }

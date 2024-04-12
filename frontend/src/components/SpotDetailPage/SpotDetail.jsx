@@ -7,7 +7,7 @@ import { useState } from "react"
 
 import SpotReviews from './SpotReviews';
 import * as spotActions from '../../store/spot';
-import OpenModalMenuItem from '../Navigation/OpenModalMenuItem';
+import OpenModalButton from '../../components/OpenModalButton'
 import { useModal } from '../../context/Modal';
 import FeatureComingModal from '../FeatureComingModal';
 
@@ -94,15 +94,18 @@ const SpotDetail =()=>{
                 )}
             </div>
             <div id='spot-details'>
-                {/* Hosted by {firstName} {lastName} */}
+                <span id='host+description'>
+                <h4>Hosted by {Owner.firstName} {Owner.lastName}</h4>
                 <p className='description'>{description}</p>
+                </span>
+
                 <div className='reserve-box'>
                     <div className='reserve-box-info'>
                         <span>${price}night</span>
                         <IoIosStar />
                         {/* <span>{reviews.entries.length} reviews</span> */}
                     </div>
-                    <OpenModalMenuItem itemText='Reserve' onButtonClick={closeMenu} modalComponent={<FeatureComingModal/>}/>
+                    <OpenModalButton id='reserve-button' buttonText='Reserve' onButtonClick={closeMenu} modalComponent={<FeatureComingModal/>}/>
                 </div>
             </div>
             <SpotReviews spotId={spotId}/>
