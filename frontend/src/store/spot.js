@@ -1,6 +1,6 @@
 //* Imports 
 import { csrfFetch } from "./csrf";
-import { createSelector } from 'reselect';
+import { createSelector, createStructuredSelector } from 'reselect';
 //* Case Methods
 const GET_SPOTS = 'spots/getAllSpots';
 // const LOG_OUT = 'session/log-out';
@@ -74,6 +74,8 @@ export const getOneSpotThunk = (id) => async(dispatch)=>{
 }
 
 
+
+
 //* Reducer
 
 const initialState = {}
@@ -81,21 +83,22 @@ const initialState = {}
 const spotReducer = (state = initialState , action, prevState) =>{
     switch(action.type){
         case GET_SPOTS:{
-            const newState ={};
+            const newState ={...state};
             action.spots.Spots.forEach((spot)=> newState[spot.id] = spot)
-            return {...state, ...newState}
+            return newState
         }
         case GET_SPOT_DETAIL:{
-            const newSpotState = {}
+            const newSpotState = {...state}
             const spot = action.spot
             newSpotState[spot.id] = spot;
-            return {...state, ...newSpotState}
+            return newSpotState
         }
         default:
             return state
     }
 
 }
+
 
 
 export default spotReducer;

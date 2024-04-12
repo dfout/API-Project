@@ -2,8 +2,8 @@ import {useEffect, useRef} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import { getAllSpotsThunk, getSpotsList } from '../../store/spot';
 import { IoIosStar } from "react-icons/io"; 
+import {Link, Navigate} from 'react-router-dom';
 
-import { Navigate } from "react-router-dom";
 
 
 const SpotsPage =()=>{
