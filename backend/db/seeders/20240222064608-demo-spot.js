@@ -22,7 +22,7 @@ module.exports = {
         name: 'Beautiful Spot 1',
         description: 'A lovely spot with a great view.',
         price: 100.00,
-        avgRating: 3.0,
+        avgRating: 3.25,
         previewImage: "https://squatspot.s3.us-east-2.amazonaws.com/exteriors/c5kls99qmgo31.jpg"
       },
       {
@@ -36,8 +36,8 @@ module.exports = {
         name: 'Cozy Retreat',
         description: 'Perfect spot for a weekend getaway.',
         price: 150.00,
-        avgRating: 4.5,
-        previewImage: "1234"
+        avgRating: 4.51,
+        previewImage: "https://squatspot.s3.us-east-2.amazonaws.com/exteriors/c5kls99qmgo31.jpg"
       }
     ], {validate :true})
     /**

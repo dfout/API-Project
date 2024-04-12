@@ -6,6 +6,9 @@ import {Link, Navigate} from 'react-router-dom';
 import SpotDetail from '../SpotDetailPage/SpotDetail';
 
 
+import './SpotsPage.css'
+
+
 
 const SpotsPage =()=>{
     const dispatch = useDispatch();
@@ -35,12 +38,16 @@ const SpotsPage =()=>{
 
         <ul className='all-spots'>
         {allSpots?.map(({id, previewImage, city, state, avgRating, price, name })=>(
-            <li className='spot-tile' key={id}><Link to={`/spots/${id}`}>
-                <img src={previewImage} alt={`${name} in ${city, state}`} title={`${name} in ${city, state}`}/>
+            <li className='spot-tile' key={id}><Link to={`/spots/${id}`}className='link-tile'>
+                <div className='image-container'>
+                <img className='preview-image' src={previewImage} alt={`${name} in ${city, state}`} title={`${name} in ${city, state}`}/>
+                </div>
                 <div className='spot-info'>
-                    <span>{city}, {state}</span>
-                    <IoIosStar />
+                    <h3>{city}, {state}</h3>
+                    <span id='ratings'>
+                        <IoIosStar />
                     <span>{avgRating !== null ? avgRating : 'New'}</span>
+                    </span>
                 </div>
                 <div className='spot-price'>
                     <span>${price} night </span>

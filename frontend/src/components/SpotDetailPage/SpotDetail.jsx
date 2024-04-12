@@ -11,6 +11,8 @@ import OpenModalMenuItem from '../Navigation/OpenModalMenuItem';
 import { useModal } from '../../context/Modal';
 import FeatureComingModal from '../FeatureComingModal';
 
+import './SpotDetail.css'
+
 
 const SpotDetail =()=>{
     //when this is triggered, my state is has changed because the page has navigated
@@ -67,22 +69,30 @@ const SpotDetail =()=>{
 
  
   
-    const { name, city, state, country, Owner, price, description,previewImage } = spot;
+    const { name, city, state, country, Owner, price, description,previewImage, SpotImages } = spot;
     
 
 
 
     return(
-        <>
+        <section className='spot-detail'>
             <div className= 'spot-title'> 
-                <h1>{name}</h1>
-                <h2>{city}, {state}, {country}</h2>
+                <h2>{name}</h2>
+                <h3>{city}, {state}, {country}</h3>
             </div>
             <div className='spot-images'>
                 <span className='first-image'>
                     <img src={previewImage} alt={`${name} in ${city, state}`} title={`${name} in ${city, state}`}/>
                 </span>
-                {/* <SpotImages/> */}
+                {SpotImages?.length > 0 && (
+                    <div className='other-images-container'>
+                        {SpotImages.map((imageObject) => (
+                        imageObject.preview === false && (
+                            <img key={imageObject.url} src={imageObject.url} id='other-image' alt="" />
+                        )
+                        ))}
+                    </div>
+                )}
             </div>
             <div id='spot-details'>
                 {/* Hosted by {firstName} {lastName} */}
@@ -97,7 +107,7 @@ const SpotDetail =()=>{
                 </div>
             </div>
             <SpotReviews spotId={spotId}/>
-        </>
+        </section>
 
         
     )

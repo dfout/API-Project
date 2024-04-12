@@ -39,6 +39,7 @@ export const getSpotsList = createSelector(
 // )
 
 
+
 //* Thunk Actions
 
 export const getAllSpotsThunk = () => async(dispatch)=>{
@@ -73,6 +74,10 @@ export const getOneSpotThunk = (id) => async(dispatch)=>{
     }
 }
 
+
+// export const getSpotImagesThunk = (id) => async(dispatch)=>{
+//     const reponse = await csrfFetch()
+// }
 
 
 

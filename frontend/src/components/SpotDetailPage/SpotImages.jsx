@@ -5,7 +5,7 @@ import { IoIosStar } from "react-icons/io";
 import {useParams} from 'react-router-dom';
 
 
-const SpotImages = () =>{
+const SpotImages = ({spotId}) =>{
 
 }
 
