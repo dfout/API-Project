@@ -31,17 +31,17 @@ const SpotDetail =()=>{
   
     const [timeCheck, setTimeCheck] = useState(true);
 
-    useEffect(() => {
-        let timeout;
-        if (!spot) {
-            timeout = setTimeout(() => setTimeCheck(false), 3000);
-        }
+    // useEffect(() => {
+    //     let timeout;
+    //     if (!spot) {
+    //         timeout = setTimeout(() => setTimeCheck(false), 3000);
+    //     }
 
-        return () => clearTimeout(timeout);
-    }, [spot]);
+    //     return () => clearTimeout(timeout);
+    // }, [spot]);
 
-    if (!spot && timeCheck) return <h1>Loading...</h1>;
-    else if (!spot&& !timeCheck) return <h1>Sorry, please refresh the page</h1>;
+    // if (!spot && timeCheck) return <h1>Loading...</h1>;
+    // else if (!spot&& !timeCheck) return <h1>Sorry, please refresh the page</h1>;
 
     
 
