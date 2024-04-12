@@ -1,9 +1,10 @@
 
 
 .spot-detail{
+   
     margin:0;
     padding-left: 8%;
-    padding-right:8%;
+     padding-right:8%;
     padding-top:2%;
     padding-bottom:2%;
 }
@@ -13,15 +14,16 @@
     flex-direction:column;
     gap:10px;
     padding-bottom:1%;
+    
 }
 
 .spot-images{
     position:relative;
     display:flex;
     height: 40vh;
-    width:100%;
+    /* width:100%; */
     flex-direction: row;
-    /* max-width: 75%; */
+    max-width: 800px;
     
 }
 .first-image{
@@ -34,6 +36,7 @@
 }
 
 .other-images-container{
+    position:relative;
     width:100%;
     height:100%;
     display:flex;
@@ -41,6 +44,8 @@
     flex-wrap:wrap;
     gap:1%;;
     padding-left:1%;
+    
+    
    
 }
 
