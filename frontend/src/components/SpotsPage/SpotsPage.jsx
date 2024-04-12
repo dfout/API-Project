@@ -3,6 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import { getAllSpotsThunk, getSpotsList } from '../../store/spot';
 import { IoIosStar } from "react-icons/io"; 
 import {Link, Navigate} from 'react-router-dom';
+import SpotDetail from '../SpotDetailPage/SpotDetail';
 
 
 
@@ -34,7 +35,7 @@ const SpotsPage =()=>{
 
         <ul className='all-spots'>
         {allSpots?.map(({id, previewImage, city, state, avgRating, price, name })=>(
-            <li className='spot-tile' key={id}><a href={`/spots/${id}`}>
+            <li className='spot-tile' key={id}><Link to={`/spots/${id}`}>
                 <img src={previewImage} alt={`${name} in ${city, state}`} title={`${name} in ${city, state}`}/>
                 <div className='spot-info'>
                     <span>{city}, {state}</span>
@@ -44,7 +45,7 @@ const SpotsPage =()=>{
                 <div className='spot-price'>
                     <span>${price} night </span>
                 </div>
-                </a></li>
+                </Link></li>
 
         ))}
          </ul>

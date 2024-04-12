@@ -23,7 +23,7 @@ module.exports = {
         description: 'A lovely spot with a great view.',
         price: 100.00,
         avgRating: 3.0,
-        previewImage: "789"
+        previewImage: "https://squatspot.s3.us-east-2.amazonaws.com/exteriors/c5kls99qmgo31.jpg"
       },
       {
         ownerId: 2,

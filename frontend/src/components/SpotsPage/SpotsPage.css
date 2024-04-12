@@ -10,6 +10,7 @@
 
 .spot-tile{
     display:flex;
+    height:100px;
 
 }
 
@@ -21,3 +22,5 @@
     height:100px;
     width:200px;
 }
+
+/* Link to={`/spots/${id}`} */
