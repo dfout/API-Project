@@ -4,13 +4,13 @@ import { useDispatch } from 'react-redux';
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 
 // Import Components
-import HomePage from './components/HomePage/HomePage';
-// import LoginFormPage from './components/LoginFormPage'
-// import SignupFormPage from './components/SignupFormPage'
+import SpotsPage from './components/SpotsPage/SpotsPage';
 import Navigation from './components/Navigation'
 
 // Import Actions
 import * as sessionActions from './store/session';
+import * as spotActions from './store/spot'
+import SpotDetail from './components/SpotDetailPage/SpotDetail';
 
 
 
@@ -24,6 +24,7 @@ function Layout(){
     dispatch(sessionActions.restoreUserThunk()).then(()=>{
       setIsLoaded(true)
     })
+    // dispatch(spotActions.getAllSpotsThunk())
   }, [dispatch])
 
   return(
@@ -44,12 +45,12 @@ const router = createBrowserRouter([
     children: [
       {
         path:'/',
-        element:<HomePage />
+        element:<SpotsPage />
       },
-      // {
-      //   path: '/signup',
-      //   element: <SignupFormPage/>
-      // }
+      {
+        path: '/spots/:spotId',
+        element: <SpotDetail/>
+      }
     ]
   }
 

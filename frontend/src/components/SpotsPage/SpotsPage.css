@@ -1,0 +1,23 @@
+
+
+.all-spots{
+    position:relative;
+    width:100%;
+    display:flex;
+    flex-direction:row;
+
+}
+
+.spot-tile{
+    display:flex;
+
+}
+
+.spot-tile:hover{
+    cursor: pointer;
+}
+
+.img{
+    height:100px;
+    width:200px;
+}
