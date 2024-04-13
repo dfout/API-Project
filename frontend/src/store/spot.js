@@ -29,14 +29,7 @@ export const getSpotsList = createSelector(
     (state) => state.spots,
     (spots) => Object.values(spots)
 );
-// export const getSpotDetails = createSelector(
-//     (state) => state.spot
-// )
 
-// export const getSpotObject = createSelector(
-//     (state) => state.spots,
-//     (spots)=> spots[id]
-// )
 
 
 
@@ -44,8 +37,6 @@ export const getSpotsList = createSelector(
 
 export const getAllSpotsThunk = () => async(dispatch)=>{
     const response = await csrfFetch('/api/spots')
-
-  
 
     if(response.ok){
         const spotData = await response.json()
@@ -75,9 +66,6 @@ export const getOneSpotThunk = (id) => async(dispatch)=>{
 }
 
 
-// export const getSpotImagesThunk = (id) => async(dispatch)=>{
-//     const reponse = await csrfFetch()
-// }
 
 
 
