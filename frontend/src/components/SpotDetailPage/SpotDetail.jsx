@@ -34,12 +34,37 @@ const SpotDetail =()=>{
     
     const closeMenu = useModal();
 
-    if (!spot || !spot.Owner) return null
+    // if (!spot || !spot.Owner) return null
     
+  
+    const [timeCheck, setTimeCheck] = useState(true);
+
+    useEffect(() => {
+        let timeout;
+       
+        if (!spot || !spot.Owner) {
+            timeout = setTimeout(() => setTimeCheck(false), 3000);
+            
+        }
+    
+        return () => clearTimeout(timeout);
+    }, [spot]);
+
+    if (!spot || !spot.Owner && timeCheck) return <h1>Loading...</h1>;
+    else if (!spot || !spot.Owner && !timeCheck) return <h1>Sorry, please refresh the page</h1>;
+
    
 
     const { name, city, state, country, Owner, price, description,previewImage, SpotImages } = spot;
 
+    // useEffect(() => {
+    //     let timeout;
+    //     if (!Owner) {
+    //         timeout = setTimeout(() => setTimeCheck(false), 3000);
+    //     }
+    
+    //     return () => clearTimeout(timeout);
+    // }, [Owner]);
     
 
     return(
