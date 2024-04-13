@@ -33,36 +33,13 @@ const SpotDetail =()=>{
     const spot = useSelector((state)=> state.spots[spotId]);
     
     const closeMenu = useModal();
+
+    if (!spot || !spot.Owner) return null
     
-  
-    // const [timeCheck, setTimeCheck] = useState(true);
-
-    // useEffect(() => {
-    //     let timeout;
-       
-    //     if (!spot.Owner) {
-    //         timeout = setTimeout(() => setTimeCheck(false), 3000);
-    //         getSpotDetails()
-    //     }
-    
-    //     return () => clearTimeout(timeout);
-    // }, [getSpotDetails, spot, spotId]);
-
-    // if (!spot && timeCheck) return <h1>Loading...</h1>;
-    // else if (!spot && !timeCheck) return <h1>Sorry, please refresh the page</h1>;
-
-    console.log( "SPOT:spotID OBJECT",spot)
+   
 
     const { name, city, state, country, Owner, price, description,previewImage, SpotImages } = spot;
 
-    // useEffect(() => {
-    //     let timeout;
-    //     if (!Owner) {
-    //         timeout = setTimeout(() => setTimeCheck(false), 3000);
-    //     }
-    
-    //     return () => clearTimeout(timeout);
-    // }, [Owner]);
     
 
     return(
