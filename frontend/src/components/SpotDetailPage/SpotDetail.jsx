@@ -23,11 +23,10 @@ const SpotDetail =()=>{
 
     useEffect(()=>{
        dispatch(spotActions.getOneSpotThunk(spotId))
-     
-        
+    
     }, [dispatch, spotId])
 
-
+    // const getSpotDetails =(spotId)= async (dispatch)=> (spotActions.getOneSpotThunk(spotId));
     // const spots = useSelector(spotActions.getSpotsList)
     // console.log(spots)
 
@@ -36,32 +35,34 @@ const SpotDetail =()=>{
     const closeMenu = useModal();
     
   
-    const [timeCheck, setTimeCheck] = useState(true);
+    // const [timeCheck, setTimeCheck] = useState(true);
 
-    useEffect(() => {
-        let timeout;
-        if (!spot) {
-            timeout = setTimeout((dispatch(spotActions.getOneSpotThunk(spotId)) => setTimeCheck(false), 3000);
-        }
+    // useEffect(() => {
+    //     let timeout;
+       
+    //     if (!spot.Owner) {
+    //         timeout = setTimeout(() => setTimeCheck(false), 3000);
+    //         getSpotDetails()
+    //     }
     
-        return () => clearTimeout(timeout);
-    }, [spot, dispatch, spotId]);
+    //     return () => clearTimeout(timeout);
+    // }, [getSpotDetails, spot, spotId]);
 
-    if (!spot && timeCheck) return <h1>Loading...</h1>;
-    else if (!spot && !timeCheck) return <h1>Sorry, please refresh the page</h1>;
+    // if (!spot && timeCheck) return <h1>Loading...</h1>;
+    // else if (!spot && !timeCheck) return <h1>Sorry, please refresh the page</h1>;
 
-    console.log(spot)
+    console.log( "SPOT:spotID OBJECT",spot)
 
     const { name, city, state, country, Owner, price, description,previewImage, SpotImages } = spot;
 
-    useEffect(() => {
-        let timeout;
-        if (!Owner) {
-            timeout = setTimeout(() => setTimeCheck(false), 3000);
-        }
+    // useEffect(() => {
+    //     let timeout;
+    //     if (!Owner) {
+    //         timeout = setTimeout(() => setTimeCheck(false), 3000);
+    //     }
     
-        return () => clearTimeout(timeout);
-    }, [Owner]);
+    //     return () => clearTimeout(timeout);
+    // }, [Owner]);
     
 
     return(
