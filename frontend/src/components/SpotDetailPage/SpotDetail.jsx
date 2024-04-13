@@ -22,7 +22,7 @@ const SpotDetail =()=>{
     const dispatch = useDispatch();
 
     useEffect(()=>{
-        dispatch(spotActions.getOneSpotThunk(spotId))
+       dispatch(spotActions.getOneSpotThunk(spotId))
      
         
     }, [dispatch, spotId])
@@ -32,46 +32,37 @@ const SpotDetail =()=>{
     // console.log(spots)
 
     const spot = useSelector((state)=> state.spots[spotId]);
+    
     const closeMenu = useModal();
-    console.log(spot)
-
+    
   
     const [timeCheck, setTimeCheck] = useState(true);
 
     useEffect(() => {
         let timeout;
-        if (!spot.Owner) {
+        if (!spot) {
+            timeout = setTimeout((dispatch(spotActions.getOneSpotThunk(spotId)) => setTimeCheck(false), 3000);
+        }
+    
+        return () => clearTimeout(timeout);
+    }, [spot, dispatch, spotId]);
+
+    if (!spot && timeCheck) return <h1>Loading...</h1>;
+    else if (!spot && !timeCheck) return <h1>Sorry, please refresh the page</h1>;
+
+    console.log(spot)
+
+    const { name, city, state, country, Owner, price, description,previewImage, SpotImages } = spot;
+
+    useEffect(() => {
+        let timeout;
+        if (!Owner) {
             timeout = setTimeout(() => setTimeCheck(false), 3000);
         }
-
+    
         return () => clearTimeout(timeout);
-    }, [spot]);
-
-    if (!spot.Owner && timeCheck) return <h1>Loading...</h1>;
-    else if (!spot.Owner&& !timeCheck) return <h1>Sorry, please refresh the page</h1>;
-
+    }, [Owner]);
     
-
-
-
-    
-    // const getSpotData = (spotId)=>{
-    //     return dispatch(spotActions.getOneSpotThunk(spotId))
-    // }
-    
-    // const spot = getSpotData(spotId)
-    // console.log("SPOT", spot)
-    
-    // // const closeMenu = useModal()
-    // // const spotData = getSpotData(spotId)
-    // // console.log("SPOTDATA",spotData)
-
-
- 
-  
-    const { name, city, state, country, Owner, price, description,previewImage, SpotImages } = spot;
-    
-
 
     return(
         <section className='spot-detail'>
