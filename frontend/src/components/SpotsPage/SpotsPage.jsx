@@ -40,7 +40,7 @@ const SpotsPage =()=>{
         {allSpots?.map(({id, previewImage, city, state, avgRating, price, name })=>(
             <li className='spot-tile' key={id}><Link to={`/spots/${id}`}className='link-tile'>
                 <div className='image-container'>
-                <img className='preview-image' src={previewImage} alt={`${name} in ${city, state}`} title={`${name} in ${city, state}`}/>
+                <img id='preview-image' src={previewImage} alt={`${name} in ${city, state}`} title={`${name} in ${city, state}`}/>
                 </div>
                 <div className='spot-info'>
                     <h3>{city}, {state}</h3>

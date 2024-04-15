@@ -65,6 +65,29 @@ export const getOneSpotThunk = (id) => async(dispatch)=>{
     }
 }
 
+export const createSpotThunk = (spot) => async (dispatch)=>{
+    const { address, city, state, country, lat, lng, name, description, price, previewImage} = spot;
+    const response = await csrfFetch('/api/spots',{
+        method: 'POST',
+        body:  JSON.stringify({
+            address, 
+            city,
+            state, 
+            country, 
+            lat, 
+            lng,
+            name, 
+            description, 
+            price,
+            previewImage
+        })
+    });
+
+    const data = await response.json();
+    dispatch(getSpotDetails(data));
+    return response;
+}
+
 
 
 

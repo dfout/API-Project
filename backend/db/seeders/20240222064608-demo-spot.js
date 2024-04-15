@@ -23,7 +23,7 @@ module.exports = {
         description: 'A lovely spot with a great view.',
         price: 100.00,
         avgRating: 3.25,
-        previewImage: "https://squatspot.s3.us-east-2.amazonaws.com/exteriors/c5kls99qmgo31.jpg"
+        previewImage: "https://squatspot.s3.us-east-2.amazonaws.com/download-resized.png"
       },
       {
         ownerId: 2,
@@ -37,7 +37,72 @@ module.exports = {
         description: 'Perfect spot for a weekend getaway.',
         price: 150.00,
         avgRating: 4.51,
-        previewImage: "https://squatspot.s3.us-east-2.amazonaws.com/exteriors/c5kls99qmgo31.jpg"
+        previewImage: "https://squatspot.s3.us-east-2.amazonaws.com/download-resized.png"
+      },
+      {
+        ownerId: 2,
+        address: '678 Pike Ave',
+        city: 'Another City',
+        state: 'GA',
+        country: 'USA',
+        lat: '40.7128',
+        lng: '-74.0060',
+        name: 'Cozy Retreat',
+        description: 'Perfect spot for a weekend getaway.',
+        price: 150.00,
+        previewImage: "https://squatspot.s3.us-east-2.amazonaws.com/download-resized.png"
+      },
+      {
+        ownerId: 1,
+        address: '220 Main Ave',
+        city: 'Example City',
+        state: 'MA',
+        country: 'USA',
+        lat: '40.7128',
+        lng: '-74.0060',
+        name: 'Adventurous Stay',
+        description: 'Perfect spot for a weekend getaway.',
+        price: 150.00,
+        previewImage: "https://squatspot.s3.us-east-2.amazonaws.com/download-resized.png"
+      },
+      {
+        ownerId: 1,
+        address: '1189 Sicamore St',
+        city: 'Port Townsend',
+        state: 'WA',
+        country: 'USA',
+        lat: '40.7128',
+        lng: '-74.0060',
+        name: 'Warm Stay',
+        description: 'Perfect spot for a weekend getaway.',
+        price: 150.00,
+        previewImage: "https://squatspot.s3.us-east-2.amazonaws.com/download-resized.png"
+      },
+      {
+        ownerId: 2,
+        address: '103 Maple Rd',
+        city: 'Example City',
+        state: 'OH',
+        country: 'USA',
+        lat: '40.7128',
+        lng: '-74.0060',
+        name: 'Fun stay',
+        description: 'Perfect spot for a weekend getaway.',
+        price: 150.00,
+        previewImage: "https://squatspot.s3.us-east-2.amazonaws.com/download-resized.png"
+      },
+      {
+        ownerId: 2,
+        address: '123 Capitol Rd',
+        city: 'Example City',
+        state: 'PA',
+        country: 'USA',
+        lat: '40.7128',
+        lng: '-74.0060',
+        name: 'Fun stay',
+        description: 'Perfect spot for a weekend getaway.',
+        price: 150.00,
+        previewImage: "https://squatspot.s3.us-east-2.amazonaws.com/download-resized.png"
       }
     ], {validate :true})
     /**

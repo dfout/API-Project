@@ -27,7 +27,7 @@ const Navigation = ({isLoaded})=>{
                 <div className='right-side'>
                 {sessionUser && (
                         <li id='create-spot'>
-                        <NavLink to='/create-a-spot' className='create-link'><span >Got a spot for a squat?</span></NavLink>
+                        <NavLink to='/spots/create' className='create-link'><span >Got a spot for a squat?</span></NavLink>
                         </li>
 
                 )}

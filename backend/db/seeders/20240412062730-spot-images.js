@@ -13,46 +13,145 @@ module.exports = {
 
     await SpotImage.bulkCreate([
       {
-        url:'https://squatspot.s3.us-east-2.amazonaws.com/interiors/images-5.jpg',
+        url:'https://squatspot.s3.us-east-2.amazonaws.com/download-resized.png',
         spotId:1,
         preview: false,
       },
       {
-        url: 'https://squatspot.s3.us-east-2.amazonaws.com/interiors/images-5.jpg',
+        url: 'https://squatspot.s3.us-east-2.amazonaws.com/download-resized.png',
         spotId:1,
         preview: false
       },
       {
-        url: 'https://squatspot.s3.us-east-2.amazonaws.com/interiors/images-5.jpg',
+        url: 'https://squatspot.s3.us-east-2.amazonaws.com/download-resized.png',
         spotId:1,
         preview:false
       },
       {
-        url: 'https://squatspot.s3.us-east-2.amazonaws.com/interiors/images-5.jpg',
+        url: 'https://squatspot.s3.us-east-2.amazonaws.com/download-resized.png',
         spotId:1,
         preview:false
       },
       {
-        url: 'https://squatspot.s3.us-east-2.amazonaws.com/interiors/images-13.jpg',
+        url: 'https://squatspot.s3.us-east-2.amazonaws.com/download-resized.png',
         spotId:2,
         preview:false,
       },
       {
-        url: 'https://squatspot.s3.us-east-2.amazonaws.com/interiors/images-13.jpg',
+        url: 'https://squatspot.s3.us-east-2.amazonaws.com/download-resized.png',
         spotId:2,
         preview:false
       },
       {
-        url:'https://squatspot.s3.us-east-2.amazonaws.com/interiors/images-13.jpg',
+        url:'https://squatspot.s3.us-east-2.amazonaws.com/download-resized.png',
         spotId:2,
         preview:false
       },
       {
-        url: 'https://squatspot.s3.us-east-2.amazonaws.com/interiors/images-13.jpg',
+        url: 'https://squatspot.s3.us-east-2.amazonaws.com/download-resized.png',
         spotId:2,
         preview:false
-      }
-
+      },
+      {
+        url:'https://squatspot.s3.us-east-2.amazonaws.com/download-resized.png',
+        spotId:3,
+        preview: false,
+      },
+      {
+        url:'https://squatspot.s3.us-east-2.amazonaws.com/download-resized.png',
+        spotId:3,
+        preview: false,
+      },
+      {
+        url:'https://squatspot.s3.us-east-2.amazonaws.com/download-resized.png',
+        spotId:3,
+        preview: false,
+      },
+      {
+        url:'https://squatspot.s3.us-east-2.amazonaws.com/download-resized.png',
+        spotId:3,
+        preview: false,
+      },
+      {
+        url:'https://squatspot.s3.us-east-2.amazonaws.com/download-resized.png',
+        spotId:4,
+        preview: false,
+      },
+      {
+        url:'https://squatspot.s3.us-east-2.amazonaws.com/download-resized.png',
+        spotId:4,
+        preview: false,
+      },
+      {
+        url:'https://squatspot.s3.us-east-2.amazonaws.com/download-resized.png',
+        spotId:4,
+        preview: false,
+      },
+      {
+        url:'https://squatspot.s3.us-east-2.amazonaws.com/download-resized.png',
+        spotId:4,
+        preview: false,
+      },
+      {
+        url:'https://squatspot.s3.us-east-2.amazonaws.com/download-resized.png',
+        spotId:5,
+        preview: false,
+      },
+      {
+        url:'https://squatspot.s3.us-east-2.amazonaws.com/download-resized.png',
+        spotId:5,
+        preview: false,
+      },
+      {
+        url:'https://squatspot.s3.us-east-2.amazonaws.com/download-resized.png',
+        spotId:5,
+        preview: false,
+      },
+      {
+        url:'https://squatspot.s3.us-east-2.amazonaws.com/download-resized.png',
+        spotId:5,
+        preview: false,
+      },
+      {
+        url:'https://squatspot.s3.us-east-2.amazonaws.com/download-resized.png',
+        spotId:6,
+        preview: false,
+      },
+      {
+        url:'https://squatspot.s3.us-east-2.amazonaws.com/download-resized.png',
+        spotId:6,
+        preview: false,
+      },
+      {
+        url:'https://squatspot.s3.us-east-2.amazonaws.com/download-resized.png',
+        spotId:6,
+        preview: false,
+      },
+      {
+        url:'https://squatspot.s3.us-east-2.amazonaws.com/download-resized.png',
+        spotId:6,
+        preview: false,
+      },
+      {
+        url:'https://squatspot.s3.us-east-2.amazonaws.com/download-resized.png',
+        spotId:7,
+        preview: false,
+      },
+      {
+        url:'https://squatspot.s3.us-east-2.amazonaws.com/download-resized.png',
+        spotId:7,
+        preview: false,
+      },
+      {
+        url:'https://squatspot.s3.us-east-2.amazonaws.com/download-resized.png',
+        spotId:7,
+        preview: false,
+      },
+      {
+        url:'https://squatspot.s3.us-east-2.amazonaws.com/download-resized.png',
+        spotId:7,
+        preview: false,
+      },
     ], {validate:true})
     /**
      * Add seed commands here.

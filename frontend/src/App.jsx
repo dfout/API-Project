@@ -11,6 +11,7 @@ import Navigation from './components/Navigation'
 import * as sessionActions from './store/session';
 import * as spotActions from './store/spot'
 import SpotDetail from './components/SpotDetailPage/SpotDetail';
+import CreateSpotPage from './components/CreateSpotPage';
 
 
 
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
       {
         path: '/spots/:spotId',
         element: <SpotDetail/>
+      },
+      {
+        path: '/spots/create',
+        element:<CreateSpotPage />
       }
     ]
   }

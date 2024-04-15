@@ -2,12 +2,19 @@
 
 .all-spots{
     position:relative;
-    width:100%;
+    
+    width:100vw;
     display:flex;
     flex-direction:row;
+    
+    flex-wrap:wrap;
+    margin:0;
     gap: 20px;
     padding-left: 5%;
-    padding-top: 2%;
+    margin-right: 5%;
+    padding-top: 2%; 
+    /* margin-left: 5%;
+    margin-right:5%; */
 
 }
 
@@ -22,18 +29,18 @@
     cursor: pointer;
 }
 
-img{
-    height:100%;
-    width:100%;
-    overflow:hidden;
-    border-radius:10px;
-}
+
 .image-container{
     height:200px;
     width:200px;
     padding-bottom:10px;
-   
-  
+}
+
+#preview-image{
+    height:100%;
+    width:100%;
+    overflow:hidden;
+    border-radius:10px;
 }
 
 /* Link to={`/spots/${id}`} */

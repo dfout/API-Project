@@ -16,7 +16,7 @@ const router = express.Router();
 const validateSpot = [
     check('address')
         .exists().notEmpty()
-        .withMessage('Street address is required'),
+        .withMessage('Address is required'),
     check('city')
         .exists().notEmpty()
         .withMessage("City is required"),
@@ -34,14 +34,31 @@ const validateSpot = [
         .exists().isFloat({min: -181, max: 181})
         .withMessage("Longitude must be within -180 and 180"),
     check('name')
-        .exists().notEmpty().isLength({max:50})
-        .withMessage("Name must be less than 50 characters"),
+        .exists().notEmpty().withMessage('Name is required')
+        .isLength({max:50}).withMessage("Name must be less than 50 characters"),
     check('description')
         .exists().notEmpty()
-        .withMessage("Description is required"),
+        .withMessage("Description needs a minimum of 30 characters"),
     check('price')
-        .exists().isInt({gt: 0})
-        .withMessage("Price per day must be a positive number"),
+    .custom((value) => {
+        if (value !== "") { // Only validate if previewImage has a value
+          if (value <= 0) {
+            throw new Error('Price per day must be a positive number');
+          }
+        }else{
+            throw new Error('Price is required')
+        }
+      }),
+    check('previewImage')
+        .custom((value) => {
+            if (value !== "") { // Only validate if previewImage has a value
+              if (!value.match(/\.(png|jpg|jpeg)$/i)) {
+                throw new Error('Preview Image URL must end in .png, .jpg, or .jpeg');
+              }
+            }else{
+                throw new Error('Preview Image is required')
+            }
+          }),
     handleValidationErrors
 ];
 
@@ -574,7 +591,7 @@ router.post('/:spotId/images', requireAuth, async(req,res,next)=>{
 
 })
 
-// CREATE A SPOT
+
 //? MADE AVG RATING AND PREVIEW IMAGE DEFAULT TO UNDEFINED ON MODEL
 //? SO THAT IT DOESN'T SHOW UP UNLESS THEY MAKE IT.
 
@@ -636,10 +653,10 @@ router.post('/:spotId/reviews', requireAuth, async(req,res,next)=>{
 
 });
 
-
+//CREATE A SPOT
 
 router.post('/', requireAuth, validateSpot, async(req,res,next)=>{
-    const {address, city, state, country, lat, lng, name, description, price} = req.body;
+    const {address, city, state, country, lat, lng, name, description, price, previewImage} = req.body;
     const ownerId = req.user.id;
 
     const newSpot = await Spot.create({ownerId, address, city, state, country, lat, lng, name, description, price});
@@ -656,6 +673,7 @@ router.post('/', requireAuth, validateSpot, async(req,res,next)=>{
         name: newSpot.name,
         description: newSpot.description,
         price: newSpot.price,
+        previewImage: newSpot.previewImage,
         createdAt: newSpot.createdAt,
         updatedAt: newSpot.updatedAt,
     }
