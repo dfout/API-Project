@@ -540,15 +540,18 @@ router.get('/current', requireAuth, async(req,res,next)=>{
 router.get('/:spotId', async(req,res,next)=>{
     const { spotId } = req.params;
     const spot = await Spot.findByPk(spotId,{
-        include: [{model:SpotImage},{model:User, as: 'Owner', attributes: {exclude: ['username']}}]
+        include: [{model:Review, include:{model:User}},{model:SpotImage},{model:User, as: 'Owner', attributes: {exclude: ['username']}}]
     });
     if (spot === null){
         res.status(404)
         return res.json({
             message: "Spot couldn't be found"
         })
+    }else{
+        spot.numReviews = spot.Reviews.length;
+        return res.json(spot);
     }
-    return res.json(spot);
+    
 
 })
 

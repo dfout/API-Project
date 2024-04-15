@@ -33,6 +33,8 @@ export const getSpotsList = createSelector(
 
 
 
+
+
 //* Thunk Actions
 
 export const getAllSpotsThunk = () => async(dispatch)=>{
@@ -88,6 +90,10 @@ export const createSpotThunk = (spot) => async (dispatch)=>{
     return response;
 }
 
+export const setSpotImages = (spotImages, spotId)=> async(dispatch)=>{
+
+
+}
 
 
 

@@ -52,6 +52,10 @@ module.exports = {
         type:Sequelize.FLOAT,
         defaultValue: undefined
       },
+      numReviews:{
+        type:Sequelize.INTEGER,
+        defaultValue: null
+      },
       previewImage:{
         type:Sequelize.STRING,
         defaultValue: undefined

@@ -35,6 +35,7 @@ const SpotDetail =()=>{
     const closeMenu = useModal();
 
     // if (!spot || !spot.Owner) return null
+
     
   
     const [timeCheck, setTimeCheck] = useState(true);
@@ -42,7 +43,7 @@ const SpotDetail =()=>{
     useEffect(() => {
         let timeout;
        
-        if (!spot || !spot.Owner) {
+        if (!spot || !spot.Owner || !spot.Reviews) {
             timeout = setTimeout(() => setTimeCheck(false), 3000);
             
         }
@@ -50,24 +51,16 @@ const SpotDetail =()=>{
         return () => clearTimeout(timeout);
     }, [spot]);
 
-    if (!spot || !spot.Owner && timeCheck) return <h1>Loading...</h1>;
-    else if (!spot || !spot.Owner && !timeCheck) return <h1>Sorry, please refresh the page</h1>;
+    if (!spot || !spot.Owner || !spot.Reviews && timeCheck) return <h1>Loading...</h1>;
+    else if (!spot || !spot.Owner || !spot.Reviews && !timeCheck) return <h1>Sorry, please refresh the page</h1>;
 
    
 
-    const { name, city, state, country, Owner, price, description,previewImage, SpotImages } = spot;
-
-    // useEffect(() => {
-    //     let timeout;
-    //     if (!Owner) {
-    //         timeout = setTimeout(() => setTimeCheck(false), 3000);
-    //     }
-    
-    //     return () => clearTimeout(timeout);
-    // }, [Owner]);
+    const { name, city, state, country, Owner, price, avgRating, numReviews, description,previewImage, SpotImages, Reviews } = spot;
     
 
     return(
+        <>
         <section className='spot-detail'>
             <div className= 'spot-title'> 
                 <h2>{name}</h2>
@@ -97,15 +90,17 @@ const SpotDetail =()=>{
                     <div className='reserve-box-info'>
                         <span>${price}night</span>
                         <IoIosStar />
-                        {/* <span>{reviews.entries.length} reviews</span> */}
+                        <span>{avgRating}</span>
+                        <span>{
+                            (numReviews === 0 || numReviews === null) ? "New" : numReviews + ' reviews'
+                        }</span>
                     </div>
                     <OpenModalButton id='reserve-button' buttonText='Reserve' onButtonClick={closeMenu} modalComponent={<FeatureComingModal/>}/>
                 </div>
             </div>
-            {/* <SpotReviews spotId={spotId}/> */}
         </section>
-
-        
+        <SpotReviews reviews={Reviews} avgRating={avgRating} numReviews={numReviews} ownerId={Owner.id}/>
+        </>
     )
 }
 

@@ -7,37 +7,51 @@ import {useParams} from 'react-router-dom';
 import * as reviewActions from '../../store/review'
 
 
-const SpotReviews = ({spotId}) =>{
-    console.log(spotId)
+const SpotReviews = ({numReviews, avgRating, ownerId, reviews }) =>{
+    
+    // For Post Review Button:
+
+    // Check if user is logged in         T: GreenLight           F: RedLight
+    const sessionUser = useSelector((state) => state.session.user);
+
+    // Check if user is the creator of the post   T: RedLight        F: GreenLight
+    const userId = sessionUser.id
+    const isCreator = (userId, ownerId)=> userId === ownerId
+
+    // Check if user has already posted a reivew for this spot      T: RightLight   F: GreenLight
 
 
-    const dispatch = useDispatch();
-    const getReviewsList = useSelector(reviewActions.getReviewsList)
-    console.log(getReviewsList)
+    // Need access to the user information on the review: COMPLETED. User is joined on the each review in the Reviews key. 
+
+    // Reviews is an array of two objects. This will not be iterable. unless we change it to be 
+    
+    // const Reviews = useSelector((state)=>)
+
+   
 
 
-    useEffect((spotId)=>{ 
-        dispatch(reviewActions.getReviewsForSpotThunk(spotId))
+    return(
+        <>
+        <IoIosStar/>
+        <span>{avgRating}</span>
+        <span>{
+            (numReviews === 0 || numReviews === null) ? "New" : numReviews + ' reviews'
+        }</span>
+        <button>Post Your Review</button>
+        <ul className='spot-reviews'>
+        {reviews?.map(({id, userId, User, stars, review, createdAt, updatedAt })=>(
+            <li className='review-tile' key={id}>
+                <h4>{User.firstName}</h4>
 
-    },[dispatch])
+            </li>
 
-    const reviews = useSelector((state)=> state.reviews);
-
-    const [timeCheck, setTimeCheck] = useState(true);
-
-    useEffect(() => {
-        let timeout;
-        if (!reviews) {
-            timeout = setTimeout(() => setTimeCheck(false), 3000);
-        }
-
-        return () => clearTimeout(timeout);
-    }, [ reviews]);
-
-    if ( !reviews && timeCheck) return <h1>Loading...</h1>;
-    else if ( !reviews && !timeCheck) return <h1>Sorry, please refresh the page</h1>;
-
-    return;
+        ))}
+         </ul>
+        
+        
+        </>
+    );
+    
 
 }
 

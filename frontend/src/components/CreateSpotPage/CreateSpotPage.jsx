@@ -48,7 +48,6 @@ function CreateSpotPage() {
           setErrors(data.errors);
         }
       });
-
   };
 
   return (
