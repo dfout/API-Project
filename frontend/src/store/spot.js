@@ -88,6 +88,10 @@ export const createSpotThunk = (spot) => async (dispatch)=>{
     return response;
 }
 
+export const setSpotImages = (spotImages, spotId)=> async(dispatch)=>{
+
+
+}
 
 
 

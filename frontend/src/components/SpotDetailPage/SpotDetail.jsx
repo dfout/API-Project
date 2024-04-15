@@ -55,7 +55,7 @@ const SpotDetail =()=>{
 
    
 
-    const { name, city, state, country, Owner, price, description,previewImage, SpotImages } = spot;
+    const { name, city, state, country, Owner, price, avgRating, numReviews, description,previewImage, SpotImages } = spot;
 
     // useEffect(() => {
     //     let timeout;
@@ -97,7 +97,8 @@ const SpotDetail =()=>{
                     <div className='reserve-box-info'>
                         <span>${price}night</span>
                         <IoIosStar />
-                        {/* <span>{reviews.entries.length} reviews</span> */}
+                        <span>{avgRating}</span>
+                        <span>{numReviews} reviews</span>
                     </div>
                     <OpenModalButton id='reserve-button' buttonText='Reserve' onButtonClick={closeMenu} modalComponent={<FeatureComingModal/>}/>
                 </div>
