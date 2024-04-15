@@ -33,6 +33,8 @@ export const getSpotsList = createSelector(
 
 
 
+
+
 //* Thunk Actions
 
 export const getAllSpotsThunk = () => async(dispatch)=>{
