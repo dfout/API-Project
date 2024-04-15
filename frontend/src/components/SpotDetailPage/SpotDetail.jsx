@@ -5,7 +5,7 @@ import { IoIosStar } from "react-icons/io";
 import {useParams} from 'react-router-dom';
 import { useState } from "react"
 
-import SpotReviews from './SpotReviews';
+// import SpotReviews from './SpotReviews';
 import * as spotActions from '../../store/spot';
 import OpenModalButton from '../../components/OpenModalButton'
 import { useModal } from '../../context/Modal';
@@ -98,7 +98,9 @@ const SpotDetail =()=>{
                         <span>${price}night</span>
                         <IoIosStar />
                         <span>{avgRating}</span>
-                        <span>{numReviews} reviews</span>
+                        <span>{
+                            (numReviews === 0 || numReviews === null) ? "New" : numReviews + ' reviews'
+                        }</span>
                     </div>
                     <OpenModalButton id='reserve-button' buttonText='Reserve' onButtonClick={closeMenu} modalComponent={<FeatureComingModal/>}/>
                 </div>
