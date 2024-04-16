@@ -5,6 +5,7 @@ import { createSelector, createStructuredSelector } from 'reselect';
 const GET_SPOTS = 'spots/getAllSpots';
 // const LOG_OUT = 'session/log-out';
 const GET_SPOT_DETAIL = 'spots/:spotId'
+const SET_SPOT_IMAGES = 'spots/images'
 
 
 //* POJO Action Creators
@@ -20,6 +21,13 @@ const getSpotDetails = (spot) =>{
     return({
         type: GET_SPOT_DETAIL,
         spot
+    })
+}
+
+const setImages = (image)=>{
+    return({
+        type: SET_SPOT_IMAGES,
+        image
     })
 }
 
@@ -90,8 +98,19 @@ export const createSpotThunk = (spot) => async (dispatch)=>{
     return response;
 }
 
-export const setSpotImages = (spotImages, spotId)=> async(dispatch)=>{
+export const setSpotImagesThunk = (spotImage)=> async(dispatch)=>{
+    const {url, preview, spotId} = spotImage;
+    const response = await csrfFetch(`/api/spots/${spotId}/images`, {
+        method: "POST",
+        body: JSON.stringify({
+            url,
+            preview,
+        })
+    })
 
+    const data = await response.json();
+    dispatch(setImages)
+    return response
 
 }
 

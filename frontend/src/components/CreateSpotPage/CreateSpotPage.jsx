@@ -17,9 +17,9 @@ function CreateSpotPage() {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [previewImage, setPreviewImage] = useState("")
-  const [SpotImage, setSpotImages] = useState([]);
+  const [SpotImages, setSpotImages] = useState([]);
   const [errors, setErrors] = useState({});
-  const SpotImages = [];
+
 
 //   if (sessionUser) return <Navigate to="/" replace={true} />;
 
@@ -46,6 +46,25 @@ function CreateSpotPage() {
         const data = await res.json();
         if (data?.errors) {
           setErrors(data.errors);
+        }else{
+          
+          const createdSpotId = data.spot.id;
+          const createdPreviewImage = {
+            url:previewImage,
+            preview:true,
+            spotId: createdSpotId
+          }
+          dispatch(spotActions.setSpotImagesThunk(createdPreviewImage))
+          SpotImages.forEach((image)=>{
+            const spotImage = {
+              url:image,
+              preview:false,
+              spotId: createdSpotId
+            }
+            dispatch(spotActions.setSpotImagesThunk(spotImage))
+          })
+
+          return <Navigate to={`/spots/${createdSpotId}`}/>
         }
       });
   };
@@ -61,6 +80,7 @@ function CreateSpotPage() {
           <input
             type="text"
             value={country}
+            placeholder='Country'
             onChange={(e) => setCountry(e.target.value)}
            
           />
@@ -71,6 +91,7 @@ function CreateSpotPage() {
           <input
             type="text"
             value={address}
+            placeholder='Address'
             onChange={(e) => setAddress(e.target.value)}
             
           />
@@ -80,6 +101,7 @@ function CreateSpotPage() {
           City
           <input
             type="text"
+            placeholder='City'
             value={city}
             onChange={(e) => setCity(e.target.value)}
            
@@ -90,6 +112,7 @@ function CreateSpotPage() {
           State
           <input
             type="text"
+            placeholder='STATE'
             value={state}
             onChange={(e) => setState(e.target.value)}
             
@@ -100,6 +123,7 @@ function CreateSpotPage() {
           Latitude
           <input
             type="text"
+            placeholder='Latitude'
             value={lat}
             onChange={(e) => setLat(e.target.value)}
             
@@ -110,6 +134,7 @@ function CreateSpotPage() {
           Long
           <input
             type="text"
+            placeholder='Longitude'
             value={lng}
             onChange={(e) => setLng(e.target.value)}
             
@@ -122,6 +147,7 @@ function CreateSpotPage() {
           <input
             type="text"
             value={description}
+            placeholder='Please write at least 30 characters'
             onChange={(e) => setDescription(e.target.value)}
             
           />
@@ -133,6 +159,7 @@ function CreateSpotPage() {
           <input
             type="text"
             value={name}
+            placeholder='Name of your spot'
             onChange={(e) => setName(e.target.value)}
             
           />
@@ -144,6 +171,7 @@ function CreateSpotPage() {
           $<input
             type="text"
             value={price}
+            placeholder='Price per night (USD)'
             onChange={(e) => setPrice(e.target.value)}
           />
         </label>
@@ -161,31 +189,32 @@ function CreateSpotPage() {
             <input 
             type='text'
             placeholder='Image URL'
-            value={SpotImage}
-            onChange={(e)=> setSpotImages(e.target.value)}
+            value={SpotImages[0] || ''} 
+            onChange={(e) => setSpotImages([e.target.value, ...SpotImages.slice(1)])}
+
             />
                  <input 
             type='text'
             placeholder='Image URL'
-            value={SpotImage}
-            onChange={(e)=> setSpotImages.push(e.target.value)}
+            value={SpotImages[1] || ''} 
+            onChange={(e) => setSpotImages([...SpotImages.slice(0, 1), e.target.value, ...SpotImages.slice(2)])}
             />
                  <input 
             type='text'
             placeholder='Image URL'
-            value={SpotImage}
-            onChange={(e)=> setSpotImages.push(e.target.value)}
+            value={SpotImages[2] || ''}
+            onChange={(e) => setSpotImages([...SpotImages.slice(0, 2), e.target.value, ...SpotImages.slice(3)])}
             />
                  <input 
             type='text'
             placeholder='Image URL'
-            value={SpotImage}
-            onChange={(e)=> setSpotImages.push(e.target.value)}
+            value={SpotImages[3] || ''}
+            onChange={(e) => setSpotImages([...SpotImages.slice(0, 3), e.target.value])}
             />
           
         </label>
     
-        <button type="submit">Sign Up</button>
+        <button type="submit" onSubmit={handleSubmit}>Create Spot</button>
       </form>
     </>
   );

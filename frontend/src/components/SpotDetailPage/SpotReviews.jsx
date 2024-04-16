@@ -42,6 +42,7 @@ const SpotReviews = ({numReviews, avgRating, ownerId, reviews }) =>{
         {reviews?.map(({id, userId, User, stars, review, createdAt, updatedAt })=>(
             <li className='review-tile' key={id}>
                 <h4>{User.firstName}</h4>
+                <span>{review}</span>
 
             </li>
 

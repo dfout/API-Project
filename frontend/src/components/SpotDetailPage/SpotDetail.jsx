@@ -2,6 +2,7 @@ import {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import { getAllSpotsThunk, getSpotsList } from '../../store/spot';
 import { IoIosStar } from "react-icons/io";
+import { BsDot } from "react-icons/bs";
 import {useParams} from 'react-router-dom';
 import { useState } from "react"
 
@@ -91,9 +92,14 @@ const SpotDetail =()=>{
                         <span>${price}night</span>
                         <IoIosStar />
                         <span>{avgRating}</span>
-                        <span>{
-                            (numReviews === 0 || numReviews === null) ? "New" : numReviews + ' reviews'
-                        }</span>
+                        {numReviews === 0 || numReviews === null ? (
+                        <span>New</span>
+                        ) : (
+                        <>
+                            <span>{numReviews === 1 ? `${numReviews} review` : `${numReviews} reviews`}</span>
+                            <BsDot />
+                        </>
+                        )}
                     </div>
                     <OpenModalButton id='reserve-button' buttonText='Reserve' onButtonClick={closeMenu} modalComponent={<FeatureComingModal/>}/>
                 </div>
