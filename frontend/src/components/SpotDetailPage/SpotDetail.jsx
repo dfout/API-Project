@@ -108,7 +108,7 @@ const SpotDetail =()=>{
                 </div>
             </div>
         </section>
-        <SpotReviews reviews={Reviews} avgRating={avgRating} numReviews={numReviews} ownerId={Owner.id}/>
+        <SpotReviews reviews={Reviews} avgRating={avgRating} numReviews={numReviews} ownerId={Owner.id} spotId={spotId}/>
         </>
     )
 }

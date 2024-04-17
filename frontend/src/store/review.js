@@ -14,10 +14,10 @@ const getReviews = (reviews) => {
 };
 
 
-export const getReviewsList = createSelector(
-    (state)=> state.reviews,
-    (reviews)=> Object.values(reviews)
-)
+// export const getReviewsList = createSelector(
+//     (state)=> state.reviews,
+//     (Reviews)=> Object.values(Reviews)
+// )
 
 
 
@@ -33,7 +33,11 @@ export const getReviewsForSpotThunk = (id) => async(dispatch) =>{
         const error = await response.json();
         return error
     }
-}
+};
+
+// export const getUserReviewsThunk = () => async(dispatch)=>{
+//     const response = await 
+// }
 
 
 

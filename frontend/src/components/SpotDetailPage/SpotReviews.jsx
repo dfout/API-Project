@@ -6,28 +6,60 @@ import {useParams} from 'react-router-dom';
 
 import * as reviewActions from '../../store/review'
 
+import './SpotReview.css'
 
-const SpotReviews = ({numReviews, avgRating, ownerId, reviews }) =>{
+const SpotReviews = ({numReviews, avgRating, ownerId, reviews, spotId }) =>{
+    const dispatch = useDispatch()
+
+    
+
+   useEffect(()=>{
+    dispatch(reviewActions.getReviewsForSpotThunk(spotId))
+   }, [dispatch, spotId])
     
     // For Post Review Button:
-
     // Check if user is logged in         T: GreenLight           F: RedLight
     const sessionUser = useSelector((state) => state.session.user);
-
-    // Check if user is the creator of the post   T: RedLight        F: GreenLight
     const userId = sessionUser.id
-    const isCreator = (userId, ownerId)=> userId === ownerId
-
+    
+    // Check if user is the creator of the post   T: RedLight        F: GreenLight
+    const isCreator = userId === ownerId;
     // Check if user has already posted a reivew for this spot      T: RightLight   F: GreenLight
+    const reviewState = useSelector((state)=>state.reviews)
+    // const alreadyReviewed = reviewState[userId]
+
+
+    // Reviews is an array of two objects. This will not be iterable. unless we change it to be 
+   // To Make reviews Iterable:
+   const reviewsObj = useSelector((state)=>state.reviews, (reviews)=> Object.values)
+    
+   const reviewsList = Object.values(reviewsObj)
+
+//    reviews.forEach((review)=>console.log("a review"))
+  
+
+    const alreadyReviewed = (userId, reviews)=>{
+        reviews.forEach((entry)=> {
+            if (entry.userId ===userId) return true
+            
+        })
+        return false
+    }
+
+    
+    
+
+   const canPostReview = sessionUser && !isCreator && !alreadyReviewed(userId,reviews);
+
+
+
+
+   // Logic for displayButton will need to be flipped. Button will be disabled={!displayButton}
+   // Because when the displayButton function is false, we want disabled to equal true. 
+
 
 
     // Need access to the user information on the review: COMPLETED. User is joined on the each review in the Reviews key. 
-
-    // Reviews is an array of two objects. This will not be iterable. unless we change it to be 
-    
-    // const Reviews = useSelector((state)=>)
-
-   
 
 
     return(
@@ -37,13 +69,22 @@ const SpotReviews = ({numReviews, avgRating, ownerId, reviews }) =>{
         <span>{
             (numReviews === 0 || numReviews === null) ? "New" : numReviews + ' reviews'
         }</span>
-        <button>Post Your Review</button>
+        {canPostReview && (
+             <button id='review-button'>Post Your Review</button>
+        )} 
+        {alreadyReviewed(userId, reviews) &&(
+            <button id='review-button' disabled={true}>Review Submitted</button>
+        )}
+        {isCreator && (
+            <button disabled={true}>You own this spot. Check out the reviews</button>
+        )}
         <ul className='spot-reviews'>
         {reviews?.map(({id, userId, User, stars, review, createdAt, updatedAt })=>(
             <li className='review-tile' key={id}>
                 <h4>{User.firstName}</h4>
+                <span>{createdAt.split('-')[1]}/{createdAt.split('-')[2].split('T')[0]}/{createdAt.split('-')[0]}</span>
+                <span>{stars} stars</span>
                 <span>{review}</span>
-
             </li>
 
         ))}
