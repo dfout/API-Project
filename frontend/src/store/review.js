@@ -14,10 +14,10 @@ const getReviews = (reviews) => {
 };
 
 
-// export const getReviewsList = createSelector(
-//     (state)=> state.spots,
-//     (reviews)=> Object.values(reviews)
-// )
+export const getReviewsList = createSelector(
+    (state)=> state.reviews,
+    (reviews)=> Object.values(reviews)
+)
 
 
 
@@ -43,7 +43,7 @@ const reviewReducer = (state = initialState, action, prevState) => {
     switch(action.type){
         case GET_REVIEWS:{
             const newState = {...state}
-            action.reviews.forEach((review)=> newState[review.id] = review)
+            action.reviews.Reviews.forEach((review)=> newState[review.id] = review)
             return newState
 
         }
