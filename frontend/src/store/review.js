@@ -2,7 +2,8 @@ import { csrfFetch } from "./csrf";
 import { createSelector, createStructuredSelector } from 'reselect';
 
 
-const GET_REVIEWS = 'reviews/getReviews'
+const GET_REVIEWS = 'reviews/getReviews';
+const POST_REVIEW = 'reviews/postReview';
 
 
 const getReviews = (reviews) => {
@@ -12,6 +13,13 @@ const getReviews = (reviews) => {
         
     })
 };
+
+const postReview = (review)=>{
+    return({
+        type: POST_REVIEW,
+        review
+    })
+}
 
 
 // export const getReviewsList = createSelector(
@@ -40,6 +48,27 @@ export const getReviewsForSpotThunk = (id) => async(dispatch) =>{
 // }
 
 
+export const postReviewThunk = ({review, stars}, spotId)=> async(dispatch)=>{
+    const response = await csrfFetch(`/api/spots/${spotId}/reviews`, {
+        method: "POST",
+        body: JSON.stringify({
+            review,
+            stars
+        })
+    })
+
+    if (response.ok){
+        const reviewData = await response.json();
+        dispatch(postReview(reviewData))
+        return reviewData
+    }else{
+        const error = await response.json();
+        console.log(error)
+        return error
+
+    }
+}
+
 
 const initialState = {};
 
@@ -49,7 +78,11 @@ const reviewReducer = (state = initialState, action, prevState) => {
             const newState = {...state}
             action.reviews.Reviews.forEach((review)=> newState[review.id] = review)
             return newState
-
+        }
+        case POST_REVIEW:{
+            const newState = {...state}
+            newState[action.review.id] = action.review;
+            return newState
         }
         default:
             return state

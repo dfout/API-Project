@@ -3,6 +3,9 @@ import {useDispatch, useSelector} from 'react-redux';
 import { getAllSpotsThunk, getSpotsList } from '../../store/spot';
 import { IoIosStar } from "react-icons/io";
 import {useParams} from 'react-router-dom';
+import OpenModalButton from '../OpenModalButton';
+import { useModal } from '../../context/Modal';
+import ReviewModal from '../ReviewModal';
 
 import * as reviewActions from '../../store/review'
 
@@ -34,13 +37,19 @@ const SpotReviews = ({numReviews, avgRating, ownerId, reviews, spotId }) =>{
    const reviewsObj = useSelector((state)=>state.reviews, (reviews)=> Object.values)
     
    const reviewsList = Object.values(reviewsObj)
+   const closeMenu = useModal()
 
 //    reviews.forEach((review)=>console.log("a review"))
   
 
-    const alreadyReviewed = (userId, reviews)=>{
+    const alreadyReviewed = (reviews)=>{
+
+        const sessionUser = useSelector((state) => state.session.user);
+        const currUserId = sessionUser.id
+
         reviews.forEach((entry)=> {
-            if (entry.userId ===userId) return true
+            
+            if (entry.userId === currUserId) return true
             
         })
         return false
@@ -49,9 +58,9 @@ const SpotReviews = ({numReviews, avgRating, ownerId, reviews, spotId }) =>{
     
     
 
-   const canPostReview = sessionUser && !isCreator && !alreadyReviewed(userId,reviews);
+   const canPostReview = sessionUser && !isCreator && !alreadyReviewed(reviews);
 
-
+    
 
 
    // Logic for displayButton will need to be flipped. Button will be disabled={!displayButton}
@@ -70,9 +79,9 @@ const SpotReviews = ({numReviews, avgRating, ownerId, reviews, spotId }) =>{
             (numReviews === 0 || numReviews === null) ? "New" : numReviews + ' reviews'
         }</span>
         {canPostReview && (
-             <button id='review-button'>Post Your Review</button>
+            <OpenModalButton id='review-button' buttonText='Post Your Review' onButtonClick={closeMenu} modalComponent={<ReviewModal spotId={spotId}/>}/>
         )} 
-        {alreadyReviewed(userId, reviews) &&(
+        {alreadyReviewed(reviews) &&(
             <button id='review-button' disabled={true}>Review Submitted</button>
         )}
         {isCreator && (
