@@ -8,7 +8,7 @@ import { useState } from "react"
 
 import SpotReviews from './SpotReviews';
 import * as spotActions from '../../store/spot';
-import * as reviewActions from '../../store/review';
+import * as reviewActions from '../../store/review'
 import OpenModalButton from '../../components/OpenModalButton'
 import { useModal } from '../../context/Modal';
 import FeatureComingModal from '../FeatureComingModal';
@@ -25,7 +25,6 @@ const SpotDetail =()=>{
 
     useEffect(()=>{
        dispatch(spotActions.getOneSpotThunk(spotId))
-       dispatch(reviewActions.getReviewsForSpotThunk(spotId))
     
     }, [dispatch, spotId])
 
@@ -34,6 +33,8 @@ const SpotDetail =()=>{
     // console.log(spots)
 
     const spot = useSelector((state)=> state.spots[spotId]);
+    
+   
     
     const closeMenu = useModal();
 
