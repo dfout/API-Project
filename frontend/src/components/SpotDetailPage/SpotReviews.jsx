@@ -42,8 +42,11 @@ const SpotReviews = ({numReviews, avgRating, ownerId, reviews, spotId }) =>{
 //    reviews.forEach((review)=>console.log("a review"))
   
 
-    const alreadyReviewed = (reviews)=>{
+    const alreadyReviewed = ()=>{
 
+        // const reviews = useSelector(
+        //     (state)=>state.spots.
+        // )
         const sessionUser = useSelector((state) => state.session.user);
         const currUserId = sessionUser.id
 
@@ -54,7 +57,7 @@ const SpotReviews = ({numReviews, avgRating, ownerId, reviews, spotId }) =>{
         })
         return false
     }
-
+    console.log(alreadyReviewed(reviews))
     
     
 
