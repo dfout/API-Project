@@ -51,10 +51,15 @@ export const logInUserThunk = (user) => async (dispatch) =>{
     // await dispatch(logInUser(logInData))
     // return response
 
+    if(response.ok){
+        const userData = await response.json();
+        dispatch(setUser(userData.user));
+        return response
+    }else{
+        const err = await response.json();
+        return err
+    }
 
-    const userData = await response.json();
-    dispatch(setUser(userData.user));
-    return response
 
 }
 
@@ -86,8 +91,8 @@ export const signUpUserThunk = (user) => async (dispatch)=>{
 
 // Log_Out User Thunk
 
-export const logOutUserThunk = () => async(dispatch)=>{
-    const response = await csrfFetch('api/session',{
+export const logoutUserThunk = () => async(dispatch)=>{
+    const response = await csrfFetch('/api/session',{
         method: 'DELETE'
     });
     dispatch(removeUser())
