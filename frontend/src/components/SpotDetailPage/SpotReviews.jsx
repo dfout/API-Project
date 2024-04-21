@@ -22,11 +22,22 @@ const SpotReviews = ({numReviews, avgRating, ownerId, reviews, spotId }) =>{
     
     // For Post Review Button:
     // Check if user is logged in         T: GreenLight           F: RedLight
-    const sessionUser = useSelector((state) => state.session.user);
-    const userId = sessionUser.id
+    let sessionUser = useSelector((state) => state.session.user);
+    if (sessionUser === null) {
+        sessionUser = false
+    }
+    // const userId = sessionUser.id
     
     // Check if user is the creator of the post   T: RedLight        F: GreenLight
-    const isCreator = userId === ownerId;
+    const isCreator =(sessionUser, ownerId)=>{
+       if(sessionUser){
+        const userId = sessionUser.id
+            if (userId === ownerId){
+                return true
+            }
+       }
+       return false
+    }
     // Check if user has already posted a reivew for this spot      T: RightLight   F: GreenLight
     const reviewState = useSelector((state)=>state.reviews)
     // const alreadyReviewed = reviewState[userId]
@@ -42,36 +53,42 @@ const SpotReviews = ({numReviews, avgRating, ownerId, reviews, spotId }) =>{
 //    reviews.forEach((review)=>console.log("a review"))
   
 
-    const alreadyReviewed = ()=>{
+    const alreadyReviewed = (sessionUser)=>{
 
         // const reviews = useSelector(
         //     (state)=>state.spots.
         // )
-        const sessionUser = useSelector((state) => state.session.user);
-        const currUserId = sessionUser.id
+        // const sessionUser = useSelector((state) => state.session.user);
+        if(sessionUser){
+            const currUserId = sessionUser.id
+            reviews.forEach((entry)=> {
+                if (entry.userId === currUserId) return true
+            })
 
-        reviews.forEach((entry)=> {
-            
-            if (entry.userId === currUserId) return true
-            
-        })
+        }
         return false
     }
-    console.log(alreadyReviewed(reviews))
     
-    
+    console.log("SESSIONUSER",sessionUser)
+   const canPostReview = sessionUser && !isCreator(sessionUser, ownerId) && !alreadyReviewed(reviews);
 
-   const canPostReview = sessionUser && !isCreator && !alreadyReviewed(reviews);
+   console.log( "CAN POST REVIEW",canPostReview)
+   console.log(isCreator(sessionUser, ownerId))
 
-    
-
+  
 
    // Logic for displayButton will need to be flipped. Button will be disabled={!displayButton}
    // Because when the displayButton function is false, we want disabled to equal true. 
-
-
-
     // Need access to the user information on the review: COMPLETED. User is joined on the each review in the Reviews key. 
+
+    //! CURRENT CASE:
+    /* 
+    - sessionUser === false
+    - Therefore, 
+            - Cannot post review
+            - Need to display, sign in to post a review. 
+    
+    */
 
 
     return(
@@ -81,13 +98,17 @@ const SpotReviews = ({numReviews, avgRating, ownerId, reviews, spotId }) =>{
         <span>{
             (numReviews === 0 || numReviews === null) ? "New" : numReviews + ' reviews'
         }</span>
-        {canPostReview && (
+        {!sessionUser && (
+                <button id='review-button' disabled={true}>Sign-in to post a Review</button>
+        )
+        }
+        {sessionUser && canPostReview && (
             <OpenModalButton id='review-button' buttonText='Post Your Review' onButtonClick={closeMenu} modalComponent={<ReviewModal spotId={spotId}/>}/>
         )} 
-        {alreadyReviewed(reviews) &&(
+        {sessionUser && alreadyReviewed(sessionUser) &&(
             <button id='review-button' disabled={true}>Review Submitted</button>
         )}
-        {isCreator && (
+        {sessionUser &&isCreator && (
             <button disabled={true}>You own this spot. Check out the reviews</button>
         )}
         <ul className='spot-reviews'>
