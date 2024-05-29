@@ -14,7 +14,7 @@ import './SpotReview.css'
 const SpotReviews = ({numReviews, avgRating, ownerId, reviews, spotId }) =>{
     const dispatch = useDispatch()
 
-    
+    //Listen to just the reviews..... But I want new reviews to show up immediately. So I think I can still do that. 
 
    useEffect(()=>{
     dispatch(reviewActions.getReviewsForSpotThunk(spotId))
@@ -80,7 +80,7 @@ const SpotReviews = ({numReviews, avgRating, ownerId, reviews, spotId }) =>{
     // console.log("ALREADY REVIEWED",alreadyReviewed(sessionUser))
     
     // console.log("SESSIONUSER",sessionUser)
-   const canPostReview = (sessionUser, ownerId, numReviews) => sessionUser && numReviews &&!isCreator(sessionUser, ownerId) && !alreadyReviewed(sessionUser);
+   const canPostReview = (sessionUser, ownerId) => sessionUser &&!isCreator(sessionUser, ownerId) && !alreadyReviewed(sessionUser);
 
 //    console.log( "CAN POST REVIEW",canPostReview(sessionUser, ownerId, reviews))
 //    console.log("IS CREATOR",isCreator(sessionUser, ownerId), "USERID", sessionUser.id, "OWNERID", ownerId)
@@ -103,6 +103,8 @@ const SpotReviews = ({numReviews, avgRating, ownerId, reviews, spotId }) =>{
 
     // console.log(numReviews)
 
+
+
     return(
         <>
         <IoIosStar/>
@@ -120,8 +122,8 @@ const SpotReviews = ({numReviews, avgRating, ownerId, reviews, spotId }) =>{
         {isCreator(sessionUser, ownerId) && (
             <button disabled={true}>You own this spot. Check out the reviews</button>
         )}
-        {canPostReview(sessionUser, ownerId, numReviews) && (
-            <OpenModalButton id='review-button' buttonText={numReviews ?'Post Your Review': 'Be the first to post a review!'} onButtonClick={closeMenu} modalComponent={<ReviewModal spotId={spotId}/>}/>
+        {canPostReview(sessionUser, ownerId) && (
+            <OpenModalButton id='review-button' buttonText={'Post Your Review'} onButtonClick={closeMenu} modalComponent={<ReviewModal spotId={spotId}/>}/>
         )} 
         <ul className='spot-reviews'>
         {reviews?.map(({id, userId, User, stars, review, createdAt, updatedAt })=>(

@@ -62,15 +62,41 @@ const ReviewModal = ({spotId})=>{
         setStars(Number(number));
     };
 
+    const onClickAway = () => {
+        let errs = {};
+        if (review.length < 10){
+            console.log(review)
+            errs["review"] = "Review must be at least 10 characters long"
+            console.log(errs)
+            setErrors(errs)
+            console.log(errors)
+        }
+    }
+
+   const  onChangeReview = (text) =>{
+        let newErrs = {};
+        setReview(text)
+        if(text.length >=10){
+            if (errors.review){
+               setErrors({})
+            }
+        }
+    }
+
+
+    //Now I want to track when the review text is = or longer than 10 char, I want to not display the review err. 
+
     return(
         <>
         <h4>How was your stay?</h4>
+        {errors && <p>{errors.message}</p>}
         <form onSubmit={handleSubmit}>
             <label>Leave your review here...
                 <input 
                 type='text'
                 value={review}
-                onChange={(e)=>setReview(e.target.value)}
+                onChange={(e)=>onChangeReview(e.target.value)}
+                onBlur={onClickAway}
                 />
             </label>
             {errors && <p>{errors.review}</p>}
@@ -90,4 +116,4 @@ const ReviewModal = ({spotId})=>{
 
 
 
-export default ReviewModal;
+export default ReviewModal
