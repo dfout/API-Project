@@ -80,7 +80,7 @@ const SpotReviews = ({numReviews, avgRating, ownerId, reviews, spotId }) =>{
     // console.log("ALREADY REVIEWED",alreadyReviewed(sessionUser))
     
     // console.log("SESSIONUSER",sessionUser)
-   const canPostReview = (sessionUser, ownerId) => sessionUser && !isCreator(sessionUser, ownerId) && !alreadyReviewed(sessionUser);
+   const canPostReview = (sessionUser, ownerId, numReviews) => sessionUser && numReviews &&!isCreator(sessionUser, ownerId) && !alreadyReviewed(sessionUser);
 
 //    console.log( "CAN POST REVIEW",canPostReview(sessionUser, ownerId, reviews))
 //    console.log("IS CREATOR",isCreator(sessionUser, ownerId), "USERID", sessionUser.id, "OWNERID", ownerId)
@@ -101,28 +101,28 @@ const SpotReviews = ({numReviews, avgRating, ownerId, reviews, spotId }) =>{
     
     */
 
-
+    // console.log(numReviews)
 
     return(
         <>
         <IoIosStar/>
         <span>{avgRating}</span>
         <span>{
-            (numReviews === 0 || numReviews === null) ? "New" : numReviews + ' reviews'
+            (numReviews === 0 || numReviews === null) ? "New" : (numReviews + ' reviews')
         }</span>
         {!sessionUser && (
-                <button id='review-button' disabled={true}>Sign-in to post a Review</button>
+         <button id='review-button' disabled={true}>Sign-in to post a Review</button>
         )
         }
-        {canPostReview(sessionUser, ownerId, reviews) && (
-            <OpenModalButton id='review-button' buttonText='Post Your Review' onButtonClick={closeMenu} modalComponent={<ReviewModal spotId={spotId}/>}/>
-        )} 
         {alreadyReviewed(sessionUser) &&(
             <button id='review-button' disabled={true}>Review Submitted</button>
         )}
         {isCreator(sessionUser, ownerId) && (
             <button disabled={true}>You own this spot. Check out the reviews</button>
         )}
+        {canPostReview(sessionUser, ownerId, numReviews) && (
+            <OpenModalButton id='review-button' buttonText={numReviews ?'Post Your Review': 'Be the first to post a review!'} onButtonClick={closeMenu} modalComponent={<ReviewModal spotId={spotId}/>}/>
+        )} 
         <ul className='spot-reviews'>
         {reviews?.map(({id, userId, User, stars, review, createdAt, updatedAt })=>(
             <li className='review-tile' key={id}>

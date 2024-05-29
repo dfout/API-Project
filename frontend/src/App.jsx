@@ -15,6 +15,7 @@ import CreateSpotPage from './components/CreateSpotPage';
 
 
 
+
 // Page Layout and effects directly on the original page Layout
 function Layout(){
   const dispatch = useDispatch();
