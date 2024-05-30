@@ -127,7 +127,28 @@ export const userSpotsThunk = () => async(dispatch) =>{
     }
 
 }
+//Update Spot
+export const UpdateSpotThunk = (spot) => async(dispatch) =>{
+    const {spotId} = spot.id
+    const response = await csrfFetch(`/api/spots/${spotId}`, {
+        method: "PUT",
+        body: JSON.stringify(spot)
+    });
 
+    if (response.ok) {
+        const spotData = await response.json()
+      
+        dispatch(getSpots(spotData))
+        //SpotData as of now, is: {Spots: [{}, {}, {}]}
+        
+
+
+        return spotData;
+    } else {
+        const error = await response.json();
+        return error
+    }
+}
 
 export const setSpotImagesThunk = (spotImage) => async (dispatch) => {
     const { url, preview, spotId } = spotImage;

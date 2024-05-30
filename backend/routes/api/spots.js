@@ -527,7 +527,8 @@ router.get('/current', requireAuth, async(req,res,next)=>{
     const ownedSpots = {};
 
     let Spots = await Spot.findAll({
-        where: {ownerId: currId}
+        where: {ownerId: currId},
+        include:[{model:SpotImage}]
     })
     ownedSpots.Spots = Spots;
 

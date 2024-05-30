@@ -39,6 +39,9 @@ export default function ManageSpots (){
         navigate('/spots/create')
 
     }
+    const handleUpdateButton = (id)=>{
+        return <Navigate to= {`/spots/${id}/edit`}/>
+    }
 
 
     return(
@@ -66,7 +69,7 @@ export default function ManageSpots (){
                 </div>
                 </Link>
 
-                <button>Update</button>
+                <button><Link to={`/spots/${id}/edit`}>Update</Link></button>
                 <button>Delete</button>
                 
                 </li>
