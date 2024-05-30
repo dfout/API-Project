@@ -17,7 +17,7 @@ export default function ManageSpots (){
 
     useEffect(()=>{
         const spots = dispatch(userSpotsThunk())
-        console.log(spots)
+        console.log("SPOTS",spots)
     },[dispatch, userSpotsThunk])
 
     const handleCreateButton =()=>{
