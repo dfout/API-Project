@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import * as spotActions from '../store/spot'
 import { Navigate } from "react-router-dom";
@@ -15,6 +15,7 @@ export default function EditSpotForm (){
 
     const spot = spots[spotId]
     const dispatch = useDispatch();
+    const navigate = useNavigate()
 
 
     const sessionUser = useSelector((state) => state.session.user);
@@ -49,19 +50,23 @@ export default function EditSpotForm (){
                 name,
                 description,
                 price,
-                previewImage
+                previewImage,
+                id: spotId
+               
             })
           ).catch(async (res) => {
+            console.log(res)
             const data = await res.json();
+            console.log(data)
             if (data?.errors) {
               setErrors(data.errors);
             }else{
               
-              const createdSpotId = data.spot.id;
+              
               const createdPreviewImage = {
                 url:previewImage,
                 preview:true,
-                spotId: createdSpotId
+                spotId: spotId
               }
               dispatch(spotActions.setSpotImagesThunk(createdPreviewImage))
               SpotImages.forEach((image)=>{
@@ -73,9 +78,10 @@ export default function EditSpotForm (){
                 dispatch(spotActions.setSpotImagesThunk(spotImage))
               })
     
-              return <Navigate to={`/spots/${createdSpotId}`}/>
+              navigate(`/api/spots/${spotId}`)
             }
           });
+
       };
 
 
@@ -183,7 +189,7 @@ export default function EditSpotForm (){
             type="text"
             value={price}
             placeholder='Price per night (USD)'
-            onChange={(e) => setPrice(e.target.value)}
+            onChange={(e) => setPrice(Number(e.target.value))}
           />
         </label>
         {errors.price && <p>{errors.price}</p>}

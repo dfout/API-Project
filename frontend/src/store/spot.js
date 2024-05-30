@@ -6,6 +6,7 @@ const GET_SPOTS = 'spots/getAllSpots';
 // const LOG_OUT = 'session/log-out';
 const GET_SPOT_DETAIL = 'spots/:spotId'
 const SET_SPOT_IMAGES = 'spots/images'
+const UPDATE_SPOT = 'spots/:spotId'
 
 
 //* POJO Action Creators
@@ -28,6 +29,13 @@ const setImages = (image) => {
     return ({
         type: SET_SPOT_IMAGES,
         image
+    })
+}
+
+const updateSpot = (spot) =>{
+    return ({
+        type: 'UPDATE_SPOT',
+        spot
     })
 }
 
@@ -129,24 +137,39 @@ export const userSpotsThunk = () => async(dispatch) =>{
 }
 //Update Spot
 export const UpdateSpotThunk = (spot) => async(dispatch) =>{
-    const {spotId} = spot.id
-    const response = await csrfFetch(`/api/spots/${spotId}`, {
+    console.log(spot)
+    const {id, country, address, city, state, lat, lng, description, name, price, previewImage, SpotImages } = spot;
+    const response = await csrfFetch(`/api/spots/${id}`, {
         method: "PUT",
-        body: JSON.stringify(spot)
+        headers:{
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            id,
+            country, 
+            address,
+            city, 
+            state,
+            lat,
+            lng,
+            description,
+            name,
+            price,
+            previewImage,
+            SpotImages
+        })
     });
 
     if (response.ok) {
         const spotData = await response.json()
       
-        dispatch(getSpots(spotData))
+        dispatch(updateSpot(spotData))
         //SpotData as of now, is: {Spots: [{}, {}, {}]}
-        
-
-
-        return spotData;
+    
+        return spotData
     } else {
         const error = await response.json();
-        return error
+        throw error
     }
 }
 
@@ -181,10 +204,15 @@ const spotReducer = (state = initialState, action, prevState) => {
             return newState
         }
         case GET_SPOT_DETAIL: {
-            const newSpotState = { ...state }
+            const newSpotState = { ...state.spots }
             const spot = action.spot
-            newSpotState[spot.id] = spot;
+            newSpotState[action.spot.id] = spot;
             return newSpotState
+        }
+        case UPDATE_SPOT: {
+            const newState = {...state, spots: {...state.spots}}
+            newState.spots[action.spot.id]= {...action.spot}
+            return newState
         }
         default:
             return state
