@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef} from "react"
+import { useState, useEffect, useRef, } from "react"
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux"
 // import { Navigate } from "react-router-dom";
 import * as sessionActions from '../../store/session'
@@ -19,6 +20,7 @@ const ProfileButton = ({user}) => {
     const [showMenu, setShowMenu] = useState(false)
     const dispatch = useDispatch();
     const ulRef = useRef()
+    const navigate = useNavigate();
 
     useEffect(()=>{
         if(!showMenu) return;
@@ -49,10 +51,11 @@ const ProfileButton = ({user}) => {
         setShowMenu(!showMenu)
     }
 
-    const logout = (e)=> {
+    const logout = async(e)=> {
         e.preventDefault()
-        dispatch(sessionActions.logOutUserThunk())
+        await dispatch(sessionActions.logoutUserThunk())
         closeMenu()
+        navigate('/')
     }
 
     const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
@@ -79,7 +82,7 @@ const ProfileButton = ({user}) => {
                         <span>{user.username}</span>
                         <span>{user.firstName} {user.lastName}</span>
                         <span>{user.email}</span>
-                        <span><button onClick={logout}>Log Out</button></span>
+                        <button onClick={logout}>Log Out</button>
                 
                     </div>
                 ): (

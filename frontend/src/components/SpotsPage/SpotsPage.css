@@ -1,0 +1,66 @@
+
+
+.all-spots{
+    position:relative;
+    
+    width:100vw;
+    display:flex;
+    flex-direction:row;
+    
+    flex-wrap:wrap;
+    margin:0;
+    gap: 20px;
+    padding-left: 5%;
+    margin-right: 5%;
+    padding-top: 2%; 
+    /* margin-left: 5%;
+    margin-right:5%; */
+
+}
+
+.spot-tile{
+    height:fit-content;
+    width:fit-content;
+ 
+
+}
+
+.spot-tile:hover{
+    cursor: pointer;
+}
+
+
+.image-container{
+    height:200px;
+    width:200px;
+    padding-bottom:10px;
+}
+
+#preview-image{
+    height:100%;
+    width:100%;
+    overflow:hidden;
+    border-radius:10px;
+}
+
+/* Link to={`/spots/${id}`} */
+
+h3{
+    font-size:12pt
+}
+
+.link-tile{
+    color:black;
+    text-decoration: none;
+}
+
+.spot-info{
+    display:flex;
+    
+}
+
+#ratings{
+    margin-left:auto;
+    display:flex;
+    gap: 2px;
+}
