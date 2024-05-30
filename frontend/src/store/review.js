@@ -22,10 +22,10 @@ const postReview = (review)=>{
 }
 
 
-// export const getReviewsList = createSelector(
-//     (state)=> state.reviews,
-//     (Reviews)=> Object.values(Reviews)
-// )
+export const getReviewsList = createSelector(
+    (state)=> state.reviews,
+    (Reviews)=> Object.values(Reviews)
+)
 
 
 
@@ -49,6 +49,7 @@ export const getReviewsForSpotThunk = (id) => async(dispatch) =>{
 
 
 export const postReviewThunk = ({review, stars}, spotId)=> async(dispatch)=>{
+    console.log(review, stars, spotId)
     const response = await csrfFetch(`/api/spots/${spotId}/reviews`, {
         method: "POST",
         body: JSON.stringify({
@@ -75,12 +76,12 @@ const initialState = {};
 const reviewReducer = (state = initialState, action, prevState) => {
     switch(action.type){
         case GET_REVIEWS:{
-            const newState = {}
-            action.reviews.Reviews.forEach((review)=> newState[review.id] = review)
+            const newState = {...state}
+            action.reviews.Reviews.forEach((review)=> newState[review.userId] = review)
             return newState
         }
         case POST_REVIEW:{
-            const newState = {...state}
+            const newState = {...state, ...state.reviews}
             newState[action.review.id] = action.review;
             return newState
         }

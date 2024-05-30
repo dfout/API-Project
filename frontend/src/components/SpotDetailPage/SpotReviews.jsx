@@ -6,21 +6,43 @@ import {useParams} from 'react-router-dom';
 import OpenModalButton from '../OpenModalButton';
 import { useModal } from '../../context/Modal';
 import ReviewModal from '../ReviewModal';
+import { getReviewsList } from '../../store/review';
 
 import * as reviewActions from '../../store/review'
 
 import './SpotReview.css'
 
-const SpotReviews = ({numReviews, avgRating, ownerId, reviews, spotId }) =>{
+const SpotReviews = ({ reviewsState, numReviews, avgRating, ownerId, spotId }) =>{
     const dispatch = useDispatch()
+
+    // const [reviews, setReviews] = useState(reviewsState);
+
+    spotId = Number(spotId)
+    console.log(typeof spotId)
+
+
+        
+
+    const reviews = useSelector(getReviewsList);
+    console.log(reviews)
+
+
+    //! How do I cause this component to rerender when the reviews state is updated?
 
     //Listen to just the reviews..... But I want new reviews to show up immediately. So I think I can still do that. 
 
-   useEffect(()=>{
-    dispatch(reviewActions.getReviewsForSpotThunk(spotId))
-   }, [dispatch, spotId])
-    
-    // For Post Review Button:
+//    useEffect(()=>{
+//     dispatch(reviewActions.getReviewsForSpotThunk(spotId))
+//    }, [dispatch, spotId])
+
+
+
+    // useEffect(()=>{
+
+    //     setReviews(review)
+        
+    // },[reviews])
+        // For Post Review Button:
     // Check if user is logged in         T: GreenLight           F: RedLight
     let sessionUser = useSelector((state) => state.session.user);
     if (sessionUser === null) {
@@ -39,18 +61,36 @@ const SpotReviews = ({numReviews, avgRating, ownerId, reviews, spotId }) =>{
        return false
     }
     // Check if user has already posted a reivew for this spot      T: RightLight   F: GreenLight
-    const reviewState = useSelector((state)=>state.reviews)
+    // const reviewState = useSelector((state)=>state.reviews)
     // const alreadyReviewed = reviewState[userId]
 
 
     // Reviews is an array of two objects. This will not be iterable. unless we change it to be 
    // To Make reviews Iterable:
-   const reviewsObj = useSelector((state)=>state.reviews, (reviews)=> Object.values)
+//    const reviewsObj = useSelector((state)=>state.reviews, (reviews)=> Object.values)
     
-   const reviewsList = Object.values(reviewsObj)
+//    const reviewsList = Object.values(reviewsObj)
+//    console.log(reviewsList)
    const closeMenu = useModal()
 
 //    reviews.forEach((review)=>console.log("a review"))
+
+
+const [timeCheck, setTimeCheck] = useState(true);
+
+useEffect(() => {
+    let timeout;
+   
+    if (!reviews) {
+        timeout = setTimeout(() => setTimeCheck(false), 3000);
+        
+    }
+
+    return () => clearTimeout(timeout);
+}, [reviews]);
+
+if (!reviews  && timeCheck) return <h1>Loading...</h1>;
+else if (!reviews&& !timeCheck) return <h1>Sorry, please refresh the page</h1>;
   
 
     const alreadyReviewed = (sessionUser)=>{
@@ -103,7 +143,14 @@ const SpotReviews = ({numReviews, avgRating, ownerId, reviews, spotId }) =>{
 
     // console.log(numReviews)
 
+    // const handleSubmit = async(e) => {
+    //     e.preventDefault()
+    //     setErrors
+    // };
+    
 
+
+    //! ISSUE: Right after submitting a new review, we have to wait to recieve that confirmation from the db
 
     return(
         <>
@@ -136,7 +183,6 @@ const SpotReviews = ({numReviews, avgRating, ownerId, reviews, spotId }) =>{
 
         ))}
          </ul>
-        
         
         </>
     );

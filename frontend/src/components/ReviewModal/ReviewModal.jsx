@@ -22,16 +22,21 @@ const ReviewModal = ({spotId})=>{
 
     const dispatch = useDispatch();
     const {closeModal} = useModal()
-    // const sessionUser = useSelector((state)=>state.session.user);
+    const sessionUser = useSelector((state)=>state.session.user);
 
     // if(sessionUser) return <Navigate to='/' replace={true} />
+
+    useEffect(()=>{
+
+    }, [review, stars])
+
 
     const handleSubmit = async(e)=>{
         e.preventDefault();
         setErrors({});
         let rating = Number(stars)
 
-        return dispatch(reviewActions.postReviewThunk({review, stars}, spotId)).then(closeModal).catch(
+        return dispatch(reviewActions.postReviewThunk({review, stars}, Number(spotId))).then(closeModal).catch(
             async(res)=>{
                 const data = await res.json();
                 
@@ -83,6 +88,8 @@ const ReviewModal = ({spotId})=>{
         }
     }
 
+    
+
 
     //Now I want to track when the review text is = or longer than 10 char, I want to not display the review err. 
 
@@ -107,7 +114,7 @@ const ReviewModal = ({spotId})=>{
             max="5"/>
                 {errors && <p>{errors.stars}</p>}
             <button type='submit' disabled={!isFormValid()} onSubmit={handleSubmit}>Submit Your Review</button>
-         
+
         </form>
         </>       
     );

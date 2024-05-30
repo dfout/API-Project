@@ -154,7 +154,8 @@ const bookingOwner = function(userId, booking){
 // //*Get all Reviews by Spot's Id:
 
 router.get('/:spotId/reviews', async(req,res,next)=>{
-    const {spotId} = req.params;
+    let {spotId} = req.params;
+    spotId = Number(spotId)
     const spot = await Spot.findByPk(spotId);
 
     if (!spot || spot === null){

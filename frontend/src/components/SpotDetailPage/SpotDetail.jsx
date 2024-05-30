@@ -12,6 +12,7 @@ import * as reviewActions from '../../store/review'
 import OpenModalButton from '../../components/OpenModalButton'
 import { useModal } from '../../context/Modal';
 import FeatureComingModal from '../FeatureComingModal';
+import { getReviewsList } from '../../store/review';
 
 import './SpotDetail.css'
 
@@ -25,23 +26,24 @@ const SpotDetail =()=>{
 
     useEffect(()=>{
        dispatch(spotActions.getOneSpotThunk(spotId))
+       dispatch(reviewActions.getReviewsForSpotThunk(spotId))
     
     }, [dispatch, spotId])
+
+
 
     // const getSpotDetails =(spotId)= async (dispatch)=> (spotActions.getOneSpotThunk(spotId));
     // const spots = useSelector(spotActions.getSpotsList)
     // console.log(spots)
 
     const spot = useSelector((state)=> state.spots[spotId]);
-    
-   
-    
-    const closeMenu = useModal();
-
-    // if (!spot || !spot.Owner) return null
-
-    
-  
+    const reviews = useSelector(getReviewsList)
+    let sessionUser = useSelector((state) => state.session.user);
+    if (sessionUser === null) {
+        sessionUser = false
+    }
+    // console.log(reviews)
+    // console.log(reviews)
     const [timeCheck, setTimeCheck] = useState(true);
 
     useEffect(() => {
@@ -53,15 +55,68 @@ const SpotDetail =()=>{
         }
     
         return () => clearTimeout(timeout);
-    }, [spot]);
+    }, [spot, reviews]);
 
-    if (!spot || !spot.Owner || !spot.Reviews && timeCheck) return <h1>Loading...</h1>;
-    else if (!spot || !spot.Owner || !spot.Reviews && !timeCheck) return <h1>Sorry, please refresh the page</h1>;
+    if (!spot || !spot.Owner || !reviews && timeCheck) return <h1>Loading...</h1>;
+    else if (!spot || !spot.Owner || !reviews && !timeCheck) return <h1>Sorry, please refresh the page</h1>;
+    
+   
+    
+    const closeMenu = useModal();
+
+    // if (!spot || !spot.Owner) return null
+
+    
+  
+
 
    
 
     const { name, city, state, country, Owner, price, avgRating, numReviews, description,previewImage, SpotImages, Reviews } = spot;
-    
+
+
+
+
+    const isCreator =(sessionUser, ownerId)=>{
+        if(sessionUser){
+         const userId = sessionUser.id
+             if (userId === ownerId){
+                 return true
+             }
+        }
+        return false
+     }
+
+    const alreadyReviewed = (sessionUser, reviews)=>{
+
+        // const reviews = useSelector(
+        //     (state)=>state.reviews
+        // )
+        if(reviews){
+            const reviewsList = Object.values(reviews)
+        
+            // const sessionUser = useSelector((state) => state.session.user);
+            if(sessionUser){
+                const currUserId = sessionUser.id
+                
+                const hasReviewed = reviewsList.find((entry)=> entry.userId === currUserId);
+                    // if (entry.userId === currUserId) {
+                    //     return true;
+                    // }
+                
+                if(hasReviewed){
+                    return true
+                }else{
+                    return false
+                }
+               
+            }
+
+        }
+
+    }
+
+    const canPostReview = (sessionUser, ownerId) => sessionUser &&!isCreator(sessionUser, ownerId) && !alreadyReviewed(sessionUser);
 
     return(
         <>
@@ -108,7 +163,41 @@ const SpotDetail =()=>{
                 </div>
             </div>
         </section>
-        <SpotReviews reviews={Reviews} avgRating={avgRating} numReviews={numReviews} ownerId={Owner.id} spotId={spotId}/>
+        {/* <SpotReviews reviewsState= {reviews} avgRating={avgRating} numReviews={numReviews} ownerId={Owner.id} spotId={Number(spotId)}/> */}
+
+
+        <>
+        <IoIosStar/>
+        <span>{avgRating}</span>
+        <span>{
+            (numReviews === 0 || numReviews === null) ? "New" : (numReviews + ' reviews')
+        }</span>
+        {!sessionUser && (
+         <button id='review-button' disabled={true}>Sign-in to post a Review</button>
+        )
+        }
+        {alreadyReviewed(sessionUser) &&(
+            <button id='review-button' disabled={true}>Review Submitted</button>
+        )}
+        {isCreator(sessionUser, ownerId) && (
+            <button disabled={true}>You own this spot. Check out the reviews</button>
+        )}
+        {canPostReview(sessionUser, ownerId) && (
+            <OpenModalButton id='review-button' buttonText={'Post Your Review'} onButtonClick={closeMenu} modalComponent={<ReviewModal spotId={spotId}/>}/>
+        )} 
+        <ul className='spot-reviews'>
+        {reviews?.map(({id, userId, User, stars, review, createdAt, updatedAt })=>(
+            <li className='review-tile' key={id}>
+                <h4>{User.firstName}</h4>
+                <span>{createdAt.split('-')[1]}/{createdAt.split('-')[2].split('T')[0]}/{createdAt.split('-')[0]}</span>
+                <span>{stars} stars</span>
+                <span>{review}</span>
+            </li>
+
+        ))}
+         </ul>
+        
+        </>
         </>
     )
 }
