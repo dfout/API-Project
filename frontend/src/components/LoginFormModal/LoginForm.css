@@ -1,0 +1,45 @@
+
+
+button:not([disabled]):hover{
+    cursor: pointer;
+}
+
+p{
+    color:red;
+    display:block;
+}
+
+.modal{
+    border-radius:  10px;
+}
+
+
+form{
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
+    width: 400px;
+    height: fit-content;
+}
+
+label{
+    display:flex;
+    flex-direction:column;
+    gap: 5px;
+    padding: 3% 3%;
+}
+
+h1{
+    text-align: center;
+}
+
+
+#demo-login{
+    width:fit-content;
+    align-self: center;
+    background-color: white;
+    border:none;
+    text-decoration: underline;
+    padding-bottom: 7%;
+}

@@ -1,6 +1,7 @@
 
 import { useSelector } from "react-redux"
 import { NavLink } from "react-router-dom";
+import { PiStripeLogo } from "react-icons/pi";
 
 
 import './Navigation.css'
@@ -17,14 +18,24 @@ const Navigation = ({isLoaded})=>{
 
 
     return(
-        <ul>
-            <li>
-                <NavLink to='/'>Home</NavLink>
+        <ul id= 'Navigation'>
+            <li id='logo'>
+                <NavLink to='/' className='logo-link'><h1>squatspot</h1></NavLink>
+                
             </li>
             {isLoaded && (
-            <li>
-                <ProfileButton user={sessionUser} />
-            </li>
+                <div className='right-side'>
+                {sessionUser && (
+                        <li id='create-spot'>
+                        <NavLink to='/spots/create' className='create-link'><span >Create a New Spot</span></NavLink>
+                        </li>
+
+                )}
+                    <li id= 'profile'>
+                        <ProfileButton user={sessionUser} className='profile-button' />
+                    </li>
+                </div>
+
             )}
         </ul>
     )

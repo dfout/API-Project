@@ -1,0 +1,3 @@
+button:not([disabled]):hover{
+    cursor: pointer;
+}

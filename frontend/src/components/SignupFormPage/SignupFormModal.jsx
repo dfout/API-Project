@@ -29,12 +29,16 @@ const SignupFormModal= () => {
         e.preventDefault();
         if (password === confirmPassword){
             setErrors({})
+            // const response = dispatch(signUpUserThunk({username, firstName, lastName, email, password}));
+            // console.log("AFTER DISPATCH", response)
+
             return dispatch(signUpUserThunk({username, firstName, lastName, email, password})).then(closeModal).catch(
                 async(res)=>{
                     const data = await res.json();
                     if(res.status !== 200){
-                        setErrors(data)
-                        // console.log(data)
+                        
+                        setErrors(data.errors)
+                      
                     }
                 }
             )
@@ -45,6 +49,17 @@ const SignupFormModal= () => {
         
 
     };
+    const isFormValid = ()=> {
+       const isFilled =  username && firstName && lastName && email && password && confirmPassword 
+      
+       if (isFilled && username.length >=4 && password.length >=6){
+        return true
+       }else{
+        return false
+       }
+    }
+
+
 
     return(
         <>
@@ -53,9 +68,7 @@ const SignupFormModal= () => {
                 <label>Email
                     <input type='text' value={email} onChange={(e)=> setEmail(e.target.value)} required />
                 </label>
-                <div>
                 {errors.email && <p>{errors.email}</p>}
-                </div>
                 <label>Username
                     <input type='text' value={username} onChange={(e)=> setUsername(e.target.value)} required />
                 </label>
@@ -78,7 +91,7 @@ const SignupFormModal= () => {
                     <input type='password' value={confirmPassword} onChange={(e)=> setConfirmPassword(e.target.value)} required />
                 </label>
                 {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
-                <button type='submit'>Sign Up</button>
+                <button type='submit' disabled={!isFormValid()}>Sign Up</button>
             </form>
         </>
     )
