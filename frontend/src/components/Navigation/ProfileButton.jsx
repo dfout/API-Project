@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, } from "react"
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux"
 // import { Navigate } from "react-router-dom";
 import * as sessionActions from '../../store/session'
@@ -82,6 +82,7 @@ const ProfileButton = ({user}) => {
                         <span>{user.username}</span>
                         <span>{user.firstName} {user.lastName}</span>
                         <span>{user.email}</span>
+                        <Link to='/spots/manage'>Manage Spots</Link>
                         <button onClick={logout}>Log Out</button>
                 
                     </div>

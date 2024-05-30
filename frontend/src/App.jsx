@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 // Import Components
 import SpotsPage from './components/SpotsPage/SpotsPage';
 import Navigation from './components/Navigation'
+import ManageSpots from './components/ManageSpots';
 
 // Import Actions
 import * as sessionActions from './store/session';
@@ -56,6 +57,11 @@ const router = createBrowserRouter([
       {
         path: '/spots/create',
         element:<CreateSpotPage />
+      },
+      {
+        path:'/spots/manage',
+        element: <ManageSpots />
+
       }
     ]
   }
