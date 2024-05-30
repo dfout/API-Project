@@ -114,8 +114,10 @@ export const userSpotsThunk = () => async(dispatch) =>{
     const response = await csrfFetch('/api/spots/current');
     if (response.ok) {
         const spotData = await response.json()
-        // console.log(spotData)
+      
         dispatch(getSpots(spotData))
+        //SpotData as of now, is: {Spots: [{}, {}, {}]}
+        
 
 
         return spotData;
@@ -153,7 +155,7 @@ const initialState = {}
 const spotReducer = (state = initialState, action, prevState) => {
     switch (action.type) {
         case GET_SPOTS: {
-            const newState = { ...state };
+            const newState = { ...state.spots };
             action.spots.Spots.forEach((spot) => newState[spot.id] = spot)
             return newState
         }

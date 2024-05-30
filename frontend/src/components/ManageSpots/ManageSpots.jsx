@@ -12,13 +12,28 @@ export default function ManageSpots (){
 
     const dispatch = useDispatch();
     const userSpots = Object.values(useSelector((state)=>state.spots))
-    console.log(userSpots)
+  
     const navigate = useNavigate();
+    // const [timeCheck, setTimeCheck] = useState(true);
+    
 
     useEffect(()=>{
         const spots = dispatch(userSpotsThunk())
-        console.log("SPOTS",spots)
-    },[dispatch, userSpotsThunk])
+    },[dispatch])
+
+    // useEffect(() => {
+    //     let timeout;
+       
+    //     if (!spot || !spot.Owner || !spot.Reviews) {
+    //         timeout = setTimeout(() => setTimeCheck(false), 3000);
+            
+    //     }
+    
+    //     return () => clearTimeout(timeout);
+    // }, []);
+
+    // if (!spot || !spot.Owner || !reviews && timeCheck) return <h1>Loading...</h1>;
+    // else if (!spot || !spot.Owner || !reviews && !timeCheck) return <h1>Sorry, please refresh the page</h1>;
 
     const handleCreateButton =()=>{
         navigate('/spots/create')
