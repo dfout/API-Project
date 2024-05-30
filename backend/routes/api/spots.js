@@ -709,7 +709,7 @@ router.put('/:spotId', requireAuth,validateSpot,async(req,res,next)=>{
                 message:"Forbidden"
             })
         }else{
-            const { address, city, state, country, lat, lng, name, description, price} = req.body;
+            const { address, city, state, country, lat, lng, name, description, price, previewImage} = req.body;
 
             await spot.update({
                 address,
@@ -720,7 +720,8 @@ router.put('/:spotId', requireAuth,validateSpot,async(req,res,next)=>{
                 lng,
                 name,
                 description,
-                price
+                price,
+                previewImage,
             })
 
 

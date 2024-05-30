@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import * as spotActions from '../store/spot'
 import { Navigate } from "react-router-dom";
-
+import { useEffect } from "react";
 import { useSelector } from 'react-redux';
 import { useState } from "react";
 import { UpdateSpotThunk } from "../store/spot";
@@ -11,11 +11,18 @@ import { UpdateSpotThunk } from "../store/spot";
 export default function EditSpotForm (){
     const {spotId} = useParams();
    
-    let spots = useSelector((state)=> state.spots)
-
-    const spot = spots[spotId]
+    let spot = useSelector((state)=> state.spots[spotId])
+    // const spot = spots[spotId]
     const dispatch = useDispatch();
     const navigate = useNavigate()
+
+    useEffect(()=>{
+
+        dispatch(UpdateSpotThunk())
+
+    },[spot])
+
+
 
 
     const sessionUser = useSelector((state) => state.session.user);
@@ -73,13 +80,14 @@ export default function EditSpotForm (){
                 const spotImage = {
                   url:image,
                   preview:false,
-                  spotId: createdSpotId
+                  spotId: spotId
                 }
                 dispatch(spotActions.setSpotImagesThunk(spotImage))
               })
     
-              navigate(`/api/spots/${spotId}`)
+              navigate(`/spots/${spotId}`)
             }
+            navigate(`/spots/${spotId}`)
           });
 
       };
@@ -231,7 +239,7 @@ export default function EditSpotForm (){
           
         </label>
     
-        <button type="submit" onSubmit={handleSubmit}>Update Spot</button>
+        <button type="submit" onClick={handleSubmit}>Update Spot</button>
       </form>
     </>
     )

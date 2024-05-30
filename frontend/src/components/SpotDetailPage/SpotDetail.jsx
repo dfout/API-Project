@@ -13,6 +13,7 @@ import OpenModalButton from '../../components/OpenModalButton'
 import { useModal } from '../../context/Modal';
 import FeatureComingModal from '../FeatureComingModal';
 import { getReviewsList } from '../../store/review';
+import ReviewModal from '../ReviewModal';
 
 import './SpotDetail.css'
 
@@ -72,7 +73,7 @@ const SpotDetail =()=>{
 
    
 
-    const { name, city, state, country, Owner, price, avgRating, numReviews, description,previewImage, SpotImages, Reviews } = spot;
+    const { name, city, state, country, Owner, price, avgRating, numReviews, description,previewImage, SpotImages, Reviews, ownerId } = spot;
 
 
 

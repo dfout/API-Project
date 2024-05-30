@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { Navigate } from 'react-router-dom';
 import * as spotActions from './../../store/spot'
 import './CreateSpotPage.css'
@@ -20,6 +21,7 @@ function CreateSpotPage() {
   const [SpotImages, setSpotImages] = useState([]);
   const [errors, setErrors] = useState({});
 
+  const navigate = useNavigate()
 
 //   if (sessionUser) return <Navigate to="/" replace={true} />;
 
@@ -42,12 +44,11 @@ function CreateSpotPage() {
             price,
             previewImage
         })
-      ).catch(async (res) => {
+      ).then( navigate(`/spots/${createdSpotId}`)).catch(async (res) => {
         const data = await res.json();
         if (data?.errors) {
           setErrors(data.errors);
         }else{
-          
           const createdSpotId = data.spot.id;
           const createdPreviewImage = {
             url:previewImage,
@@ -64,7 +65,7 @@ function CreateSpotPage() {
             dispatch(spotActions.setSpotImagesThunk(spotImage))
           })
 
-          return <Navigate to={`/spots/${createdSpotId}`}/>
+    
         }
       });
   };
@@ -214,7 +215,7 @@ function CreateSpotPage() {
           
         </label>
     
-        <button type="submit" onSubmit={handleSubmit}>Create Spot</button>
+        <button type="submit" onClick={handleSubmit}>Create Spot</button>
       </form>
     </>
   );
