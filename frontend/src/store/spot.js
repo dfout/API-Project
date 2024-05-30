@@ -107,8 +107,25 @@ export const createSpotThunk = (spot) => async (dispatch) => {
     //     const err = await error.json()
     //     return err
     // }
+}
+
+// ManageSpots 
+export const userSpotsThunk = () => async(dispatch) =>{
+    const response = await csrfFetch('/api/spots/current');
+    if (response.ok) {
+        const spotData = await response.json()
+        // console.log(spotData)
+        dispatch(getSpots(spotData))
+
+
+        return spotData;
+    } else {
+        const error = await response.json();
+        return error
+    }
 
 }
+
 
 export const setSpotImagesThunk = (spotImage) => async (dispatch) => {
     const { url, preview, spotId } = spotImage;
