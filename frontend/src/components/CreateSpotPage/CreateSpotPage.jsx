@@ -25,6 +25,27 @@ function CreateSpotPage() {
 
 //   if (sessionUser) return <Navigate to="/" replace={true} />;
 
+
+const regex = /\.(png|jpg|jpeg)$/i;
+
+
+    useEffect(()=>{
+      const errors = {};
+      if (!country.length) errors.country =  "Country is required"
+      if(!address.length) errors.address = "Address is required"
+      if(!city.length) errors.city = "City is required"
+      if(!state.length) errors.state = "State is required"
+      if(!lat) errors.lat = "Latitude must be within -90 and 90"
+      if(!lng) errors.lng = "Longitude must be within -180 and 180"
+      if(!description.length && description.length >= 30) errors.description = "Please provide a description of your spot at least 30 characters long"
+      if(!name) errors.name = "Please provide a name for your spot"
+      if(!price && price <1) errors.price = "Please provide a price per night"
+      if(!previewImage.length) errors.previewImage = "Please provide a preview image"
+      if(!regex.test(previewImage)) errors.previewImage = "Preview Image must end in .png, .jpg, or  .jpeg"
+
+      setValidationErrors(errors)
+    },[country, address, city, state, lat, lng, description, name, price, previewImage, SpotImages])
+
   const handleSubmit = (e) => {
     e.preventDefault();
     
@@ -44,7 +65,7 @@ function CreateSpotPage() {
             price,
             previewImage
         })
-      ).then( navigate(`/spots/${createdSpotId}`)).catch(async (res) => {
+      ).catch(async (res) => {
         const data = await res.json();
         console.log(data)
         if (data?.errors) {

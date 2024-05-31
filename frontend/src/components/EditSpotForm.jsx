@@ -13,7 +13,7 @@ export default function EditSpotForm (){
    
     let spot = useSelector((state)=> state.spots[spotId])
     // const spot = spots[spotId]
-    console.log(spot)
+   
     const dispatch = useDispatch();
     const navigate = useNavigate()
 
@@ -38,9 +38,16 @@ export default function EditSpotForm (){
     const [price, setPrice] = useState(spot.price);
     const [previewImage, setPreviewImage] = useState(spot.previewImage)
     const [SpotImages, setSpotImages] = useState(spot.SpotImages);
+
+    
     const [validationErrors, setValidationErrors] = useState({});
     const [hasSubmitted, setHasSubmitted] = useState(false)
 
+
+    const [spotImage1, setSpotImage1] = useState(spot.SpotImages[0].url || '')
+    const [spotImage2, setSpotImage2] = useState(spot.SpotImages[1].url || '')
+    const [spotImage3, setSpotImage3] = useState(spot.SpotImages[2].url|| '')
+    const [spotImage4, setSpotImage4] = useState(spot.SpotImages[3].url || '')
 
 
 
@@ -59,15 +66,28 @@ export default function EditSpotForm (){
       if(!name) errors.name = "Please provide a name for your spot"
       if(!price && price <1) errors.price = "Please provide a price per night"
       if(!previewImage.length) errors.previewImage = "Please provide a preview image"
-      if(!regex.test(previewImage)) errors.previewImage = "Preview Image must end in .png, .jpg, or  .jpeg"
+      if(!regex.test(previewImage)) errors.previewImage = "Please provide a preview image that ends in .png, .jpg, or  .jpeg"
+      if(!regex.test(spotImage1)) errors.Images = "Images must end in .png, .jpg, .jpeg"
+      if(!regex.test(spotImage2)) errors.Images = "Images must end in .png, .jpg, or .jpeg"
+      if(!regex.test(spotImage3)) errors.Images = "Images must end in .png, .jpg, or .jpeg"
+      if(!regex.test(spotImage4)) errors.Images = "Images must end in .png, .jpg, or .jpeg"
+    
+
 
       setValidationErrors(errors)
-    },[country, address, city, state, lat, lng, description, name, price, previewImage, SpotImages])
+    },[country, address, city, state, lat, lng, description, name, price, previewImage, spotImage1, spotImage2, spotImage3, spotImage4])
 
 
     const handleSubmit = async (e) =>{
       e.preventDefault();
       setHasSubmitted(true)
+      const images = [];
+      if(spotImage1.length) images.push(spotImage1)
+      if(spotImage2.length) images.push(spotImage2)
+      if(spotImage3.length) images.push(spotImage3)
+      if(spotImage4.length) images.push(spotImage4)
+
+      setSpotImages(images)
 
       if (!Object.values(validationErrors).length){
         const updatedSpot = {
@@ -270,30 +290,30 @@ export default function EditSpotForm (){
             <input 
             type='text'
             placeholder='Image URL'
-            value={SpotImages[0] || ''} 
-            onChange={(e) => setSpotImages([e.target.value, ...SpotImages.slice(1)])}
+            value={spotImage1} 
+            onChange={(e) => setSpotImage1(e.target.value)}
 
             />
                  <input 
             type='text'
             placeholder='Image URL'
-            value={SpotImages[1] || ''} 
-            onChange={(e) => setSpotImages([...SpotImages.slice(0, 1), e.target.value, ...SpotImages.slice(2)])}
+            value={spotImage2} 
+            onChange={(e) => setSpotImage2(e.target.value)}
             />
                  <input 
             type='text'
             placeholder='Image URL'
-            value={SpotImages[2] || ''}
-            onChange={(e) => setSpotImages([...SpotImages.slice(0, 2), e.target.value, ...SpotImages.slice(3)])}
+            value={spotImage3}
+            onChange={(e) => setSpotImage3(e.target.value)}
             />
                  <input 
             type='text'
             placeholder='Image URL'
-            value={SpotImages[3] || ''}
-            onChange={(e) => setSpotImages([...SpotImages.slice(0, 3), e.target.value])}
+            value={spotImage4}
+            onChange={(e) => setSpotImage4(e.target.value)}
             />
-          
         </label>
+        {validationErrors.Images && <p>{validationErrors.Images}</p>}
     
         <button type="submit" onClick={handleSubmit}>Update Spot</button>
       </form>
