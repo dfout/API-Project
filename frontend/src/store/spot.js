@@ -6,7 +6,7 @@ const GET_SPOTS = 'spots/getAllSpots';
 // const LOG_OUT = 'session/log-out';
 const GET_SPOT_DETAIL = 'spots/:spotId'
 const SET_SPOT_IMAGES = 'spots/images'
-const UPDATE_SPOT = 'spots/:spotId'
+const UPDATE_SPOT = 'spots/:spotId/update'
 const DELETE_SPOT = "/spots/:spotId/delete"
 
 
@@ -145,7 +145,7 @@ export const userSpotsThunk = () => async(dispatch) =>{
 //Update Spot
 export const UpdateSpotThunk = (spot) => async(dispatch) =>{
    
-    const {id, country, address, city, state, lat, lng, description, name, price, previewImage, SpotImages } = spot;
+    const {id,country, address, city, state, lat, lng, description, name, price, previewImage, SpotImages } = spot;
     const response = await csrfFetch(`/api/spots/${id}`, {
         method: "PUT",
         headers:{
@@ -172,11 +172,10 @@ export const UpdateSpotThunk = (spot) => async(dispatch) =>{
       
         dispatch(updateSpot(spotData))
         //SpotData as of now, is: {Spots: [{}, {}, {}]}
-    
-        return spotData
+        return true
     } else {
         const error = await response.json();
-        throw error
+        return error
     }
 }
 
@@ -240,7 +239,7 @@ const spotReducer = (state = initialState, action, prevState) => {
         }
         case UPDATE_SPOT: {
             const newState = {...state}
-            newState.spots[action.spot.id]= {...action.spot}
+            newState[action.spot.id]= {...action.spot}
             return {...newState}
         }
         case DELETE_SPOT:{

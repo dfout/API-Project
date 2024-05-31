@@ -13,14 +13,15 @@ export default function EditSpotForm (){
    
     let spot = useSelector((state)=> state.spots[spotId])
     // const spot = spots[spotId]
+    console.log(spot)
     const dispatch = useDispatch();
     const navigate = useNavigate()
 
-    useEffect(()=>{
+    // useEffect(()=>{
 
-        dispatch(UpdateSpotThunk())
+    //     dispatch(UpdateSpotThunk(spot))
 
-    },[spot])
+    // },[spot])
 
 
 
@@ -37,60 +38,115 @@ export default function EditSpotForm (){
     const [price, setPrice] = useState(spot.price);
     const [previewImage, setPreviewImage] = useState(spot.previewImage)
     const [SpotImages, setSpotImages] = useState(spot.SpotImages);
-    const [errors, setErrors] = useState({});
+    const [validationErrors, setValidationErrors] = useState({});
+    const [hasSubmitted, setHasSubmitted] = useState(false)
 
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+
+
+    const regex = /\.(png|jpg|jpeg)$/i;
+
+
+    useEffect(()=>{
+      const errors = {};
+      if (!country.length) errors.country =  "Country is required"
+      if(!address.length) errors.address = "Address is required"
+      if(!city.length) errors.city = "City is required"
+      if(!state.length) errors.state = "State is required"
+      if(!lat) errors.lat = "Latitude must be within -90 and 90"
+      if(!lng) errors.lng = "Longitude must be within -180 and 180"
+      if(!description.length && description.length >= 30) errors.description = "Please provide a description of your spot at least 30 characters long"
+      if(!name) errors.name = "Please provide a name for your spot"
+      if(!price && price <1) errors.price = "Please provide a price per night"
+      if(!previewImage.length) errors.previewImage = "Please provide a preview image"
+      if(!regex.test(previewImage)) errors.previewImage = "Preview Image must end in .png, .jpg, or  .jpeg"
+
+      setValidationErrors(errors)
+    },[country, address, city, state, lat, lng, description, name, price, previewImage, SpotImages])
+
+
+    const handleSubmit = async (e) =>{
+      e.preventDefault();
+      setHasSubmitted(true)
+
+      if (!Object.values(validationErrors).length){
+        const updatedSpot = {
+          id:spotId, 
+          country, 
+          address,
+          city, 
+          state, 
+          lat,
+          lng,
+          description,
+          name, 
+          price, 
+          previewImage, 
+          SpotImages
+        }
+
+        const response = await dispatch(UpdateSpotThunk(updatedSpot))
+        if (response === true){
+          navigate(`/spots/${spotId}`)
+        }else{
+          return null
+
+          }
+          
+        }
+      }
+
+    // const handleSubmit = (e) => {
+    //     e.preventDefault();
         
         
-          setErrors({});
-          return dispatch(
-            spotActions.UpdateSpotThunk({
-                ownerId: sessionUser.id,
-                address,
-                city,
-                state,
-                country,
-                lat,
-                lng,
-                name,
-                description,
-                price,
-                previewImage,
-                id: spotId
+    //       setErrors({});
+    //       return dispatch(
+    //         UpdateSpotThunk({
+    //             ownerId: sessionUser.id,
+    //             address,
+    //             city,
+    //             state,
+    //             country,
+    //             lat,
+    //             lng,
+    //             name,
+    //             description,
+    //             price,
+    //             previewImage,
+    //             id:spotId
                
-            })
-          ).catch(async (res) => {
-            console.log(res)
-            const data = await res.json();
-            console.log(data)
-            if (data?.errors) {
-              setErrors(data.errors);
-            }else{
+    //         })
+    //       ).catch(async (res) => {
+    //         console.log(res)
+    //         const data = await res.json();
+    //         console.log(data)
+    //         if (data?.errors) {
+    //           setErrors(data.errors);
+    //         }else{
               
               
-              const createdPreviewImage = {
-                url:previewImage,
-                preview:true,
-                spotId: spotId
-              }
-              dispatch(spotActions.setSpotImagesThunk(createdPreviewImage))
-              SpotImages.forEach((image)=>{
-                const spotImage = {
-                  url:image,
-                  preview:false,
-                  spotId: spotId
-                }
-                dispatch(spotActions.setSpotImagesThunk(spotImage))
-              })
+    //           const createdPreviewImage = {
+    //             url:previewImage,
+    //             preview:true,
+    //             spotId: spotId
+    //           }
+    //           dispatch(spotActions.setSpotImagesThunk(createdPreviewImage))
+    //           SpotImages.forEach((image)=>{
+    //             const spotImage = {
+    //               url:image,
+    //               preview:false,
+    //               spotId: spotId
+    //             }
+    //             dispatch(spotActions.setSpotImagesThunk(spotImage))
+    //           })
     
-              navigate(`/spots/${spotId}`)
-            }
-            navigate(`/spots/${spotId}`)
-          });
+    //           navigate(`/spots/${spotId}`)
+    //         }
+    //         navigate(`/spots/${spotId}`)
+    //       });
 
-      };
+    //   };
 
 
     return(
@@ -110,7 +166,7 @@ export default function EditSpotForm (){
            
           />
         </label>
-        {errors.country && <p>{errors.country}</p>}
+        {validationErrors.country && <p>{validationErrors.country}</p>}
         <label>
           Street Address
           <input
@@ -121,7 +177,7 @@ export default function EditSpotForm (){
             
           />
         </label>
-        {errors.address && <p>{errors.address}</p>}
+        {validationErrors.address && <p>{validationErrors.address}</p>}
         <label>
           City
           <input
@@ -132,7 +188,7 @@ export default function EditSpotForm (){
            
           />
         </label>
-        {errors.city && <p>{errors.city}</p>}
+        {validationErrors.city && <p>{validationErrors.city}</p>}
         <label>
           State
           <input
@@ -143,7 +199,7 @@ export default function EditSpotForm (){
             
           />
         </label>
-        {errors.state&& <p>{errors.state}</p>}
+        {validationErrors.state&& <p>{validationErrors.state}</p>}
         <label>
           Latitude
           <input
@@ -154,7 +210,7 @@ export default function EditSpotForm (){
             
           />
         </label>
-        {errors.lat && <p>{errors.lat}</p>}
+        {validationErrors.lat && <p>{validationErrors.lat}</p>}
         <label>
           Long
           <input
@@ -165,7 +221,7 @@ export default function EditSpotForm (){
             
           />
         </label>
-        {errors.lng && <p>{errors.lng}</p>}
+        {validationErrors.lng && <p>{validationErrors.lng}</p>}
         <label>
           Describe your place to Guests
           <p className ='paragraph'>Mention the best fearutes of your space, any special amenitites like fast wifi or parking, and what you love about the neighborhood.</p>
@@ -177,7 +233,7 @@ export default function EditSpotForm (){
             
           />
         </label>
-        {errors.description && <p>{errors.description}</p>}
+        {validationErrors.description && <p>{validationErrors.description}</p>}
         <label>
           Create a title for your spot
           <p className ='paragraph'>Catch guests' attentions with a spot title that highlights what makes your place great.</p>
@@ -189,7 +245,7 @@ export default function EditSpotForm (){
             
           />
         </label>
-        {errors.name && <p>{errors.name}</p>}
+        {validationErrors.name && <p>{validationErrors.name}</p>}
         <label>
           Set a base price for your spot
           <p className ='paragraph'>Competitive pricing can help your listing stand out and rank higher in search results</p>
@@ -200,7 +256,7 @@ export default function EditSpotForm (){
             onChange={(e) => setPrice(Number(e.target.value))}
           />
         </label>
-        {errors.price && <p>{errors.price}</p>}
+        {validationErrors.price && <p>{validationErrors.price}</p>}
         <label>
             Liven up your spot with photos
             <p className='paragraph'>Submit a link to at least one photo to publish your spot</p>
@@ -210,7 +266,7 @@ export default function EditSpotForm (){
             value={previewImage}
             onChange={(e)=> setPreviewImage(e.target.value)}
             />
-            {errors.previewImage && <p>{errors.previewImage}</p>}
+            {validationErrors.previewImage && <p>{validationErrors.previewImage}</p>}
             <input 
             type='text'
             placeholder='Image URL'
