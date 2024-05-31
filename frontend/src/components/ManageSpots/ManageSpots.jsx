@@ -6,6 +6,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { IoIosStar } from "react-icons/io";
 import CreateSpotPage from "../CreateSpotPage"; 
 import { Navigate } from "react-router-dom";
+import { DeleteModal } from "../DeleteModal/DeleteModal";
+import OpenModalButton from "../OpenModalButton";
+import {useModal} from '../../context/Modal'
 
 
 export default function ManageSpots (){
@@ -16,7 +19,7 @@ export default function ManageSpots (){
     const navigate = useNavigate();
     // const [timeCheck, setTimeCheck] = useState(true);
     
-
+    const closeMenu = useModal();
     useEffect(()=>{
         const spots = dispatch(userSpotsThunk())
     },[dispatch])
@@ -70,7 +73,7 @@ export default function ManageSpots (){
                 </Link>
 
                 <button><Link to={`/spots/${id}/edit`}>Update</Link></button>
-                <button>Delete</button>
+                <OpenModalButton id='delete-button' buttonText='Delete' onButtonClick={closeMenu} modalComponent={<DeleteModal spotId={id}/>}/>
                 
                 </li>
 

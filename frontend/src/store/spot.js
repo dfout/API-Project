@@ -7,6 +7,7 @@ const GET_SPOTS = 'spots/getAllSpots';
 const GET_SPOT_DETAIL = 'spots/:spotId'
 const SET_SPOT_IMAGES = 'spots/images'
 const UPDATE_SPOT = 'spots/:spotId'
+const DELETE_SPOT = "/spots/:spotId/delete"
 
 
 //* POJO Action Creators
@@ -34,7 +35,13 @@ const setImages = (image) => {
 
 const updateSpot = (spot) =>{
     return ({
-        type: 'UPDATE_SPOT',
+        type: UPDATE_SPOT,
+        spot
+    })
+}
+const deleteSpot = (spot) =>{
+    return({
+        type: DELETE_SPOT,
         spot
     })
 }
@@ -137,7 +144,7 @@ export const userSpotsThunk = () => async(dispatch) =>{
 }
 //Update Spot
 export const UpdateSpotThunk = (spot) => async(dispatch) =>{
-    console.log(spot)
+   
     const {id, country, address, city, state, lat, lng, description, name, price, previewImage, SpotImages } = spot;
     const response = await csrfFetch(`/api/spots/${id}`, {
         method: "PUT",
@@ -173,6 +180,28 @@ export const UpdateSpotThunk = (spot) => async(dispatch) =>{
     }
 }
 
+
+// Delete Spot
+
+export const DeleteSpotThunk = (spot) => async(dispatch) =>{
+    console.log()
+
+    const response = await csrfFetch(`/api/spots/${spot.id}`, {
+        method: "DELETE",
+        body: JSON.stringify({spot})
+    })
+
+    if(response.ok){
+        dispatch(deleteSpot(spot))
+        // dispatch(getSpots())
+        return response
+    }else{
+        const err = await response.json()
+        return err
+    }
+}
+
+
 export const setSpotImagesThunk = (spotImage) => async (dispatch) => {
     const { url, preview, spotId } = spotImage;
     const response = await csrfFetch(`/api/spots/${spotId}/images`, {
@@ -199,20 +228,25 @@ const initialState = {}
 const spotReducer = (state = initialState, action, prevState) => {
     switch (action.type) {
         case GET_SPOTS: {
-            const newState = { ...state.spots };
+            const newState = { ...state.spots};
             action.spots.Spots.forEach((spot) => newState[spot.id] = spot)
-            return newState
+            return {...newState}
         }
         case GET_SPOT_DETAIL: {
-            const newSpotState = { ...state.spots }
+            const newSpotState = {...state}
             const spot = action.spot
             newSpotState[action.spot.id] = spot;
-            return newSpotState
+            return {...newSpotState}
         }
         case UPDATE_SPOT: {
-            const newState = {...state, spots: {...state.spots}}
+            const newState = {...state}
             newState.spots[action.spot.id]= {...action.spot}
-            return newState
+            return {...newState}
+        }
+        case DELETE_SPOT:{
+            const newState = {...state,...state.spots}
+            delete newState[action.spot.id]
+            return {...newState}
         }
         default:
             return state

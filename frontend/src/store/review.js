@@ -76,12 +76,12 @@ const initialState = {};
 const reviewReducer = (state = initialState, action, prevState) => {
     switch(action.type){
         case GET_REVIEWS:{
-            const newState = {...state}
+            const newState = {}
             action.reviews.Reviews.forEach((review)=> newState[review.userId] = review)
             return newState
         }
         case POST_REVIEW:{
-            const newState = {...state, ...state.reviews}
+            const newState = { ...state.reviews}
             newState[action.review.id] = action.review;
             return newState
         }
