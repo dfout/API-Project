@@ -6,12 +6,14 @@ import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 // Import Components
 import SpotsPage from './components/SpotsPage/SpotsPage';
 import Navigation from './components/Navigation'
+import ManageSpots from './components/ManageSpots';
 
 // Import Actions
 import * as sessionActions from './store/session';
 import * as spotActions from './store/spot'
 import SpotDetail from './components/SpotDetailPage/SpotDetail';
 import CreateSpotPage from './components/CreateSpotPage';
+import EditSpotForm from './components/EditSpotForm';
 
 
 
@@ -56,6 +58,16 @@ const router = createBrowserRouter([
       {
         path: '/spots/create',
         element:<CreateSpotPage />
+      },
+      {
+        path:'/spots/:spotId/edit',
+        element: <EditSpotForm/>
+
+      },
+      {
+        path:'/spots/manage',
+        element: <ManageSpots />
+
       }
     ]
   }

@@ -6,6 +6,8 @@ const GET_SPOTS = 'spots/getAllSpots';
 // const LOG_OUT = 'session/log-out';
 const GET_SPOT_DETAIL = 'spots/:spotId'
 const SET_SPOT_IMAGES = 'spots/images'
+const UPDATE_SPOT = 'spots/:spotId/update'
+const DELETE_SPOT = "/spots/:spotId/delete"
 
 
 //* POJO Action Creators
@@ -28,6 +30,19 @@ const setImages = (image) => {
     return ({
         type: SET_SPOT_IMAGES,
         image
+    })
+}
+
+const updateSpot = (spot) =>{
+    return ({
+        type: UPDATE_SPOT,
+        spot
+    })
+}
+const deleteSpot = (spot) =>{
+    return({
+        type: DELETE_SPOT,
+        spot
     })
 }
 
@@ -107,8 +122,82 @@ export const createSpotThunk = (spot) => async (dispatch) => {
     //     const err = await error.json()
     //     return err
     // }
+}
+
+// ManageSpots 
+export const userSpotsThunk = () => async(dispatch) =>{
+    const response = await csrfFetch('/api/spots/current');
+    if (response.ok) {
+        const spotData = await response.json()
+      
+        dispatch(getSpots(spotData))
+        //SpotData as of now, is: {Spots: [{}, {}, {}]}
+    
+        return spotData;
+    } else {
+        const error = await response.json();
+        return error
+    }
 
 }
+//Update Spot
+export const UpdateSpotThunk = (spot) => async(dispatch) =>{
+   
+    const {id,country, address, city, state, lat, lng, description, name, price, previewImage, SpotImages } = spot;
+    const response = await csrfFetch(`/api/spots/${id}`, {
+        method: "PUT",
+        headers:{
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            id,
+            country, 
+            address,
+            city, 
+            state,
+            lat,
+            lng,
+            description,
+            name,
+            price,
+            previewImage,
+            SpotImages
+        })
+    });
+
+    if (response.ok) {
+        const spotData = await response.json()
+      
+        dispatch(updateSpot(spotData))
+        //SpotData as of now, is: {Spots: [{}, {}, {}]}
+        return true
+    } else {
+        const error = await response.json();
+        return error
+    }
+}
+
+
+// Delete Spot
+
+export const DeleteSpotThunk = (spot) => async(dispatch) =>{
+    console.log()
+
+    const response = await csrfFetch(`/api/spots/${spot.id}`, {
+        method: "DELETE",
+        body: JSON.stringify({spot})
+    })
+
+    if(response.ok){
+        dispatch(deleteSpot(spot))
+        // dispatch(getSpots())
+        return response
+    }else{
+        const err = await response.json()
+        return err
+    }
+}
+
 
 export const setSpotImagesThunk = (spotImage) => async (dispatch) => {
     const { url, preview, spotId } = spotImage;
@@ -136,15 +225,25 @@ const initialState = {}
 const spotReducer = (state = initialState, action, prevState) => {
     switch (action.type) {
         case GET_SPOTS: {
-            const newState = { ...state };
+            const newState = { ...state.spots};
             action.spots.Spots.forEach((spot) => newState[spot.id] = spot)
-            return newState
+            return {...newState}
         }
         case GET_SPOT_DETAIL: {
-            const newSpotState = { ...state }
+            const newSpotState = {...state}
             const spot = action.spot
-            newSpotState[spot.id] = spot;
-            return newSpotState
+            newSpotState[action.spot.id] = spot;
+            return {...newSpotState}
+        }
+        case UPDATE_SPOT: {
+            const newState = {...state}
+            newState[action.spot.id]= {...action.spot}
+            return {...newState}
+        }
+        case DELETE_SPOT:{
+            const newState = {...state,...state.spots}
+            delete newState[action.spot.id]
+            return {...newState}
         }
         default:
             return state

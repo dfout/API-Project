@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { Navigate } from 'react-router-dom';
 import * as spotActions from './../../store/spot'
 import './CreateSpotPage.css'
@@ -20,53 +21,135 @@ function CreateSpotPage() {
   const [SpotImages, setSpotImages] = useState([]);
   const [errors, setErrors] = useState({});
 
+  const navigate = useNavigate();
+
+
+      
+  const [validationErrors, setValidationErrors] = useState({});
+  const [hasSubmitted, setHasSubmitted] = useState(false)
+
+
+  const [spotImage1, setSpotImage1] = useState(spot.SpotImages[0].url || '')
+  const [spotImage2, setSpotImage2] = useState(spot.SpotImages[1].url || '')
+  const [spotImage3, setSpotImage3] = useState(spot.SpotImages[2].url|| '')
+  const [spotImage4, setSpotImage4] = useState(spot.SpotImages[3].url || '')
 
 //   if (sessionUser) return <Navigate to="/" replace={true} />;
 
-  const handleSubmit = (e) => {
+
+const regex = /\.(png|jpg|jpeg)$/i;
+
+
+    useEffect(()=>{
+      const errors = {};
+      if (!country.length) errors.country =  "Country is required"
+      if(!address.length) errors.address = "Address is required"
+      if(!city.length) errors.city = "City is required"
+      if(!state.length) errors.state = "State is required"
+      if(!lat) errors.lat = "Latitude must be within -90 and 90"
+      if(!lng) errors.lng = "Longitude must be within -180 and 180"
+      if(!description.length && description.length >= 30) errors.description = "Please provide a description of your spot at least 30 characters long"
+      if(!name) errors.name = "Please provide a name for your spot"
+      if(!price && price <1) errors.price = "Please provide a price per night"
+      if(!previewImage.length) errors.previewImage = "Please provide a preview image"
+      if(!regex.test(previewImage)) errors.previewImage = "Preview Image must end in .png, .jpg, or  .jpeg"
+
+      if(!regex.test(spotImage1)) errors.Images = "Images must end in .png, .jpg, .jpeg"
+      if(!regex.test(spotImage2)) errors.Images = "Images must end in .png, .jpg, or .jpeg"
+      if(!regex.test(spotImage3)) errors.Images = "Images must end in .png, .jpg, or .jpeg"
+      if(!regex.test(spotImage4)) errors.Images = "Images must end in .png, .jpg, or .jpeg"
+
+      setValidationErrors(errors)
+    },[country, address, city, state, lat, lng, description, name, price, previewImage, SpotImages])
+
+  const handleSubmit = async(e) => {
     e.preventDefault();
+    setHasSubmitted(true)
+
+    const images = [];
+    if(spotImage1.length) images.push(spotImage1)
+    if(spotImage2.length) images.push(spotImage2)
+    if(spotImage3.length) images.push(spotImage3)
+    if(spotImage4.length) images.push(spotImage4)
+
+    setSpotImages(images)
     
-    
-      setErrors({});
-      return dispatch(
-        spotActions.createSpotThunk({
-            ownerId: sessionUser.id,
-            address,
-            city,
-            state,
-            country,
-            lat,
-            lng,
-            name,
-            description,
-            price,
-            previewImage
-        })
-      ).catch(async (res) => {
-        const data = await res.json();
-        if (data?.errors) {
-          setErrors(data.errors);
-        }else{
-          
-          const createdSpotId = data.spot.id;
-          const createdPreviewImage = {
-            url:previewImage,
-            preview:true,
+    if(!Object.values(validationErrors).length){
+      const newSpot = {
+        ownerId:sessionUser.id,
+        address,
+        city,
+        state,
+        country,
+        lat,
+        lng,
+        name,
+        description,
+        price,
+        previewImage, 
+        SpotImages
+      }
+      const response = await dispatch(spotActions.createSpotThunk(newSpot))
+      if(response.spot.id){
+        const createdSpotId = response.spot.id
+        const createdPreviewImage = {
+          url :previewImage, 
+          preview:true, 
+          spotId: createdSpotId
+        }
+        dispatch(spotActions.setSpotImagesThunk(createdPreviewImage))
+        SpotImages.forEach((image)=>{
+          const spotImage = {
+            url:image,
+            preview:false,
             spotId: createdSpotId
           }
-          dispatch(spotActions.setSpotImagesThunk(createdPreviewImage))
-          SpotImages.forEach((image)=>{
-            const spotImage = {
-              url:image,
-              preview:false,
-              spotId: createdSpotId
-            }
-            dispatch(spotActions.setSpotImagesThunk(spotImage))
-          })
+          dispatch(spotActions.setSpotImagesThunk(spotImage))
+        })
+      }
+      
+    }
+    
+      // setErrors({});
+      // return dispatch(
+      //   spotActions.createSpotThunk({
+      //       ownerId: sessionUser.id,
+      //       address,
+      //       city,
+      //       state,
+      //       country,
+      //       lat,
+      //       lng,
+      //       name,
+      //       description,
+      //       price,
+      //       previewImage
+      //   })
+      // ).catch(async (res) => {
+      //   const data = await res.json();
+      //   console.log(data)
+      //   if (data?.errors) {
+      //     setErrors(data.errors);
+      //   }else{
+      //     const createdSpotId = data.spot.id;
+      //     const createdPreviewImage = {
+      //       url:previewImage,
+      //       preview:true,
+      //       spotId: createdSpotId
+      //     }
+      //     dispatch(spotActions.setSpotImagesThunk(createdPreviewImage))
+      //     SpotImages.forEach((image)=>{
+      //       const spotImage = {
+      //         url:image,
+      //         preview:false,
+      //         spotId: createdSpotId
+      //       }
+      //       dispatch(spotActions.setSpotImagesThunk(spotImage))
+      //     })
 
-          return <Navigate to={`/spots/${createdSpotId}`}/>
-        }
-      });
+    
+      //   }
+      // });
   };
 
   return (
@@ -214,7 +297,7 @@ function CreateSpotPage() {
           
         </label>
     
-        <button type="submit" onSubmit={handleSubmit}>Create Spot</button>
+        <button type="submit" onClick={handleSubmit}>Create Spot</button>
       </form>
     </>
   );
