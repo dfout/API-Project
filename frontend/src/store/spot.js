@@ -132,9 +132,7 @@ export const userSpotsThunk = () => async(dispatch) =>{
       
         dispatch(getSpots(spotData))
         //SpotData as of now, is: {Spots: [{}, {}, {}]}
-        
-
-
+    
         return spotData;
     } else {
         const error = await response.json();
