@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Navigate } from 'react-router-dom';
@@ -29,10 +29,10 @@ function CreateSpotPage() {
   const [hasSubmitted, setHasSubmitted] = useState(false)
 
 
-  const [spotImage1, setSpotImage1] = useState(spot.SpotImages[0].url || '')
-  const [spotImage2, setSpotImage2] = useState(spot.SpotImages[1].url || '')
-  const [spotImage3, setSpotImage3] = useState(spot.SpotImages[2].url|| '')
-  const [spotImage4, setSpotImage4] = useState(spot.SpotImages[3].url || '')
+  const [spotImage1, setSpotImage1] = useState('')
+  const [spotImage2, setSpotImage2] = useState('')
+  const [spotImage3, setSpotImage3] = useState('')
+  const [spotImage4, setSpotImage4] = useState('')
 
 //   if (sessionUser) return <Navigate to="/" replace={true} />;
 
@@ -40,27 +40,27 @@ function CreateSpotPage() {
 const regex = /\.(png|jpg|jpeg)$/i;
 
 
-    useEffect(()=>{
-      const errors = {};
-      if (!country.length) errors.country =  "Country is required"
-      if(!address.length) errors.address = "Address is required"
-      if(!city.length) errors.city = "City is required"
-      if(!state.length) errors.state = "State is required"
-      if(!lat) errors.lat = "Latitude must be within -90 and 90"
-      if(!lng) errors.lng = "Longitude must be within -180 and 180"
-      if(!description.length && description.length >= 30) errors.description = "Please provide a description of your spot at least 30 characters long"
-      if(!name) errors.name = "Please provide a name for your spot"
-      if(!price && price <1) errors.price = "Please provide a price per night"
-      if(!previewImage.length) errors.previewImage = "Please provide a preview image"
-      if(!regex.test(previewImage)) errors.previewImage = "Preview Image must end in .png, .jpg, or  .jpeg"
+  useEffect(()=>{
+    const errors = {};
+    if (!country.length) errors.country =  "Country is required"
+    if(!address.length) errors.address = "Address is required"
+    if(!city.length) errors.city = "City is required"
+    if(!state.length) errors.state = "State is required"
+    if(!lat) errors.lat = "Latitude must be within -90 and 90"
+    if(!lng) errors.lng = "Longitude must be within -180 and 180"
+    if(!description.length && description.length >= 30) errors.description = "Please provide a description of your spot at least 30 characters long"
+    if(!name) errors.name = "Please provide a name for your spot"
+    if(!price && price <1) errors.price = "Please provide a price per night"
+    if(!previewImage.length) errors.previewImage = "Please provide a preview image"
+    if(!regex.test(previewImage)) errors.previewImage = "Preview Image must end in .png, .jpg, or  .jpeg"
 
-      if(!regex.test(spotImage1)) errors.Images = "Images must end in .png, .jpg, .jpeg"
-      if(!regex.test(spotImage2)) errors.Images = "Images must end in .png, .jpg, or .jpeg"
-      if(!regex.test(spotImage3)) errors.Images = "Images must end in .png, .jpg, or .jpeg"
-      if(!regex.test(spotImage4)) errors.Images = "Images must end in .png, .jpg, or .jpeg"
+    if( spotImage1 && !regex.test(spotImage1)) errors.Images = "Images must end in .png, .jpg, .jpeg"
+    if(spotImage2 && !regex.test(spotImage2)) errors.Images = "Images must end in .png, .jpg, or .jpeg"
+    if(spotImage3 && !regex.test(spotImage3)) errors.Images = "Images must end in .png, .jpg, or .jpeg"
+    if(spotImage4 && !regex.test(spotImage4)) errors.Images = "Images must end in .png, .jpg, or .jpeg"
 
       setValidationErrors(errors)
-    },[country, address, city, state, lat, lng, description, name, price, previewImage, SpotImages])
+  },[country, address, city, state, lat, lng, description, name, price, previewImage, SpotImages])
 
   const handleSubmit = async(e) => {
     e.preventDefault();
@@ -73,6 +73,7 @@ const regex = /\.(png|jpg|jpeg)$/i;
     if(spotImage4.length) images.push(spotImage4)
 
     setSpotImages(images)
+    console.log(validationErrors)
     
     if(!Object.values(validationErrors).length){
       const newSpot = {
@@ -89,9 +90,8 @@ const regex = /\.(png|jpg|jpeg)$/i;
         previewImage, 
         SpotImages
       }
-      const response = await dispatch(spotActions.createSpotThunk(newSpot))
-      if(response.spot.id){
-        const createdSpotId = response.spot.id
+      const responseBody = await dispatch(spotActions.createSpotThunk(newSpot))
+      const createdSpotId = responseBody.id
         const createdPreviewImage = {
           url :previewImage, 
           preview:true, 
@@ -106,7 +106,7 @@ const regex = /\.(png|jpg|jpeg)$/i;
           }
           dispatch(spotActions.setSpotImagesThunk(spotImage))
         })
-      }
+        navigate(`/spots/${createdSpotId}`)
       
     }
     
@@ -168,7 +168,7 @@ const regex = /\.(png|jpg|jpeg)$/i;
            
           />
         </label>
-        {errors.country && <p>{errors.country}</p>}
+        {hasSubmitted && validationErrors.country && <p>{validationErrors.country}</p>}
         <label>
           Street Address
           <input
@@ -179,7 +179,7 @@ const regex = /\.(png|jpg|jpeg)$/i;
             
           />
         </label>
-        {errors.address && <p>{errors.address}</p>}
+        {hasSubmitted && validationErrors.address && <p>{validationErrors.address}</p>}
         <label>
           City
           <input
@@ -190,7 +190,7 @@ const regex = /\.(png|jpg|jpeg)$/i;
            
           />
         </label>
-        {errors.city && <p>{errors.city}</p>}
+        {hasSubmitted && validationErrors.city && <p>{validationErrors.city}</p>}
         <label>
           State
           <input
@@ -201,7 +201,7 @@ const regex = /\.(png|jpg|jpeg)$/i;
             
           />
         </label>
-        {errors.state&& <p>{errors.state}</p>}
+        {hasSubmitted && validationErrors.state && <p>{validationErrors.state}</p>}
         <label>
           Latitude
           <input
@@ -212,7 +212,7 @@ const regex = /\.(png|jpg|jpeg)$/i;
             
           />
         </label>
-        {errors.lat && <p>{errors.lat}</p>}
+        {hasSubmitted && validationErrors.lat && <p>{validationErrors.lat}</p>}
         <label>
           Long
           <input
@@ -223,7 +223,7 @@ const regex = /\.(png|jpg|jpeg)$/i;
             
           />
         </label>
-        {errors.lng && <p>{errors.lng}</p>}
+        {hasSubmitted && validationErrors.lng && <p>{validationErrors.lng}</p>}
         <label>
           Describe your place to Guests
           <p className ='paragraph'>Mention the best fearutes of your space, any special amenitites like fast wifi or parking, and what you love about the neighborhood.</p>
@@ -235,7 +235,7 @@ const regex = /\.(png|jpg|jpeg)$/i;
             
           />
         </label>
-        {errors.description && <p>{errors.description}</p>}
+        {hasSubmitted && validationErrors.description && <p>{validationErrors.description}</p>}
         <label>
           Create a title for your spot
           <p className ='paragraph'>Catch guests' attentions with a spot title that highlights what makes your place great.</p>
@@ -247,7 +247,7 @@ const regex = /\.(png|jpg|jpeg)$/i;
             
           />
         </label>
-        {errors.name && <p>{errors.name}</p>}
+        {hasSubmitted && validationErrors.name && <p>{validationErrors.name}</p>}
         <label>
           Set a base price for your spot
           <p className ='paragraph'>Competitive pricing can help your listing stand out and rank higher in search results</p>
@@ -258,7 +258,7 @@ const regex = /\.(png|jpg|jpeg)$/i;
             onChange={(e) => setPrice(e.target.value)}
           />
         </label>
-        {errors.price && <p>{errors.price}</p>}
+        {hasSubmitted && validationErrors.price && <p>{validationErrors.price}</p>}
         <label>
             Liven up your spot with photos
             <p className='paragraph'>Submit a link to at least one photo to publish your spot</p>
@@ -268,31 +268,31 @@ const regex = /\.(png|jpg|jpeg)$/i;
             value={previewImage}
             onChange={(e)=> setPreviewImage(e.target.value)}
             />
-            {errors.previewImage && <p>{errors.previewImage}</p>}
+            {hasSubmitted && validationErrors.previewImage && <p>{validationErrors.previewImage}</p>}
             <input 
             type='text'
             placeholder='Image URL'
-            value={SpotImages[0] || ''} 
-            onChange={(e) => setSpotImages([e.target.value, ...SpotImages.slice(1)])}
+            value={spotImage1} 
+            onChange={(e) => setSpotImage1(e.target.value)}
 
             />
                  <input 
             type='text'
             placeholder='Image URL'
-            value={SpotImages[1] || ''} 
-            onChange={(e) => setSpotImages([...SpotImages.slice(0, 1), e.target.value, ...SpotImages.slice(2)])}
+            value={spotImage2} 
+            onChange={(e) => setSpotImage2(e.target.value)}
             />
                  <input 
             type='text'
             placeholder='Image URL'
-            value={SpotImages[2] || ''}
-            onChange={(e) => setSpotImages([...SpotImages.slice(0, 2), e.target.value, ...SpotImages.slice(3)])}
+            value={spotImage3}
+            onChange={(e) => setSpotImage3(e.target.value)}
             />
                  <input 
             type='text'
             placeholder='Image URL'
-            value={SpotImages[3] || ''}
-            onChange={(e) => setSpotImages([...SpotImages.slice(0, 3), e.target.value])}
+            value={spotImage4}
+            onChange={(e) => setSpotImage4(e.target.value)}
             />
           
         </label>

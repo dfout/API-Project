@@ -67,10 +67,11 @@ export default function EditSpotForm (){
       if(!price && price <1) errors.price = "Please provide a price per night"
       if(!previewImage.length) errors.previewImage = "Please provide a preview image"
       if(!regex.test(previewImage)) errors.previewImage = "Please provide a preview image that ends in .png, .jpg, or  .jpeg"
-      if(!regex.test(spotImage1)) errors.Images = "Images must end in .png, .jpg, .jpeg"
-      if(!regex.test(spotImage2)) errors.Images = "Images must end in .png, .jpg, or .jpeg"
-      if(!regex.test(spotImage3)) errors.Images = "Images must end in .png, .jpg, or .jpeg"
-      if(!regex.test(spotImage4)) errors.Images = "Images must end in .png, .jpg, or .jpeg"
+
+      if( spotImage1 && !regex.test(spotImage1)) errors.Images = "Images must end in .png, .jpg, .jpeg"
+      if(spotImage2 && !regex.test(spotImage2)) errors.Images = "Images must end in .png, .jpg, or .jpeg"
+      if(spotImage3 && !regex.test(spotImage3)) errors.Images = "Images must end in .png, .jpg, or .jpeg"
+      if(spotImage4 && !regex.test(spotImage4)) errors.Images = "Images must end in .png, .jpg, or .jpeg"
     
 
 

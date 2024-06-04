@@ -91,7 +91,7 @@ export const getOneSpotThunk = (id) => async (dispatch) => {
 }
 
 export const createSpotThunk = (spot) => async (dispatch) => {
-    const { address, city, state, country, lat, lng, name, description, price, previewImage } = spot;
+    const { address, city, state, country, lat, lng, name, description, price, previewImage, SpotImages } = spot;
     // try {
         const response = await csrfFetch('/api/spots', {
             method: 'POST',
@@ -105,17 +105,17 @@ export const createSpotThunk = (spot) => async (dispatch) => {
                 name,
                 description,
                 price,
-                previewImage
+                previewImage, 
+                SpotImages
             })
         });
 
         if (response.ok) {
             const data = await response.json();
             dispatch(getSpotDetails(data));
-            return response;
+            return data
         } else {
             const error = await response.json();
-            console.log("EERRR", error)
             return error;
         }
     // } catch (error) {
@@ -191,7 +191,7 @@ export const DeleteSpotThunk = (spot) => async(dispatch) =>{
     if(response.ok){
         dispatch(deleteSpot(spot))
         // dispatch(getSpots())
-        return response
+        return true
     }else{
         const err = await response.json()
         return err
