@@ -30,7 +30,7 @@ export const DeleteModal = ({spotId})=>{
     const handleDelete = async(e) =>{
         // e.preventDefault();
         const response = dispatch(DeleteSpotThunk(spot))
-        console.log(response)
+        
         if(response){
             closeModal();
         }
@@ -39,7 +39,7 @@ export const DeleteModal = ({spotId})=>{
     return (
         <>
         <button onClick={handleDelete}>Yes (Delete Spot)</button>
-        <button>No(Keep Spot)</button>
+        <button onClick={closeModal}>No(Keep Spot)</button>
 
         </>
 
