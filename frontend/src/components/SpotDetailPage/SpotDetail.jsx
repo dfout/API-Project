@@ -176,8 +176,9 @@ const SpotDetail =()=>{
                         <span>New</span>
                         ) : (
                         <>
+                        <BsDot />
                             <span>{numReviews === 1 || numReviews === '1' ? `${numReviews} review` : `${numReviews} reviews`}</span>
-                            <BsDot />
+                            
                         </>
                         )}
                     </div>
@@ -191,10 +192,15 @@ const SpotDetail =()=>{
         {numReviews !== 0 &&(
             <span>{avgRating}</span>
         )}
-
-        <span>{
-            (numReviews === 0 || numReviews === null) ? "New" : (numReviews + ' reviews')
-        }</span>
+        {numReviews === 0 || numReviews === null ? (
+                        <span>New</span>
+                        ) : (
+                        <>
+                        <BsDot />
+                            <span>{numReviews === 1 || numReviews === '1' ? `${numReviews} review` : `${numReviews} reviews`}</span>
+                            
+                        </>
+                        )}
         {!sessionUser && (
          <button id='review-button' disabled={true}>Sign-in to post a Review</button>
         )
