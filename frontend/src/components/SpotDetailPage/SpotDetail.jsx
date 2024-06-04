@@ -14,8 +14,12 @@ import { useModal } from '../../context/Modal';
 import FeatureComingModal from '../FeatureComingModal';
 import { getReviewsList } from '../../store/review';
 import ReviewModal from '../ReviewModal';
+// import LoginFormModal from '../FeatureComingModal/FeatureComingModal';
+
+import OpenModalMenuItem from '../Navigation/OpenModalMenuItem';
 
 import './SpotDetail.css'
+import LoginFormModal from '../LoginFormModal/LoginFormModal';
 
 
 //! Once I post a review, the state of reviews changes. 
@@ -202,7 +206,8 @@ const SpotDetail =()=>{
                         </>
                         )}
         {!sessionUser && (
-         <button id='review-button' disabled={true}>Sign-in to post a Review</button>
+        //  <button id='review-button' disabled={true}>Sign-in to post a Review</button>
+        <OpenModalButton buttonText='Sign-in to post a Review' className='modal-text'onButtonClick={closeMenu} modalComponent={<LoginFormModal/>}/>
         )
         }
         {alreadyReviewed(sessionUser) &&(
