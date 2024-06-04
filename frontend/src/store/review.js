@@ -48,8 +48,8 @@ export const getReviewsForSpotThunk = (id) => async(dispatch) =>{
 // }
 
 
-export const postReviewThunk = ({review, stars}, spotId)=> async(dispatch)=>{
-    console.log(review, stars, spotId)
+export const postReviewThunk = ({review, stars}, spotId, sessionUser)=> async(dispatch)=>{
+    console.log(review, stars, spotId, sessionUser)
     const response = await csrfFetch(`/api/spots/${spotId}/reviews`, {
         method: "POST",
         body: JSON.stringify({
@@ -60,7 +60,12 @@ export const postReviewThunk = ({review, stars}, spotId)=> async(dispatch)=>{
 
     if (response.ok){
         const reviewData = await response.json();
+        
+        console.log(reviewData, "REVIEW DATA FROM THUNK")
+        reviewData['User'] = {...sessionUser}
+        console.log(reviewData, "AFTER ADDING KEY")
         dispatch(postReview(reviewData))
+        
         return reviewData
     }else{
         const error = await response.json();
@@ -76,14 +81,14 @@ const initialState = {};
 const reviewReducer = (state = initialState, action, prevState) => {
     switch(action.type){
         case GET_REVIEWS:{
-            const newState = {}
+            const newState = {...state.reviews}
             action.reviews.Reviews.forEach((review)=> newState[review.userId] = review)
-            return newState
+            return {...newState}
         }
         case POST_REVIEW:{
             const newState = { ...state.reviews}
             newState[action.review.id] = action.review;
-            return newState
+            return {...newState}
         }
         default:
             return state

@@ -24,12 +24,14 @@ const SpotDetail =()=>{
     let {spotId} = useParams();
     spotId = Number(spotId)
     const dispatch = useDispatch();
+    const spot = useSelector((state)=> state.spots[spotId]);
+    const reviews = useSelector(getReviewsList)
 
     useEffect(()=>{
        dispatch(spotActions.getOneSpotThunk(spotId))
        dispatch(reviewActions.getReviewsForSpotThunk(spotId))
     
-    }, [dispatch, spotId])
+    }, [spotId])
 
 
 
@@ -37,8 +39,7 @@ const SpotDetail =()=>{
     // const spots = useSelector(spotActions.getSpotsList)
     // console.log(spots)
 
-    const spot = useSelector((state)=> state.spots[spotId]);
-    const reviews = useSelector(getReviewsList)
+
     let sessionUser = useSelector((state) => state.session.user);
     if (sessionUser === null) {
         sessionUser = false
@@ -68,14 +69,7 @@ const SpotDetail =()=>{
     // if (!spot || !spot.Owner) return null
 
     
-  
-
-
-   
-
     const { name, city, state, country, Owner, price, avgRating, numReviews, description,previewImage, SpotImages, Reviews, ownerId } = spot;
-
-
 
 
     const isCreator =(sessionUser, ownerId)=>{
@@ -119,6 +113,10 @@ const SpotDetail =()=>{
 
     const canPostReview = (sessionUser, ownerId) => sessionUser &&!isCreator(sessionUser, ownerId) && !alreadyReviewed(sessionUser);
 
+
+    console.log("REVIEWS", reviews)
+    // console.log("SPOT", spot)
+
     return(
         <>
         <section className='spot-detail'>
@@ -155,7 +153,7 @@ const SpotDetail =()=>{
                         <span>New</span>
                         ) : (
                         <>
-                            <span>{numReviews === 1 ? `${numReviews} review` : `${numReviews} reviews`}</span>
+                            <span>{numReviews === 1 || numReviews === '1' ? `${numReviews} review` : `${numReviews} reviews`}</span>
                             <BsDot />
                         </>
                         )}
