@@ -18,6 +18,11 @@ import ReviewModal from '../ReviewModal';
 import './SpotDetail.css'
 
 
+//! Once I post a review, the state of reviews changes. 
+//! However, the numReviews and avg rating of reviews does not update here on the SpotDetail page. 
+//! I need to make sure, I am getting the numReviews and avRating from the reviews state slice ONLY. 
+
+
 const SpotDetail =()=>{
     //when this is triggered, my state is has changed because the page has navigated
 
@@ -26,6 +31,7 @@ const SpotDetail =()=>{
     const dispatch = useDispatch();
     const spot = useSelector((state)=> state.spots[spotId]);
     const reviews = useSelector(getReviewsList)
+    const numReviews = reviews.length
 
     useEffect(()=>{
        dispatch(spotActions.getOneSpotThunk(spotId))
@@ -69,7 +75,7 @@ const SpotDetail =()=>{
     // if (!spot || !spot.Owner) return null
 
     
-    const { name, city, state, country, Owner, price, avgRating, numReviews, description,previewImage, SpotImages, Reviews, ownerId } = spot;
+    const { name, city, state, country, Owner, price, avgRating, description,previewImage, SpotImages, Reviews, ownerId } = spot;
 
 
     const isCreator =(sessionUser, ownerId)=>{
