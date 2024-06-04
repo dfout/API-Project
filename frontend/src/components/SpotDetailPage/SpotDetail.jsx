@@ -51,7 +51,7 @@ const SpotDetail =()=>{
     }, [spotId])
 
     let avgRating = reviews.reduce((accumulator, currentItem)=> accumulator + currentItem.stars, 0)
-    avgRating = avgRating / numReviews
+    avgRating = (avgRating / numReviews).toFixed(2)
     console.log("AVERAGE RATING",avgRating)
     console.log("NUM REVIEWS", numReviews)
 
@@ -169,8 +169,8 @@ const SpotDetail =()=>{
                     <div className='reserve-box-info'>
                         <span>${price}night</span>
                         <IoIosStar />
-                        {numReviews &&
-                            (<span>"HERE"</span>)
+                        {numReviews!==0 &&
+                            (<span>{avgRating}</span>)
                         }
                         {numReviews === 0 || numReviews === null ? (
                         <span>New</span>
@@ -188,9 +188,10 @@ const SpotDetail =()=>{
         {/* <SpotReviews reviewsState= {reviews} avgRating={avgRating} numReviews={numReviews} ownerId={Owner.id} spotId={Number(spotId)}/> */}
         <>
         <IoIosStar/>
-        {numReviews &&(
+        {numReviews !== 0 &&(
             <span>{avgRating}</span>
         )}
+
         <span>{
             (numReviews === 0 || numReviews === null) ? "New" : (numReviews + ' reviews')
         }</span>
