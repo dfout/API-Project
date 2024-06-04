@@ -22,6 +22,13 @@ import './SpotDetail.css'
 //! However, the numReviews and avg rating of reviews does not update here on the SpotDetail page. 
 //! I need to make sure, I am getting the numReviews and avRating from the reviews state slice ONLY. 
 
+//* The number of reviews now updates. But I still have an issue with:
+//! '1 reviews'
+//! Avg Rating
+// Plan of action:
+// Grab from the list of reviews. Iterate over them 
+// 
+
 
 const SpotDetail =()=>{
     //when this is triggered, my state is has changed because the page has navigated
@@ -31,7 +38,11 @@ const SpotDetail =()=>{
     const dispatch = useDispatch();
     const spot = useSelector((state)=> state.spots[spotId]);
     const reviews = useSelector(getReviewsList)
-    const numReviews = reviews.length
+    let numReviews = reviews.length
+
+    // if (numReviews === 0){
+    //     numReviews = false
+    // }
 
     useEffect(()=>{
        dispatch(spotActions.getOneSpotThunk(spotId))
@@ -39,6 +50,10 @@ const SpotDetail =()=>{
     
     }, [spotId])
 
+    let avgRating = reviews.reduce((accumulator, currentItem)=> accumulator + currentItem.stars, 0)
+    avgRating = avgRating / numReviews
+    console.log("AVERAGE RATING",avgRating)
+    console.log("NUM REVIEWS", numReviews)
 
 
     // const getSpotDetails =(spotId)= async (dispatch)=> (spotActions.getOneSpotThunk(spotId));
@@ -75,7 +90,7 @@ const SpotDetail =()=>{
     // if (!spot || !spot.Owner) return null
 
     
-    const { name, city, state, country, Owner, price, avgRating, description,previewImage, SpotImages, Reviews, ownerId } = spot;
+    const { name, city, state, country, Owner, price, description,previewImage, SpotImages, Reviews, ownerId } = spot;
 
 
     const isCreator =(sessionUser, ownerId)=>{
@@ -154,7 +169,9 @@ const SpotDetail =()=>{
                     <div className='reserve-box-info'>
                         <span>${price}night</span>
                         <IoIosStar />
-                        <span>{avgRating}</span>
+                        {numReviews &&
+                            (<span>"HERE"</span>)
+                        }
                         {numReviews === 0 || numReviews === null ? (
                         <span>New</span>
                         ) : (
@@ -169,11 +186,11 @@ const SpotDetail =()=>{
             </div>
         </section>
         {/* <SpotReviews reviewsState= {reviews} avgRating={avgRating} numReviews={numReviews} ownerId={Owner.id} spotId={Number(spotId)}/> */}
-
-
         <>
         <IoIosStar/>
-        <span>{avgRating}</span>
+        {numReviews &&(
+            <span>{avgRating}</span>
+        )}
         <span>{
             (numReviews === 0 || numReviews === null) ? "New" : (numReviews + ' reviews')
         }</span>
