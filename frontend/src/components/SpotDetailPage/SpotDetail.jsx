@@ -14,6 +14,8 @@ import { useModal } from '../../context/Modal';
 import FeatureComingModal from '../FeatureComingModal';
 import { getReviewsList } from '../../store/review';
 import ReviewModal from '../ReviewModal';
+// import OpenModalButton from '../../components/OpenModalButton';
+import {DeleteReviewModal} from '../DeleteModal/DeleteReview'
 // import LoginFormModal from '../FeatureComingModal/FeatureComingModal';
 
 import OpenModalMenuItem from '../Navigation/OpenModalMenuItem';
@@ -56,8 +58,8 @@ const SpotDetail =()=>{
 
     let avgRating = reviews.reduce((accumulator, currentItem)=> accumulator + currentItem.stars, 0)
     avgRating = (avgRating / numReviews).toFixed(2)
-    console.log("AVERAGE RATING",avgRating)
-    console.log("NUM REVIEWS", numReviews)
+   
+    // console.log("NUM REVIEWS", numReviews)
 
 
     // const getSpotDetails =(spotId)= async (dispatch)=> (spotActions.getOneSpotThunk(spotId));
@@ -136,10 +138,29 @@ const SpotDetail =()=>{
 
     }
 
-    const canPostReview = (sessionUser, ownerId) => sessionUser &&!isCreator(sessionUser, ownerId) && !alreadyReviewed(sessionUser);
+    const canPostReview = (sessionUser, ownerId, reviews) =>{
+        if (sessionUser == true){
+            if (isCreator(sessionUser, ownerId) == false){
+                if (alreadyReviewed(sessionUser,reviews) == false){
+                    return true
+                }
+                else{
+                    return false
+                }
+            }else{
+                return false
+            }
+        }else{
+            return false
+        }
+    }
+        //  &&!isCreator(sessionUser, ownerId) && !alreadyReviewed(sessionUser);
+    // console.log("HAS ALREADY REVIEWED", alreadyReviewed(sessionUser, reviews))
+    // console.log("CAN POST", canPostReview(sessionUser,ownerId))
+    // console.log("IsCreator", isCreator(sessionUser, ownerId,reviews))
 
 
-    console.log("REVIEWS", reviews)
+    // console.log("REVIEWS", reviews)
     // console.log("SPOT", spot)
 
     return(
@@ -210,13 +231,13 @@ const SpotDetail =()=>{
         <OpenModalButton buttonText='Sign-in to post a Review' className='modal-text'onButtonClick={closeMenu} modalComponent={<LoginFormModal/>}/>
         )
         }
-        {alreadyReviewed(sessionUser) &&(
+        {alreadyReviewed(sessionUser, reviews) &&(
             <button id='review-button' disabled={true}>Review Submitted</button>
         )}
         {isCreator(sessionUser, ownerId) && (
             <button disabled={true}>You own this spot. Check out the reviews</button>
         )}
-        {canPostReview(sessionUser, ownerId) && (
+        {canPostReview(sessionUser, ownerId, reviews) && (
             <OpenModalButton id='review-button' buttonText={'Post Your Review'} onButtonClick={closeMenu} modalComponent={<ReviewModal spotId={spotId}/>}/>
         )} 
         <ul className='spot-reviews'>
@@ -226,6 +247,8 @@ const SpotDetail =()=>{
                 <span>{createdAt.split('-')[1]}/{createdAt.split('-')[2].split('T')[0]}/{createdAt.split('-')[0]}</span>
                 <span>{stars} stars</span>
                 <span>{review}</span>
+                {sessionUser.id === userId && 
+                (<OpenModalButton id="delete-button" buttonText={'Delete'} onButtonClick={closeMenu} modalComponent={<DeleteReviewModal reviewId={id}/>}/>)}
             </li>
 
         ))}
