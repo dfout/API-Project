@@ -43,7 +43,11 @@ const SpotDetail =()=>{
     spotId = Number(spotId)
     const dispatch = useDispatch();
     const spot = useSelector((state)=> state.spots[spotId]);
-    const reviews = useSelector(getReviewsList)
+    let reviews = (useSelector(getReviewsList))
+    console.log("REVIEWS BEFORE", reviews)
+    reviews = [...reviews].reverse();
+
+    // let reviewso = reviews.reduce((acc,obj)=>obj.concat(acc),[])
     let numReviews = reviews.length
 
     // if (numReviews === 0){
