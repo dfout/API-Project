@@ -138,22 +138,21 @@ const SpotDetail =()=>{
 
     }
 
-    const canPostReview = (sessionUser, ownerId, reviews) =>{
-        if (sessionUser == true){
-            if (isCreator(sessionUser, ownerId) == false){
-                if (alreadyReviewed(sessionUser,reviews) == false){
-                    return true
-                }
-                else{
-                    return false
-                }
-            }else{
-                return false
-            }
-        }else{
-            return false
-        }
-    }
+    const canPostReview = (sessionUser, ownerId, reviews) => sessionUser && !isCreator(sessionUser, ownerId) && !alreadyReviewed(sessionUser, reviews)
+    
+    // {
+    //     if (sessionUser == true){
+    //         if (isCreator(sessionUser, ownerId) == false){
+    //             if (alreadyReviewed(sessionUser,reviews) == false){
+    //                 return true
+    //             }
+    //         }else{
+    //             return false
+    //         }
+    //     }else{
+    //         return false
+    //     }
+    // }
         //  &&!isCreator(sessionUser, ownerId) && !alreadyReviewed(sessionUser);
     // console.log("HAS ALREADY REVIEWED", alreadyReviewed(sessionUser, reviews))
     // console.log("CAN POST", canPostReview(sessionUser,ownerId))
