@@ -55,7 +55,7 @@ const ReviewModal = ({spotId})=>{
         )
     };
 
-    const isFormValid = ()=> review.length >=10 
+    const isFormValid = ()=> review.length >=10 && stars
 
     const handleStarHover = (hoveredRating) => {
         setStars(hoveredRating); // Update stars on hover

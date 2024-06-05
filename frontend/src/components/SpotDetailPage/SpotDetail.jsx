@@ -199,7 +199,10 @@ const SpotDetail =()=>{
         </div>
 
         <ul className='spot-reviews'>
-            {reviews?.map(({ id, userId, User, stars, review, createdAt, updatedAt }) => {
+            {reviews.length == 0 && 
+            <span>Be the first to post a review!</span>
+            }
+            {reviews.length != 0 && reviews?.map(({ id, userId, User, stars, review, createdAt, updatedAt }) => {
                 const date = new Date(createdAt);
                 const monthName = monthNames[date.getMonth()];
                 const year = date.getFullYear();
