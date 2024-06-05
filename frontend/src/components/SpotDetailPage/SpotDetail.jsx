@@ -47,6 +47,15 @@ const SpotDetail =()=>{
     reviews = [...reviews].reverse();
     let numReviews = reviews.length
 
+    const closeMenu = useModal();
+
+    const [timeCheck, setTimeCheck] = useState(true);
+
+    let sessionUser = useSelector((state) => state.session.user);
+    if (sessionUser === null) {
+        sessionUser = false
+    }
+
     useEffect(()=>{
        dispatch(spotActions.getOneSpotThunk(spotId))
        dispatch(reviewActions.getReviewsForSpotThunk(spotId))
@@ -56,12 +65,6 @@ const SpotDetail =()=>{
     let avgRating = reviews.reduce((accumulator, currentItem)=> accumulator + currentItem.stars, 0)
     avgRating = (avgRating / numReviews).toFixed(2)
    
-    let sessionUser = useSelector((state) => state.session.user);
-    if (sessionUser === null) {
-        sessionUser = false
-    }
-
-    const [timeCheck, setTimeCheck] = useState(true);
     useEffect(() => {
         let timeout;
        
@@ -77,7 +80,7 @@ const SpotDetail =()=>{
     else if (!spot || !spot.Owner || !reviews && !timeCheck) return <h1>Sorry, please refresh the page</h1>;
     
    
-    const closeMenu = useModal();
+    
     const { name, city, state, country, Owner, price, description,previewImage, SpotImages, Reviews, ownerId } = spot;
 
 
