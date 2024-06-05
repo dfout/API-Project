@@ -44,15 +44,8 @@ const SpotDetail =()=>{
     const dispatch = useDispatch();
     const spot = useSelector((state)=> state.spots[spotId]);
     let reviews = (useSelector(getReviewsList))
-    console.log("REVIEWS BEFORE", reviews)
     reviews = [...reviews].reverse();
-
-    // let reviewso = reviews.reduce((acc,obj)=>obj.concat(acc),[])
     let numReviews = reviews.length
-
-    // if (numReviews === 0){
-    //     numReviews = false
-    // }
 
     useEffect(()=>{
        dispatch(spotActions.getOneSpotThunk(spotId))
@@ -63,22 +56,12 @@ const SpotDetail =()=>{
     let avgRating = reviews.reduce((accumulator, currentItem)=> accumulator + currentItem.stars, 0)
     avgRating = (avgRating / numReviews).toFixed(2)
    
-    // console.log("NUM REVIEWS", numReviews)
-
-
-    // const getSpotDetails =(spotId)= async (dispatch)=> (spotActions.getOneSpotThunk(spotId));
-    // const spots = useSelector(spotActions.getSpotsList)
-    // console.log(spots)
-
-
     let sessionUser = useSelector((state) => state.session.user);
     if (sessionUser === null) {
         sessionUser = false
     }
-    // console.log(reviews)
-    // console.log(reviews)
-    const [timeCheck, setTimeCheck] = useState(true);
 
+    const [timeCheck, setTimeCheck] = useState(true);
     useEffect(() => {
         let timeout;
        
@@ -94,12 +77,7 @@ const SpotDetail =()=>{
     else if (!spot || !spot.Owner || !reviews && !timeCheck) return <h1>Sorry, please refresh the page</h1>;
     
    
-    
     const closeMenu = useModal();
-
-    // if (!spot || !spot.Owner) return null
-
-    
     const { name, city, state, country, Owner, price, description,previewImage, SpotImages, Reviews, ownerId } = spot;
 
 
@@ -111,13 +89,10 @@ const SpotDetail =()=>{
              }
         }
         return false
-     }
+    }
 
     const alreadyReviewed = (sessionUser, reviews)=>{
 
-        // const reviews = useSelector(
-        //     (state)=>state.reviews
-        // )
         if(reviews){
             const reviewsList = Object.values(reviews)
         
@@ -126,10 +101,6 @@ const SpotDetail =()=>{
                 const currUserId = sessionUser.id
                 
                 const hasReviewed = reviewsList.find((entry)=> entry.userId === currUserId);
-                    // if (entry.userId === currUserId) {
-                    //     return true;
-                    // }
-                
                 if(hasReviewed){
                     return true
                 }else{
@@ -143,28 +114,8 @@ const SpotDetail =()=>{
     }
 
     const canPostReview = (sessionUser, ownerId, reviews) => sessionUser && !isCreator(sessionUser, ownerId) && !alreadyReviewed(sessionUser, reviews)
-    
-    // {
-    //     if (sessionUser == true){
-    //         if (isCreator(sessionUser, ownerId) == false){
-    //             if (alreadyReviewed(sessionUser,reviews) == false){
-    //                 return true
-    //             }
-    //         }else{
-    //             return false
-    //         }
-    //     }else{
-    //         return false
-    //     }
-    // }
-        //  &&!isCreator(sessionUser, ownerId) && !alreadyReviewed(sessionUser);
-    // console.log("HAS ALREADY REVIEWED", alreadyReviewed(sessionUser, reviews))
-    // console.log("CAN POST", canPostReview(sessionUser,ownerId))
-    // console.log("IsCreator", isCreator(sessionUser, ownerId,reviews))
 
-
-    // console.log("REVIEWS", reviews)
-    // console.log("SPOT", spot)
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
     return(
         <>
@@ -216,6 +167,7 @@ const SpotDetail =()=>{
         </section>
         {/* <SpotReviews reviewsState= {reviews} avgRating={avgRating} numReviews={numReviews} ownerId={Owner.id} spotId={Number(spotId)}/> */}
         <>
+        <div id='review-intro'>
         <IoIosStar/>
         {numReviews !== 0 &&(
             <span>{avgRating}</span>
@@ -243,19 +195,27 @@ const SpotDetail =()=>{
         {canPostReview(sessionUser, ownerId, reviews) && (
             <OpenModalButton id='review-button' buttonText={'Post Your Review'} onButtonClick={closeMenu} modalComponent={<ReviewModal spotId={spotId}/>}/>
         )} 
-        <ul className='spot-reviews'>
-        {reviews?.map(({id, userId, User, stars, review, createdAt, updatedAt })=>(
-            <li className='review-tile' key={id}>
-                <h4>{User.firstName}</h4>
-                <span>{createdAt.split('-')[1]}/{createdAt.split('-')[2].split('T')[0]}/{createdAt.split('-')[0]}</span>
-                <span>{stars} stars</span>
-                <span>{review}</span>
-                {sessionUser.id === userId && 
-                (<OpenModalButton id="delete-button" buttonText={'Delete'} onButtonClick={closeMenu} modalComponent={<DeleteReviewModal reviewId={id}/>}/>)}
-            </li>
 
-        ))}
-         </ul>
+        </div>
+
+        <ul className='spot-reviews'>
+            {reviews?.map(({ id, userId, User, stars, review, createdAt, updatedAt }) => {
+                const date = new Date(createdAt);
+                const monthName = monthNames[date.getMonth()];
+                const year = date.getFullYear();
+
+                return (
+                    <li className='review-tile' key={id}>
+                        <h4>{User.firstName}</h4>
+                        <p className='review-info'>{monthName} {year}</p>
+                        <p className='review-info'>{stars} stars</p>
+                        <p className='review-info'>{review}</p>
+                        {sessionUser.id === userId && 
+                        (<OpenModalButton id="delete-button" buttonText={'Delete'} onButtonClick={closeMenu} modalComponent={<DeleteReviewModal reviewId={id}/>}/>)}
+                    </li>
+                );
+            })}
+        </ul>
         
         </>
         </>
@@ -264,3 +224,6 @@ const SpotDetail =()=>{
 
 
 export default SpotDetail
+
+
+// {createdAt.split('-')[2].split('T')[0]}
