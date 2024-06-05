@@ -26,10 +26,13 @@ export const DeleteReviewModal = ({reviewId})=>{
 
     const handleDelete = async(e) =>{
         // e.preventDefault();
+        console.log(reviewId)
         const response = await dispatch(deleteReviewThunk(reviewId))
         
-        if(response){
+        if(response == true){
             closeModal();
+        }else{
+            return null
         }
     }
 
