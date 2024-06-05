@@ -330,6 +330,7 @@ router.get('/', async(req,res)=>{
         where: {},
         limit: size,
         offset: (page - 1) * size,
+        include:[{model:Review}]
     };
 
     const queryValidErrors = {};

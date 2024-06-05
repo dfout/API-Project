@@ -31,7 +31,7 @@ const SpotsPage =()=>{
     })
 
 
-    // const spotTiles = allSpots ? 
+    
 
     return(
         <>
