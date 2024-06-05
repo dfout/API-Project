@@ -86,8 +86,8 @@ const reviewReducer = (state = initialState, action, prevState) => {
             return {...newState}
         }
         case POST_REVIEW:{
-            const newState = { ...state.reviews}
-            newState[action.review.id] = action.review;
+            const newState = { ...state}
+            newState[action.review.id] = {...action.review}
             return {...newState}
         }
         default:
