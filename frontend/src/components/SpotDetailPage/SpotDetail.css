@@ -94,3 +94,20 @@
 #reserve-button{
    color:none;
 }
+
+.review-info{
+    color:black;
+}
+
+.spot-reviews{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    padding-top: 10px;
+    padding-left: 10px;
+}
+
+#review-intro{
+    padding-top: 10px;
+    padding-left:10px;
+}

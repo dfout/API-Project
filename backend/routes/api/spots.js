@@ -605,10 +605,9 @@ router.post('/:spotId/images', requireAuth, async(req,res,next)=>{
 //*POST api/spot/:spotId/reviews:
 // Create a Review for a Spot based on the Spot's Id
 router.post('/:spotId/reviews', requireAuth, async(req,res,next)=>{
-    const { spotId } = req.params;
-
+    let { spotId } = req.params;
+    spotId = Number(spotId)
     const spot = await Spot.findByPk(spotId)
-
     if (!spot){
         res.status(404)
         return res.json({
@@ -616,19 +615,14 @@ router.post('/:spotId/reviews', requireAuth, async(req,res,next)=>{
         })
     }
     const  userId  = req.user.id;
-
-
     const { review, stars } = req.body;
-
     //Body Validation Errors
     let errors = {};
-
     if(!review){
         errors.review = 'Review text is required'
     };
     // if the stars are less than 1 or more than 5 or if in general the type of stars is not a number then
     // throw this error
-
     if ((stars < 1 || stars > 5) || typeof stars !== 'number'){
         errors.stars = 'Stars must be an integer from 1 to 5'
     }
@@ -640,9 +634,6 @@ router.post('/:spotId/reviews', requireAuth, async(req,res,next)=>{
         res.status(400)
         return res.json(e)
     }
-
-
-
     const isAlreadyReview = await Review.findOne({
         where: {
             userId:userId,
@@ -653,7 +644,6 @@ router.post('/:spotId/reviews', requireAuth, async(req,res,next)=>{
         res.status(500)
         return res.json({message: "User already has a review for this spot"})
     }
-
     const newReviewForSpot = await Review.create({userId,spotId,review,stars})
     res.status(201);
     return res.json(newReviewForSpot)

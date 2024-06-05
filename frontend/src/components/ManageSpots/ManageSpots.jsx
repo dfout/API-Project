@@ -51,8 +51,9 @@ export default function ManageSpots (){
         <>
         <h2>Manage Your Spots</h2>
 
-
-        <button onClick={handleCreateButton}>Create a New Spot</button>
+        {userSpots.length === 0 &&
+        (<button onClick={handleCreateButton}>Create a New Spot</button>)
+        }
 
         <ul className='all-spots'>
         {userSpots?.map(({id, previewImage, city, state, avgRating, price, name })=>(

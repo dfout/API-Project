@@ -159,7 +159,8 @@ router.put('/:reviewId', requireAuth, async(req,res,next)=>{
 
 
 router.delete('/:reviewId', requireAuth, async(req,res,next)=>{
-    const { reviewId } = req.params;
+    let { reviewId } = req.params;
+    reviewId= Number(reviewId)
     const reviewObj = await Review.findByPk(reviewId);
     if(!reviewObj){
         res.status(404);

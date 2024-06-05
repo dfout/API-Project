@@ -16,10 +16,21 @@
 
 .logo-link{
     text-decoration: none;
+    display:flex;
+    flex-direction: row;
+    /* height: 100%; */
     /* color: #242b47; */
     /* color: #353c57; */
-    color: #FF5A5F
+    color: #FF5A5F;
+    /* background-color:blue; */
     /* color: #f80000; */
+}
+#logo-image{
+    top: 10px;
+    height:30px;
+    width:30px;
+    display:flex;
+    align-self: center;
 }
 
 
@@ -75,3 +86,7 @@ span{
     position:absolute;
     left:0;
 } */
+
+
+
+

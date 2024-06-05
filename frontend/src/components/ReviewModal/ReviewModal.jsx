@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import * as reviewActions from '../../store/review'
 import { useDispatch } from "react-redux"
 // import { Navigate } from "react-router-dom";
@@ -7,8 +7,10 @@ import {useModal} from '../../context/Modal'
 // import './LoginForm.css'
 // import React from 'react';
 import RatingInput from "./RatingInput"
+import { useSelector } from "react-redux"
 
 import { FaRegStar } from "react-icons/fa";
+
 
 
 const ReviewModal = ({spotId})=>{
@@ -26,9 +28,10 @@ const ReviewModal = ({spotId})=>{
 
     // if(sessionUser) return <Navigate to='/' replace={true} />
 
-    useEffect(()=>{
+    // useEffect(()=>{
+    //     dispatch(create)
 
-    }, [review, stars])
+    // }, [review, stars])
 
 
     const handleSubmit = async(e)=>{
@@ -36,7 +39,7 @@ const ReviewModal = ({spotId})=>{
         setErrors({});
         let rating = Number(stars)
 
-        return dispatch(reviewActions.postReviewThunk({review, stars}, Number(spotId))).then(closeModal).catch(
+        const response = await dispatch(reviewActions.postReviewThunk({review, stars}, Number(spotId),sessionUser)).then(closeModal).catch(
             async(res)=>{
                 const data = await res.json();
                 
@@ -52,7 +55,7 @@ const ReviewModal = ({spotId})=>{
         )
     };
 
-    const isFormValid = ()=> review.length >=10 
+    const isFormValid = ()=> review.length >=10 && stars
 
     const handleStarHover = (hoveredRating) => {
         setStars(hoveredRating); // Update stars on hover
