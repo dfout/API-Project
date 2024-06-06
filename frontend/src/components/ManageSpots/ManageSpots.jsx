@@ -4,8 +4,8 @@ import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Link, useNavigate } from "react-router-dom";
 import { IoIosStar } from "react-icons/io";
-import CreateSpotPage from "../CreateSpotPage"; 
-import { Navigate } from "react-router-dom";
+// import CreateSpotPage from "../CreateSpotPage"; 
+// import { Navigate } from "react-router-dom";
 import { DeleteModal } from "../DeleteModal/DeleteModal";
 import OpenModalButton from "../OpenModalButton";
 import {useModal} from '../../context/Modal'
@@ -21,7 +21,8 @@ export default function ManageSpots (){
     
     const closeMenu = useModal();
     useEffect(()=>{
-        const spots = dispatch(userSpotsThunk())
+        // had const spots = 
+        dispatch(userSpotsThunk())
     },[dispatch])
 
     // useEffect(() => {
@@ -42,9 +43,9 @@ export default function ManageSpots (){
         navigate('/spots/create')
 
     }
-    const handleUpdateButton = (id)=>{
-        return <Navigate to= {`/spots/${id}/edit`}/>
-    }
+    // const handleUpdateButton = (id)=>{
+    //     return <Navigate to= {`/spots/${id}/edit`}/>
+    // }
 
 
     return(

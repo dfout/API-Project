@@ -1,12 +1,12 @@
 import {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import { getAllSpotsThunk, getSpotsList } from '../../store/spot';
+// import { getAllSpotsThunk, getSpotsList } from '../../store/spot';
 import { IoIosStar } from "react-icons/io";
 import { BsDot } from "react-icons/bs";
 import {useParams} from 'react-router-dom';
 import { useState } from "react"
 
-import SpotReviews from './SpotReviews';
+// import SpotReviews from './SpotReviews';
 import * as spotActions from '../../store/spot';
 import * as reviewActions from '../../store/review'
 import OpenModalButton from '../../components/OpenModalButton'
@@ -18,7 +18,7 @@ import ReviewModal from '../ReviewModal';
 import {DeleteReviewModal} from '../DeleteModal/DeleteReview'
 // import LoginFormModal from '../FeatureComingModal/FeatureComingModal';
 
-import OpenModalMenuItem from '../Navigation/OpenModalMenuItem';
+// import OpenModalMenuItem from '../Navigation/OpenModalMenuItem';
 
 import './SpotDetail.css'
 import LoginFormModal from '../LoginFormModal/LoginFormModal';
@@ -60,7 +60,7 @@ const SpotDetail =()=>{
        dispatch(spotActions.getOneSpotThunk(spotId))
        dispatch(reviewActions.getReviewsForSpotThunk(spotId))
     
-    }, [spotId])
+    }, [spotId, dispatch])
 
     let avgRating = reviews.reduce((accumulator, currentItem)=> accumulator + currentItem.stars, 0)
     avgRating = (avgRating / numReviews).toFixed(2)
@@ -81,7 +81,7 @@ const SpotDetail =()=>{
     
    
     
-    const { name, city, state, country, Owner, price, description,previewImage, SpotImages, Reviews, ownerId } = spot;
+    const { name, city, state, country, Owner, price, description,previewImage, SpotImages, ownerId } = spot;
 
 
     const isCreator =(sessionUser, ownerId)=>{
@@ -205,7 +205,7 @@ const SpotDetail =()=>{
             {reviews.length == 0 && canPostReview(sessionUser, ownerId, reviews) && 
             <span>Be the first to post a review!</span>
             }
-            {reviews.length != 0 && reviews?.map(({ id, userId, User, stars, review, createdAt, updatedAt }) => {
+            {reviews.length != 0 && reviews?.map(({ id, userId, User, stars, review, createdAt }) => {
                 const date = new Date(createdAt);
                 const monthName = monthNames[date.getMonth()];
                 const year = date.getFullYear();

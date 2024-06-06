@@ -1,12 +1,12 @@
-import { useState } from "react"
-import * as sessionActions from '../../store/session'
+// import { useState } from "react"
+// import * as sessionActions from '../../store/session'
 import { useDispatch } from "react-redux"
 // import { Navigate } from "react-router-dom";
 // import { logInUserThunk } from "../../store/session";
 import {useModal} from '../../context/Modal'
 import { useSelector } from "react-redux"
-import { getAllSpotsThunk } from "../../store/spot"
-import { useEffect } from "react"
+// import { getAllSpotsThunk } from "../../store/spot"
+// import { useEffect } from "react"
 
 // import React from 'react';
 import { DeleteSpotThunk } from "../../store/spot"
@@ -27,7 +27,7 @@ export const DeleteModal = ({spotId})=>{
     //     dispatch(getAllSpotsThunk())
     // },[])
 
-    const handleDelete = async(e) =>{
+    const handleDelete = async() =>{
         // e.preventDefault();
         const response = dispatch(DeleteSpotThunk(spot))
         

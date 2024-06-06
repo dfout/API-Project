@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Navigate } from 'react-router-dom';
+// import { Navigate } from 'react-router-dom';
 import * as spotActions from './../../store/spot'
 import './CreateSpotPage.css'
 
@@ -19,7 +19,7 @@ function CreateSpotPage() {
   const [price, setPrice] = useState("");
   const [previewImage, setPreviewImage] = useState("")
   const [SpotImages, setSpotImages] = useState([]);
-  const [errors, setErrors] = useState({});
+  // const [errors, setErrors] = useState({});
 
   const navigate = useNavigate();
 
@@ -37,11 +37,12 @@ function CreateSpotPage() {
 //   if (sessionUser) return <Navigate to="/" replace={true} />;
 
 
-const regex = /\.(png|jpg|jpeg)$/i;
+
 
 
   useEffect(()=>{
     const errors = {};
+    const regex = /\.(png|jpg|jpeg)$/i;
     if (!country.length) errors.country =  "Country is required"
     if(!address.length) errors.address = "Address is required"
     if(!city.length) errors.city = "City is required"
@@ -60,7 +61,7 @@ const regex = /\.(png|jpg|jpeg)$/i;
     if(spotImage4 && !regex.test(spotImage4)) errors.Images = "Images must end in .png, .jpg, or .jpeg"
 
       setValidationErrors(errors)
-  },[country, address, city, state, lat, lng, description, name, price, previewImage, SpotImages])
+  },[country, address, city, state, lat, lng, description, name, price, previewImage, SpotImages, spotImage1, spotImage2, spotImage3, spotImage4])
 
   const handleSubmit = async(e) => {
     e.preventDefault();
@@ -238,7 +239,7 @@ const regex = /\.(png|jpg|jpeg)$/i;
         {hasSubmitted && validationErrors.description && <p>{validationErrors.description}</p>}
         <label>
           Create a title for your spot
-          <p className ='paragraph'>Catch guests' attentions with a spot title that highlights what makes your place great.</p>
+          <p className ='paragraph'>Catch guests attentions with a spot title that highlights what makes your place great.</p>
           <input
             type="text"
             value={name}

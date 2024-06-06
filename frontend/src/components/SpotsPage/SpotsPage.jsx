@@ -1,9 +1,9 @@
-import {useEffect, useRef} from 'react';
+import {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import { getAllSpotsThunk, getSpotsList } from '../../store/spot';
 import { IoIosStar } from "react-icons/io"; 
-import {Link, Navigate} from 'react-router-dom';
-import SpotDetail from '../SpotDetailPage/SpotDetail';
+import {Link} from 'react-router-dom';
+// import SpotDetail from '../SpotDetailPage/SpotDetail';
 
 
 import './SpotsPage.css'
@@ -14,7 +14,7 @@ const SpotsPage =()=>{
     const dispatch = useDispatch();
     const allSpots = useSelector(getSpotsList)
   
-    const ulRef = useRef()
+    // const ulRef = useRef()
 
     
 
@@ -24,11 +24,11 @@ const SpotsPage =()=>{
         dispatch(getAllSpotsThunk())
     }, [dispatch])
 
-    useEffect(()=>{
-        const openDetails = (e) => {
+    // useEffect(()=>{
+    //     const openDetails = (e) => {
 
-        }
-    })
+    //     }
+    // })
 
 
     // const spotTiles = allSpots ? 

@@ -1,9 +1,9 @@
-import { useState } from "react"
-import * as sessionActions from '../../store/session'
-import { useDispatch } from "react-redux"
+// import { useState } from "react"
+// import * as sessionActions from '../../store/session'
+// import { useDispatch } from "react-redux"
 // import { Navigate } from "react-router-dom";
 // import { logInUserThunk } from "../../store/session";
-import {useModal} from '../../context/Modal'
+// import {useModal} from '../../context/Modal'
 
 // import React from 'react';
 
@@ -14,7 +14,7 @@ const LoginFormModal = ()=>{
 
 
 
-    const {closeModal} = useModal()
+    // const {closeModal} = useModal()
 
     return(
         <>

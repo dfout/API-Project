@@ -1,5 +1,5 @@
 import { csrfFetch } from "./csrf";
-import { createSelector, createStructuredSelector } from 'reselect';
+import { createSelector } from 'reselect';
 
 
 const GET_REVIEWS = 'reviews/getReviews';
@@ -101,7 +101,7 @@ export const deleteReviewThunk = (reviewId) => async(dispatch) => {
 
 const initialState = {};
 
-const reviewReducer = (state = initialState, action, prevState) => {
+const reviewReducer = (state = initialState, action) => {
     switch(action.type){
         case GET_REVIEWS:{
             const newState = {...state.reviews}

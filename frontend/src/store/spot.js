@@ -1,6 +1,6 @@
 //* Imports 
 import { csrfFetch } from "./csrf";
-import { createSelector, createStructuredSelector } from 'reselect';
+import { createSelector } from 'reselect';
 //* Case Methods
 const GET_SPOTS = 'spots/getAllSpots';
 // const LOG_OUT = 'session/log-out';
@@ -208,10 +208,17 @@ export const setSpotImagesThunk = (spotImage) => async (dispatch) => {
             preview,
         })
     })
-
-    const data = await response.json();
-    dispatch(setImages)
+    //! HAD TO CHANGE? WILL IT AFFECT CREATING A SPOT OR UPDATING? MAYBE
+    // if(response.ok){
+    //     const data = await response.json();
+    //     dispatch(setImages(spotImage))
+    //     return data
+    // }
+    dispatch(setImages(spotImage))
     return response
+    // const data = await response.json();
+    // dispatch(setImages)
+    // return response
 
 }
 
@@ -222,7 +229,7 @@ export const setSpotImagesThunk = (spotImage) => async (dispatch) => {
 
 const initialState = {}
 
-const spotReducer = (state = initialState, action, prevState) => {
+const spotReducer = (state = initialState, action) => {
     switch (action.type) {
         case GET_SPOTS: {
             const newState = { ...state.spots};

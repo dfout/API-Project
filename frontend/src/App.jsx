@@ -10,7 +10,7 @@ import ManageSpots from './components/ManageSpots';
 
 // Import Actions
 import * as sessionActions from './store/session';
-import * as spotActions from './store/spot'
+// import * as spotActions from './store/spot'
 import SpotDetail from './components/SpotDetailPage/SpotDetail';
 import CreateSpotPage from './components/CreateSpotPage';
 import EditSpotForm from './components/EditSpotForm';

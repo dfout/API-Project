@@ -1,19 +1,19 @@
 import {useEffect, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import { getAllSpotsThunk, getSpotsList } from '../../store/spot';
+import {useSelector} from 'react-redux';
+// import { getAllSpotsThunk, getSpotsList } from '../../store/spot';
 import { IoIosStar } from "react-icons/io";
-import {useParams} from 'react-router-dom';
+// import {useParams} from 'react-router-dom';
 import OpenModalButton from '../OpenModalButton';
 import { useModal } from '../../context/Modal';
 import ReviewModal from '../ReviewModal';
 import { getReviewsList } from '../../store/review';
 
-import * as reviewActions from '../../store/review'
+// import * as reviewActions from '../../store/review'
 
 import './SpotReview.css'
 
-const SpotReviews = ({ reviewsState, numReviews, avgRating, ownerId, spotId }) =>{
-    const dispatch = useDispatch()
+const SpotReviews = ({ numReviews, avgRating, ownerId, spotId }) =>{
+    
 
     // const [reviews, setReviews] = useState(reviewsState);
 
@@ -24,7 +24,7 @@ const SpotReviews = ({ reviewsState, numReviews, avgRating, ownerId, spotId }) =
         
 
     const reviews = useSelector(getReviewsList);
-    console.log(reviews)
+    // console.log(reviews)
 
 
     //! How do I cause this component to rerender when the reviews state is updated?
@@ -92,19 +92,21 @@ useEffect(() => {
 if (!reviews  && timeCheck) return <h1>Loading...</h1>;
 else if (!reviews&& !timeCheck) return <h1>Sorry, please refresh the page</h1>;
   
+    //this used to be inside already reviewed
+    // const reviews = useSelector(
+    //     (state)=>state.reviews
+    // )
 
-    const alreadyReviewed = (sessionUser)=>{
+    const alreadyReviewed = (sessionUser, reviews = reviews)=>{
 
-        const reviews = useSelector(
-            (state)=>state.reviews
-        )
-        const reviewsList = Object.values(reviews)
+
+        // const reviewsList = Object.values(reviews)
         
         // const sessionUser = useSelector((state) => state.session.user);
         if(sessionUser){
             const currUserId = sessionUser.id
             
-            const hasReviewed = reviewsList.find((entry)=> entry.userId === currUserId);
+            const hasReviewed = reviews.find((entry)=> entry.userId === currUserId);
                 // if (entry.userId === currUserId) {
                 //     return true;
                 // }
@@ -173,7 +175,7 @@ else if (!reviews&& !timeCheck) return <h1>Sorry, please refresh the page</h1>;
             <OpenModalButton id='review-button' buttonText={'Post Your Review'} onButtonClick={closeMenu} modalComponent={<ReviewModal spotId={spotId}/>}/>
         )} 
         <ul className='spot-reviews'>
-        {reviews?.map(({id, userId, User, stars, review, createdAt, updatedAt })=>(
+        {reviews?.map(({id,User, stars, review, createdAt})=>(
             <li className='review-tile' key={id}>
                 <h4>{User.firstName}</h4>
                 <span>{createdAt.split('-')[1]}/{createdAt.split('-')[2].split('T')[0]}/{createdAt.split('-')[0]}</span>

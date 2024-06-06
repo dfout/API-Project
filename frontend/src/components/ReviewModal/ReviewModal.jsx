@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import * as reviewActions from '../../store/review'
 import { useDispatch } from "react-redux"
 // import { Navigate } from "react-router-dom";
@@ -9,7 +9,7 @@ import {useModal} from '../../context/Modal'
 import RatingInput from "./RatingInput"
 import { useSelector } from "react-redux"
 
-import { FaRegStar } from "react-icons/fa";
+// import { FaRegStar } from "react-icons/fa";
 
 
 
@@ -38,8 +38,8 @@ const ReviewModal = ({spotId})=>{
         e.preventDefault();
         setErrors({});
         // let rating = Number(stars)
-
-        const response = await dispatch(reviewActions.postReviewThunk({review, stars}, Number(spotId),sessionUser)).then(closeModal).catch(
+        // had const resposne = 
+        return await dispatch(reviewActions.postReviewThunk({review, stars}, Number(spotId),sessionUser)).then(closeModal).catch(
             async(res)=>{
                 const data = await res.json();
                 
@@ -57,13 +57,13 @@ const ReviewModal = ({spotId})=>{
 
     const isFormValid = ()=> review.length >=10 && stars
 
-    const handleStarHover = (hoveredRating) => {
-        setStars(hoveredRating); // Update stars on hover
-    };
+    // const handleStarHover = (hoveredRating) => {
+    //     setStars(hoveredRating); // Update stars on hover
+    // };
 
-    const handleClickStar = (clickedRating) => {
-        setStars(clickedRating); // Update stars on click and persist
-    };
+    // const handleClickStar = (clickedRating) => {
+    //     setStars(clickedRating); // Update stars on click and persist
+    // };
 
     const onChange = (e) => {
         const number = e.target.value;
@@ -82,7 +82,7 @@ const ReviewModal = ({spotId})=>{
     }
 
    const  onChangeReview = (text) =>{
-        let newErrs = {};
+        // let newErrs = {};
         setReview(text)
         if(text.length >=10){
             if (errors.review){

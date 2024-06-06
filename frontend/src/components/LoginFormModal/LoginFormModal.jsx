@@ -40,7 +40,7 @@ const LoginFormModal = ()=>{
 
     const isFormValid = ()=> credential.length >=4 && password.length >=6
 
-    const demoUserLogIn = (e) =>{
+    const demoUserLogIn = () =>{
        return dispatch(sessionActions.logInUserThunk({credential:'Demo-lition', password: 'password'})).then(closeModal)
     }
 

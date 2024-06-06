@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import * as spotActions from '../store/spot'
-import { Navigate } from "react-router-dom";
+// import * as spotActions from '../store/spot'
+// import { Navigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useSelector } from 'react-redux';
 import { useState } from "react";
@@ -26,7 +26,7 @@ export default function EditSpotForm (){
 
 
 
-    const sessionUser = useSelector((state) => state.session.user);
+    // const sessionUser = useSelector((state) => state.session.user);
     const [country, setCountry] = useState(spot.country);
     const [address, setAddress] = useState(spot.address);
     const [city, setCity] = useState(spot.city);
@@ -41,7 +41,7 @@ export default function EditSpotForm (){
 
     
     const [validationErrors, setValidationErrors] = useState({});
-    const [hasSubmitted, setHasSubmitted] = useState(false)
+    // const [hasSubmitted, setHasSubmitted] = useState(false)
 
 
     const [spotImage1, setSpotImage1] = useState(spot.SpotImages[0].url || '')
@@ -51,11 +51,12 @@ export default function EditSpotForm (){
 
 
 
-    const regex = /\.(png|jpg|jpeg)$/i;
+    
 
 
     useEffect(()=>{
       const errors = {};
+      const regex = /\.(png|jpg|jpeg)$/i;
       if (!country.length) errors.country =  "Country is required"
       if(!address.length) errors.address = "Address is required"
       if(!city.length) errors.city = "City is required"
@@ -81,7 +82,7 @@ export default function EditSpotForm (){
 
     const handleSubmit = async (e) =>{
       e.preventDefault();
-      setHasSubmitted(true)
+      // setHasSubmitted(true)
       const images = [];
       if(spotImage1.length) images.push(spotImage1)
       if(spotImage2.length) images.push(spotImage2)
@@ -257,7 +258,7 @@ export default function EditSpotForm (){
         {validationErrors.description && <p>{validationErrors.description}</p>}
         <label>
           Create a title for your spot
-          <p className ='paragraph'>Catch guests' attentions with a spot title that highlights what makes your place great.</p>
+          <p className ='paragraph'>Catch guests attentions with a spot title that highlights what makes your place great.</p>
           <input
             type="text"
             value={name}
