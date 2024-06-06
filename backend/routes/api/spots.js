@@ -275,43 +275,10 @@ router.post('/:spotId/bookings', requireAuth, validateBooking, async (req, res)=
 
         return res.status(200).json(formattedResponse)
     }
-    // }else {
-    //     return res.status(403).json({message: 'Forbidden'})
-    // }
 
 
 })
 
-// const validateQueryFilters = [
-//     check('page')
-//         .exists({checkFalsy:true})
-//         .isEmail()
-//         .withMessage('Invalid email'),
-//     check('size')
-//         .exists({checkFalsy:true})
-//         .isLength({min:4}).withMessage('Please provide a username with at least 4 characters.'),
-//     check('maxLat')
-//         .exists({values: 'undefined'}).withMessage('Username is required'),
-//     check('minLat')
-//         .not()
-//         .isEmail()
-//         .withMessage('Username cannot be an email'),
-//     check('minLng')
-//         .notEmpty()
-//         .withMessage('First Name is required'),
-//     check('maxLng')
-//         .notEmpty()
-//         .withMessage('Last Name is required'),
-//     check('minPrice')
-//         .exists({checkFalsy:true})
-//         .isLength({min:6})
-//         .withMessage('Password must be 6 characters or more.'),
-//         check('minPrice')
-//         .exists({checkFalsy:true})
-//         .isLength({min:6})
-//         .withMessage('Password must be 6 characters or more.'),
-//     handleValidationErrors
-// ];
 //* GET ALL SPOTS
 //! FOR Getting All Spots I should Calculate the AvgRating
 router.get('/', async(req,res)=>{
@@ -330,6 +297,7 @@ router.get('/', async(req,res)=>{
         where: {},
         limit: size,
         offset: (page - 1) * size,
+        include:[{model: Review}]
     };
 
     const queryValidErrors = {};
@@ -512,7 +480,15 @@ router.get('/', async(req,res)=>{
     }
 
 
-    const allSpots = await Spot.findAll({...filter});
+    let allSpots = await Spot.findAll({...filter});
+    // sqlize fnc 
+    // console.log("ALL SPOTS---------------------------------",allSpots)
+    allSpots.forEach((spot)=> {
+    const initialValue = 0;
+    const rating = spot?.Reviews.reduce((acc, curr)=> acc + curr.stars, initialValue)
+    spot.avgRating = rating / spot.Reviews.length
+    })
+
 
     return res.json({
         Spots: allSpots,
