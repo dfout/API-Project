@@ -37,7 +37,7 @@ const ReviewModal = ({spotId})=>{
     const handleSubmit = async(e)=>{
         e.preventDefault();
         setErrors({});
-        let rating = Number(stars)
+        // let rating = Number(stars)
 
         const response = await dispatch(reviewActions.postReviewThunk({review, stars}, Number(spotId),sessionUser)).then(closeModal).catch(
             async(res)=>{

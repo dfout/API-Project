@@ -202,7 +202,7 @@ const SpotDetail =()=>{
         </div>
 
         <ul className='spot-reviews'>
-            {reviews.length == 0 && 
+            {reviews.length == 0 && canPostReview(sessionUser, ownerId, reviews) && 
             <span>Be the first to post a review!</span>
             }
             {reviews.length != 0 && reviews?.map(({ id, userId, User, stars, review, createdAt, updatedAt }) => {
