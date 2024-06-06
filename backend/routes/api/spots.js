@@ -486,7 +486,9 @@ router.get('/', async(req,res)=>{
     allSpots.forEach((spot)=> {
     const initialValue = 0;
     const rating = spot?.Reviews.reduce((acc, curr)=> acc + curr.stars, initialValue)
-    spot.avgRating = rating / spot.Reviews.length
+    if(rating){
+        spot.avgRating = (rating / spot.Reviews.length).toFixed(2)
+    }
     })
 
 
