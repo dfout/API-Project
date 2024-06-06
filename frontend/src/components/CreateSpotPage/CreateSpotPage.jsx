@@ -154,11 +154,13 @@ function CreateSpotPage() {
   };
 
   return (
-    <>
+    <div className="Spot-Form">
+      <form onSubmit={handleSubmit}>
+      <div>
       <h2>Create a new Spot</h2>
       <h3>Where is your place located?</h3>
       <p className ='paragraph'>Guests will only recieve your exact address once they have booked a reservation.</p>
-      <form onSubmit={handleSubmit}>
+      </div>
         <label>
           Country
           <input
@@ -297,10 +299,9 @@ function CreateSpotPage() {
             />
           
         </label>
-    
         <button type="submit" onClick={handleSubmit}>Create Spot</button>
       </form>
-    </>
+    </div>
   );
 }
 

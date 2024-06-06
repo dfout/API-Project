@@ -10,4 +10,37 @@ input[type=text], select {
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
-  }
+}
+
+
+.Spot-Form{
+    background-color: blue;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 2%;
+    padding-bottom: 10%;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+
+form{
+    width: 100%;
+    margin:0;
+    padding:0;
+}
+
+button{
+    width: 300px;
+    align-self:center;
+    height: 50px;
+}
+
+label{
+    margin: 0;
+}
+input{
+    margin:0;
+    padding:0;
+}
