@@ -27,12 +27,12 @@ const validateSpot = [
         .exists().notEmpty()
         .withMessage("Country is required"),
     //? HOW TO DEFAULT LAT AND LNG?
-    check('lat')
-        .exists().isFloat({min: -89, max: 91})
-        .withMessage("Latitude must be within -90 and 90"),
-    check('lng')
-        .exists().isFloat({min: -181, max: 181})
-        .withMessage("Longitude must be within -180 and 180"),
+    // check('lat')
+    //     .exists().isFloat({min: -89, max: 91})
+    //     .withMessage("Latitude must be within -90 and 90"),
+    // check('lng')
+    //     .exists().isFloat({min: -181, max: 181})
+    //     .withMessage("Longitude must be within -180 and 180"),
     check('name')
         .exists().notEmpty().withMessage('Name is required')
         .isLength({max:50}).withMessage("Name must be less than 50 characters"),
@@ -297,7 +297,7 @@ router.get('/', async(req,res)=>{
         where: {},
         limit: size,
         offset: (page - 1) * size,
-        include:[{model: Review}]
+        include:[{model: Review, include:[{model:ReviewImage}]}, {model:SpotImage}]
     };
 
     const queryValidErrors = {};
@@ -633,7 +633,7 @@ router.post('/:spotId/reviews', requireAuth, async(req,res,next)=>{
 router.post('/', requireAuth, validateSpot, async(req,res,next)=>{
 
     console.log('we are here \n\n\n\n')
-    const {address, city, state, country, lat, lng, name, description, price, previewImage} = req.body;
+    const {address, city, state, country, lat= null, lng= null, name, description, price, previewImage} = req.body;
     const ownerId = req.user.id;
 
     const newSpot = await Spot.create({ownerId, address, city, state, country, lat, lng, name, description, price});

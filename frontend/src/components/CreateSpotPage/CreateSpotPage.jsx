@@ -43,25 +43,56 @@ function CreateSpotPage() {
   useEffect(()=>{
     const errors = {};
     const regex = /\.(png|jpg|jpeg)$/i;
+     // regexNum is true when the string is only numbers
+    const onlyNum = /^\d+$/;
+    // regexNum is true when the string is only numbers
+    const onlyAlpha = /^\D*$/;
+    //for coordinates, they have - 
+    const isCoords = /^[0-9-]+$/;
+   
+    
+    // console.log(lat.length) // shows 2
+    // console.log(typeof lat) //shows string
+    // console.log(isCoords.test(lat), "IS COORDS") //shows true
+    // console.log(Number(lat)< -90) //false
+    // console.log(Number(lat)> 90)//false
+    // console.log(lat.length && isCoords.test(lat) && (Number(lat)< -90 || Number(lat)>90))//false
     if (!country.length) errors.country =  "Country is required"
-    if(!address.length) errors.address = "Address is required"
+    if(country.length && !onlyAlpha.test(country)) errors.country = "Country must not contain numbers"
+    if(!address.length && typeof address == 'string') errors.address = "Address is required"
     if(!city.length) errors.city = "City is required"
+    if(city.length && !onlyAlpha.test(city)) errors.city = "City must not contain numbers"
     if(!state.length) errors.state = "State is required"
-    if(!lat) errors.lat = "Latitude must be within -90 and 90"
-    if(!lng) errors.lng = "Longitude must be within -180 and 180"
-    if(!description.length && description.length >= 30) errors.description = "Please provide a description of your spot at least 30 characters long"
+    if (state.length && !onlyAlpha.test(state)) errors.state = "State must not contain numbers"
+    // if(lat.length && !onlyNum.test(lat)) errors.lat = "Latitude must be a number between -90 and 90"
+    if(lat.length && !isCoords.test(lat)) errors.lat = "Latitude must be a number between -90 and 90"
+    if(lat.length && isCoords.test(lat) && (Number(lat)< -90 || Number(lat)>90)) errors.lat = "Latitude must be within -90 and 90"
+    if(lng.length && !isCoords.test(lng)) errors.lng = "Latitude must be a number between -90 and 90"
+    if(lng.length && isCoords.test(lng)&& (Number(lng)<-180 || Number(lng)> 180)) errors.lng = "Longitude must be a number between -180 and 180"
+    // if(Number(lng)<-180 || Number(lng)> 180) errors.lng = "Longitude must be within -180 and 180"
+    if(!description.length || description.length < 30 || typeof description !=='string') errors.description = "Please provide a description of your spot at least 30 characters long"
     if(!name) errors.name = "Please provide a name for your spot"
-    if(!price && price <1) errors.price = "Please provide a price per night"
+    if(onlyNum.test(name)) errors.name = "Title for your spot must contain letters"
+    if(!price || price <1 && onlyNum.test(price)) errors.price = "Please provide a valid price in USD"
+    if(!onlyNum.test(price)) errors.price = "Price must be a valid numerical input over 0 in USD"
     if(!previewImage.length) errors.previewImage = "Please provide a preview image"
     if(!regex.test(previewImage)) errors.previewImage = "Preview Image must end in .png, .jpg, or  .jpeg"
 
-    if( spotImage1 && !regex.test(spotImage1)) errors.Images = "Images must end in .png, .jpg, .jpeg"
-    if(spotImage2 && !regex.test(spotImage2)) errors.Images = "Images must end in .png, .jpg, or .jpeg"
-    if(spotImage3 && !regex.test(spotImage3)) errors.Images = "Images must end in .png, .jpg, or .jpeg"
-    if(spotImage4 && !regex.test(spotImage4)) errors.Images = "Images must end in .png, .jpg, or .jpeg"
+    // const imageErrors = {};
+    if(spotImage1.length && !regex.test(spotImage1)) errors.image1 = "Images must end in .png, .jpg, .jpeg"
+    if(spotImage2.length && !regex.test(spotImage2)) errors.image2 = "Images must end in .png, .jpg, or .jpeg"
+    if(spotImage3.length!= ''  && !regex.test(spotImage3)) errors.image3 = "Images must end in .png, .jpg, or .jpeg"
+    if(spotImage4!= '' && !regex.test(spotImage4)) errors.image4 = "Images must end in .png, .jpg, or .jpeg"
 
-      setValidationErrors(errors)
+    // if(Object.values(imageErrors).length){
+    //   errors.Images = {...imageErrors}
+    // }
+    // setHasSubmitted(false)
+   
+    setValidationErrors(errors)
   },[country, address, city, state, lat, lng, description, name, price, previewImage, SpotImages, spotImage1, spotImage2, spotImage3, spotImage4])
+
+
 
   const handleSubmit = async(e) => {
     e.preventDefault();
@@ -74,10 +105,11 @@ function CreateSpotPage() {
     if(spotImage4.length) images.push(spotImage4)
 
     setSpotImages(images)
-    console.log(validationErrors)
+    // console.log(validationErrors)
     
     if(!Object.values(validationErrors).length){
-      const newSpot = {
+      const newSpot = 
+      {
         ownerId:sessionUser.id,
         address,
         city,
@@ -91,67 +123,46 @@ function CreateSpotPage() {
         previewImage, 
         SpotImages
       }
-      const responseBody = await dispatch(spotActions.createSpotThunk(newSpot))
+     const responseBody = await dispatch(spotActions.createSpotThunk(newSpot))
+     if(!responseBody.id){
+      const data = await responseBody.json()
+      if (data?.errors) {
+        setValidationErrors(data.errors);
+      }
+     }
       const createdSpotId = responseBody.id
-        const createdPreviewImage = {
-          url :previewImage, 
-          preview:true, 
+      const createdPreviewImage = {
+        url :previewImage, 
+        preview:true, 
+        spotId: createdSpotId
+      }
+      dispatch(spotActions.setSpotImagesThunk(createdPreviewImage))
+      SpotImages.forEach((image)=>{
+        const spotImage = {
+          url:image,
+          preview:false,
           spotId: createdSpotId
         }
-        dispatch(spotActions.setSpotImagesThunk(createdPreviewImage))
-        SpotImages.forEach((image)=>{
-          const spotImage = {
-            url:image,
-            preview:false,
-            spotId: createdSpotId
-          }
-          dispatch(spotActions.setSpotImagesThunk(spotImage))
-        })
-        navigate(`/spots/${createdSpotId}`)
-      
-    }
-    
-      // setErrors({});
-      // return dispatch(
-      //   spotActions.createSpotThunk({
-      //       ownerId: sessionUser.id,
-      //       address,
-      //       city,
-      //       state,
-      //       country,
-      //       lat,
-      //       lng,
-      //       name,
-      //       description,
-      //       price,
-      //       previewImage
-      //   })
-      // ).catch(async (res) => {
-      //   const data = await res.json();
-      //   console.log(data)
-      //   if (data?.errors) {
-      //     setErrors(data.errors);
-      //   }else{
-      //     const createdSpotId = data.spot.id;
-      //     const createdPreviewImage = {
-      //       url:previewImage,
-      //       preview:true,
-      //       spotId: createdSpotId
-      //     }
-      //     dispatch(spotActions.setSpotImagesThunk(createdPreviewImage))
-      //     SpotImages.forEach((image)=>{
-      //       const spotImage = {
-      //         url:image,
-      //         preview:false,
-      //         spotId: createdSpotId
-      //       }
-      //       dispatch(spotActions.setSpotImagesThunk(spotImage))
-      //     })
+        dispatch(spotActions.setSpotImagesThunk(spotImage))
+      })
 
-    
-      //   }
-      // });
-  };
+        
+        // setAddress('')
+        // setCity('')
+        // setState('')
+        // setCountry('')
+        // setDescription('')
+        // setLat('')
+        // setLng('')
+        // setName('')
+        // setPrice('')
+        // setPreviewImage('')
+        // setSpotImages('')
+        navigate(`/spots/${createdSpotId}`)
+    }
+}
+
+console.log(validationErrors)
 
   return (
     <div className="Spot-Form">
@@ -171,7 +182,7 @@ function CreateSpotPage() {
            
           />
         </label>
-        {hasSubmitted && validationErrors.country && <p>{validationErrors.country}</p>}
+        {hasSubmitted && validationErrors.country && (<p>{validationErrors.country}</p>)}
         <label>
           Street Address
           <input
@@ -209,7 +220,7 @@ function CreateSpotPage() {
           Latitude
           <input
             type="text"
-            placeholder='Latitude'
+            placeholder='Optional'
             value={lat}
             onChange={(e) => setLat(e.target.value)}
             
@@ -220,7 +231,7 @@ function CreateSpotPage() {
           Long
           <input
             type="text"
-            placeholder='Longitude'
+            placeholder='Optional'
             value={lng}
             onChange={(e) => setLng(e.target.value)}
             
@@ -271,34 +282,46 @@ function CreateSpotPage() {
             value={previewImage}
             onChange={(e)=> setPreviewImage(e.target.value)}
             />
+          
+
             {hasSubmitted && validationErrors.previewImage && <p>{validationErrors.previewImage}</p>}
+           
             <input 
             type='text'
             placeholder='Image URL'
             value={spotImage1} 
             onChange={(e) => setSpotImage1(e.target.value)}
-
             />
+           
+            {hasSubmitted && validationErrors.image1 && <p>{validationErrors.image1}</p>}
+            
                  <input 
             type='text'
             placeholder='Image URL'
             value={spotImage2} 
             onChange={(e) => setSpotImage2(e.target.value)}
             />
+          
+            {hasSubmitted && validationErrors.image2 && (<p>{validationErrors.image2}</p>)}
+          
                  <input 
             type='text'
             placeholder='Image URL'
             value={spotImage3}
             onChange={(e) => setSpotImage3(e.target.value)}
             />
-                 <input 
+            
+            {hasSubmitted && validationErrors.image3 && (<p>{validationErrors.image3}</p>)}
+            
+            <input 
             type='text'
             placeholder='Image URL'
             value={spotImage4}
             onChange={(e) => setSpotImage4(e.target.value)}
             />
-          
         </label>
+        {hasSubmitted && validationErrors.image4 && (<p>{validationErrors.image4}</p>)}
+        {/* {hasSubmitted && validationErrors.Images && (<p>{validationErrors.Images}</p>)} */}
         <button type="submit" onClick={handleSubmit}>Create Spot</button>
       </form>
     </div>

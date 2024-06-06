@@ -33,7 +33,7 @@ const SignupFormModal= () => {
         if(password.length < 6) validationErrors.password="Password must be at least 6 characters"
 
         setErrors(validationErrors)
-    },[username, password])
+    },[firstName, lastName,username, password])
 
     const handleSubmit = async(e)=>{
         e.preventDefault();

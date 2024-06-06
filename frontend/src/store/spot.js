@@ -69,6 +69,7 @@ export const getAllSpotsThunk = () => async (dispatch) => {
         return spotData;
     } else {
         const error = await response.json();
+        console.log(error)
         return error
     }
 }

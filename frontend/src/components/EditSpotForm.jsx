@@ -27,16 +27,16 @@ export default function EditSpotForm (){
 
 
     // const sessionUser = useSelector((state) => state.session.user);
-    const [country, setCountry] = useState(spot.country);
-    const [address, setAddress] = useState(spot.address);
-    const [city, setCity] = useState(spot.city);
-    const [state, setState] = useState(spot.state);
-    const [lat, setLat] = useState(spot.lat);
-    const [lng, setLng] = useState(spot.lng);
-    const [description, setDescription] = useState(spot.description);
-    const [name, setName] = useState(spot.name);
-    const [price, setPrice] = useState(spot.price);
-    const [previewImage, setPreviewImage] = useState(spot.previewImage)
+    const [country, setCountry] = useState(spot.country ? spot.country: '');
+    const [address, setAddress] = useState(spot.address ? spot.address: '');
+    const [city, setCity] = useState(spot.city ? spot.city: '');
+    const [state, setState] = useState(spot.state ? spot.state: '');
+    const [lat, setLat] = useState(spot.lat ? spot.lat: '');
+    const [lng, setLng] = useState(spot.lng ? spot.lng: '');
+    const [description, setDescription] = useState(spot.description ? spot.description: '');
+    const [name, setName] = useState(spot.name ? spot.name: '');
+    const [price, setPrice] = useState(spot.price ? spot.price :'');
+    const [previewImage, setPreviewImage] = useState(spot.previewImage? spot.previewImage :'')
     const [SpotImages, setSpotImages] = useState(spot.SpotImages);
 
     
@@ -44,10 +44,10 @@ export default function EditSpotForm (){
     // const [hasSubmitted, setHasSubmitted] = useState(false)
 
 
-    const [spotImage1, setSpotImage1] = useState(spot.SpotImages[0].url || '')
-    const [spotImage2, setSpotImage2] = useState(spot.SpotImages[1].url || '')
-    const [spotImage3, setSpotImage3] = useState(spot.SpotImages[2].url|| '')
-    const [spotImage4, setSpotImage4] = useState(spot.SpotImages[3].url || '')
+    const [spotImage1, setSpotImage1] = useState(spot.SpotImages[0]? spot.SpotImages[0].url:'')
+    const [spotImage2, setSpotImage2] = useState(spot.SpotImages[1]? spot.SpotImages[1].url:'')
+    const [spotImage3, setSpotImage3] = useState(spot.SpotImages[2]? spot.SpotImages[2].url:'')
+    const [spotImage4, setSpotImage4] = useState(spot.SpotImages[3]? spot.SpotImages[3].url:'')
 
 
 
@@ -57,27 +57,25 @@ export default function EditSpotForm (){
     useEffect(()=>{
       const errors = {};
       const regex = /\.(png|jpg|jpeg)$/i;
-      if (!country.length) errors.country =  "Country is required"
-      if(!address.length) errors.address = "Address is required"
-      if(!city.length) errors.city = "City is required"
-      if(!state.length) errors.state = "State is required"
-      if(!lat) errors.lat = "Latitude must be within -90 and 90"
-      if(!lng) errors.lng = "Longitude must be within -180 and 180"
-      if(!description.length && description.length >= 30) errors.description = "Please provide a description of your spot at least 30 characters long"
-      if(!name) errors.name = "Please provide a name for your spot"
-      if(!price && price <1) errors.price = "Please provide a price per night"
+      if (!country.length || !typeof country === 'string') errors.country =  "Country is required"
+      if(!address.length || !typeof address == 'string') errors.address = "Address is required"
+      if(!city.length || !typeof city ==='string') errors.city = "City is required"
+      if(!state.length || !typeof state == 'string') errors.state = "State is required"
+      if(!lat || !typeof lat === "number") errors.lat = "Latitude must be within -90 and 90"
+      if(!lng || !typeof lng === 'number') errors.lng = "Longitude must be within -180 and 180"
+      if(!description.length || description.length < 30 || !typeof description ==='string') errors.description = "Please provide a description of your spot at least 30 characters long"
+      if(!name || !typeof name === 'string') errors.name = "Please provide a name for your spot"
+      if(!price || price <1 || typeof price !== 'number') errors.price = "Please provide a price per night"
       if(!previewImage.length) errors.previewImage = "Please provide a preview image"
-      if(!regex.test(previewImage)) errors.previewImage = "Please provide a preview image that ends in .png, .jpg, or  .jpeg"
-
+      if(!regex.test(previewImage)) errors.previewImage = "Preview Image must end in .png, .jpg, or  .jpeg"
+  
       if( spotImage1 && !regex.test(spotImage1)) errors.Images = "Images must end in .png, .jpg, .jpeg"
       if(spotImage2 && !regex.test(spotImage2)) errors.Images = "Images must end in .png, .jpg, or .jpeg"
       if(spotImage3 && !regex.test(spotImage3)) errors.Images = "Images must end in .png, .jpg, or .jpeg"
       if(spotImage4 && !regex.test(spotImage4)) errors.Images = "Images must end in .png, .jpg, or .jpeg"
-    
-
-
-      setValidationErrors(errors)
-    },[country, address, city, state, lat, lng, description, name, price, previewImage, spotImage1, spotImage2, spotImage3, spotImage4])
+  
+        setValidationErrors(errors)
+    },[country, address, city, state, lat, lng, description, name, price, previewImage, SpotImages, spotImage1, spotImage2, spotImage3, spotImage4])
 
 
     const handleSubmit = async (e) =>{
