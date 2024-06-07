@@ -107,6 +107,9 @@ function CreateSpotPage() {
     setSpotImages(images)
 
     if(!Object.values(validationErrors).length){
+
+      if(!lat) lat = -90
+      if (!lng) lng = -180
       const newSpot = 
       {
         ownerId:sessionUser.id,
