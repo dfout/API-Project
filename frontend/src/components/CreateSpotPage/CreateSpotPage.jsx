@@ -162,7 +162,7 @@ function CreateSpotPage() {
     }
 }
 
-console.log(validationErrors)
+
 
   return (
     <div className="Spot-Form">

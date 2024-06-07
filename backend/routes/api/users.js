@@ -24,12 +24,12 @@ const validateSignup = [
         .not()
         .isEmail()
         .withMessage('Username cannot be an email'),
-    check('firstName')
-        .notEmpty()
-        .withMessage('First Name is required'),
-    check('lastName')
-        .notEmpty()
-        .withMessage('Last Name is required'),
+    // check('firstName')
+    //     .notEmpty()
+    //     .withMessage('First Name is required'),
+    // check('lastName')
+    //     .notEmpty()
+    //     .withMessage('Last Name is required'),
     check('password')
         .exists({checkFalsy:true})
         .isLength({min:6})

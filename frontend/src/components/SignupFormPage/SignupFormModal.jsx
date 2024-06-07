@@ -28,12 +28,18 @@ const SignupFormModal= () => {
     // if(sessionUser) return <Navigate to='/' replace={true} />
 
     useEffect(()=>{
+        const onlyAlpha = /^\D*$/;
         const validationErrors = {};
+        if(!firstName.length) validationErrors.firstName = "Please provide your first name"
+        if(!onlyAlpha.test(firstName)) validationErrors.firstName = "First name can only include letters"
+        if (!lastName.length) validationErrors.lastName = "Please provide your last name"
+        if(!onlyAlpha.test(lastName)) validationErrors.lastName == "Last name can only include letters"
         if(username.length < 4) validationErrors.username="Username must be at least 4 characters long"
         if(password.length < 6) validationErrors.password="Password must be at least 6 characters"
+        if(password !== confirmPassword) validationErrors.confirmPassword = "Confirm Password field must be the same as the Password Field"
 
         setErrors(validationErrors)
-    },[firstName, lastName,username, password])
+    },[firstName, lastName,username, password, confirmPassword])
 
     const handleSubmit = async(e)=>{
         e.preventDefault();
@@ -42,25 +48,30 @@ const SignupFormModal= () => {
             setErrors({})
             // const response = dispatch(signUpUserThunk({username, firstName, lastName, email, password}));
             // console.log("AFTER DISPATCH", response)
-
-            return dispatch(signUpUserThunk({username, firstName, lastName, email, password})).then(closeModal).catch(
-                async(res)=>{
-                    const data = await res.json();
-                    if(res.status !== 200){
-                        
-                        setErrors(data.errors)
-                      
+            if(!Object.values(errors).length){
+                return response =  dispatch(signUpUserThunk({username, firstName, lastName, email, password})).then(closeModal).catch(
+                    async(res)=>{
+                        const data = await res.json();
+                        if(res.status !== 200){
+                            
+                            setErrors(data.errors)
+                          
+                        }
                     }
-                }
-            )
+                )
+
+            }
+
         }
-        return setErrors({
-            confirmPassword: "Confirm Password field must be the same as the Password Field"
-        })
+        // return setErrors({
+        //     confirmPassword: "Confirm Password field must be the same as the Password Field"
+        // })
         
 
     };
+    console.log(errors)
     const isFormValid = ()=> {
+        const onlyAlpha = /^\D*$/;
        const isFilled =  username && firstName && lastName && email && password && confirmPassword 
       
        if (isFilled && username.length >=4 && password.length >=6){
@@ -70,12 +81,12 @@ const SignupFormModal= () => {
        }
     }
 
-
+    console.log(errors)
 
     return(
-        <>
+        <div id="sign-up-modal">
         <h1>Sign Up</h1>
-            <form onSubmit={handleSubmit}>
+            <form id='sign-up-form' onSubmit={handleSubmit}>
                 <label>Email
                     <input type='text' value={email} onChange={(e)=> setEmail(e.target.value)} required />
                 </label>
@@ -104,7 +115,7 @@ const SignupFormModal= () => {
                 {hasSubmitted && errors.confirmPassword && <p>{errors.confirmPassword}</p>}
                 <button type='submit' disabled={!isFormValid()}>Sign Up</button>
             </form>
-        </>
+        </div>
     )
 }
 

@@ -1,0 +1,14 @@
+#sign-up-modal{
+    /* height:50vh;
+    width: 50vw; */
+    /* display:flex; */
+}
+
+#sign-up-form{
+    display:flex;
+    /* flex-direction:row; */
+}
+
+label{
+    margin:0;
+}
