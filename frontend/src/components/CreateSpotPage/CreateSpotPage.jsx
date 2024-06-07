@@ -12,8 +12,8 @@ function CreateSpotPage() {
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
-  const [lat, setLat] = useState("");
-  const [lng, setLng] = useState("");
+  let [lat, setLat] = useState("");
+  let [lng, setLng] = useState("");
   const [description, setDescription] = useState("");
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
