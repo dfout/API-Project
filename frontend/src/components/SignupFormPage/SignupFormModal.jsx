@@ -69,7 +69,6 @@ const SignupFormModal= () => {
         
 
     };
-    console.log(errors)
     const isFormValid = ()=> {
         // const onlyAlpha = /^\D*$/;
        const isFilled =  username && firstName && lastName && email && password && confirmPassword 
