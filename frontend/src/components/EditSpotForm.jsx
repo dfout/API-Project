@@ -17,13 +17,6 @@ export default function EditSpotForm (){
     const dispatch = useDispatch();
     const navigate = useNavigate()
 
-    // useEffect(()=>{
-
-    //     dispatch(UpdateSpotThunk(spot))
-
-    // },[spot])
-
-
 
 
     // const sessionUser = useSelector((state) => state.session.user);
@@ -37,9 +30,8 @@ export default function EditSpotForm (){
     const [name, setName] = useState(spot.name ? spot.name: '');
     const [price, setPrice] = useState(spot.price ? spot.price :'');
     const [previewImage, setPreviewImage] = useState(spot.previewImage? spot.previewImage :'')
-    const [SpotImages, setSpotImages] = useState(spot.SpotImages);
+    const [SpotImages] = useState(spot.SpotImages);
 
-    console.log(lat, lng)
     const [validationErrors, setValidationErrors] = useState({});
     const [hasSubmitted, setHasSubmitted] = useState(false)
 
@@ -64,13 +56,6 @@ export default function EditSpotForm (){
       //for coordinates, they have - 
       const isCoords = /^[0-9-]+$/;
      
-      
-      // console.log(lat.length) // shows 2
-      // console.log(typeof lat) //shows string
-      // console.log(isCoords.test(lat), "IS COORDS") //shows true
-      // console.log(Number(lat)< -90) //false
-      // console.log(Number(lat)> 90)//false
-      // console.log(lat.length && isCoords.test(lat) && (Number(lat)< -90 || Number(lat)>90))//false
       if (!country.length) errors.country =  "Country is required"
       if(country.length && !onlyAlpha.test(country)) errors.country = "Country must not contain numbers"
       if(!address.length && typeof address == 'string') errors.address = "Address is required"
@@ -92,16 +77,12 @@ export default function EditSpotForm (){
       if(!previewImage.length) errors.previewImage = "Please provide a preview image"
       if(!regex.test(previewImage)) errors.previewImage = "Preview Image must end in .png, .jpg, or  .jpeg"
   
-      // const imageErrors = {};
+
       if(spotImage1.length && !regex.test(spotImage1)) errors.image1 = "Images must end in .png, .jpg, .jpeg"
       if(spotImage2.length && !regex.test(spotImage2)) errors.image2 = "Images must end in .png, .jpg, or .jpeg"
       if(spotImage3.length!= ''  && !regex.test(spotImage3)) errors.image3 = "Images must end in .png, .jpg, or .jpeg"
       if(spotImage4!= '' && !regex.test(spotImage4)) errors.image4 = "Images must end in .png, .jpg, or .jpeg"
   
-      // if(Object.values(imageErrors).length){
-      //   errors.Images = {...imageErrors}
-      // }
-      // setHasSubmitted(false)
      
       setValidationErrors(errors)
     },[country, address, city, state, lat, lng, description, name, price, previewImage, SpotImages, spotImage1, spotImage2, spotImage3, spotImage4])
@@ -110,13 +91,16 @@ export default function EditSpotForm (){
     const handleSubmit = async (e) =>{
       e.preventDefault();
       setHasSubmitted(true)
-      const images = [];
-      if(spotImage1.length) images.push(spotImage1)
-      if(spotImage2.length) images.push(spotImage2)
-      if(spotImage3.length) images.push(spotImage3)
-      if(spotImage4.length) images.push(spotImage4)
 
-      setSpotImages(images)
+      //! Backend route does not exist yet
+
+      // const images = [];
+      // if(spotImage1.length) images.push(spotImage1)
+      // if(spotImage2.length) images.push(spotImage2)
+      // if(spotImage3.length) images.push(spotImage3)
+      // if(spotImage4.length) images.push(spotImage4)
+
+      // setSpotImages(images)
 
       if (!Object.values(validationErrors).length){
         const updatedSpot = {
@@ -145,61 +129,9 @@ export default function EditSpotForm (){
         }
       }
 
-    // const handleSubmit = (e) => {
-    //     e.preventDefault();
-        
-        
-    //       setErrors({});
-    //       return dispatch(
-    //         UpdateSpotThunk({
-    //             ownerId: sessionUser.id,
-    //             address,
-    //             city,
-    //             state,
-    //             country,
-    //             lat,
-    //             lng,
-    //             name,
-    //             description,
-    //             price,
-    //             previewImage,
-    //             id:spotId
-               
-    //         })
-    //       ).catch(async (res) => {
-    //         console.log(res)
-    //         const data = await res.json();
-    //         console.log(data)
-    //         if (data?.errors) {
-    //           setErrors(data.errors);
-    //         }else{
-              
-              
-    //           const createdPreviewImage = {
-    //             url:previewImage,
-    //             preview:true,
-    //             spotId: spotId
-    //           }
-    //           dispatch(spotActions.setSpotImagesThunk(createdPreviewImage))
-    //           SpotImages.forEach((image)=>{
-    //             const spotImage = {
-    //               url:image,
-    //               preview:false,
-    //               spotId: spotId
-    //             }
-    //             dispatch(spotActions.setSpotImagesThunk(spotImage))
-    //           })
-    
-    //           navigate(`/spots/${spotId}`)
-    //         }
-    //         navigate(`/spots/${spotId}`)
-    //       });
-
-    //   };
 
 
     return(
-        // <SpotForm formType={'Edit Your Spot'} spot={spot}/>
         <>
       <h2>Edit Your Spot</h2>
       <h3>Where is your place located?</h3>

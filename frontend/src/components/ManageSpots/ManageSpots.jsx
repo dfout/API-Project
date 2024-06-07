@@ -17,7 +17,7 @@ export default function ManageSpots (){
     const userSpots = Object.values(useSelector((state)=>state.spots))
   
     const navigate = useNavigate();
-    // const [timeCheck, setTimeCheck] = useState(true);
+
     
     const closeMenu = useModal();
     useEffect(()=>{
@@ -25,27 +25,12 @@ export default function ManageSpots (){
         dispatch(userSpotsThunk())
     },[dispatch])
 
-    // useEffect(() => {
-    //     let timeout;
-       
-    //     if (!spot || !spot.Owner || !spot.Reviews) {
-    //         timeout = setTimeout(() => setTimeCheck(false), 3000);
-            
-    //     }
-    
-    //     return () => clearTimeout(timeout);
-    // }, []);
 
-    // if (!spot || !spot.Owner || !reviews && timeCheck) return <h1>Loading...</h1>;
-    // else if (!spot || !spot.Owner || !reviews && !timeCheck) return <h1>Sorry, please refresh the page</h1>;
 
     const handleCreateButton =()=>{
         navigate('/spots/create')
 
     }
-    // const handleUpdateButton = (id)=>{
-    //     return <Navigate to= {`/spots/${id}/edit`}/>
-    // }
 
 
     return(
