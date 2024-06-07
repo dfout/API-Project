@@ -105,8 +105,7 @@ function CreateSpotPage() {
     if(spotImage4.length) images.push(spotImage4)
 
     setSpotImages(images)
-    // console.log(validationErrors)
-    
+
     if(!Object.values(validationErrors).length){
       const newSpot = 
       {
@@ -145,8 +144,6 @@ function CreateSpotPage() {
         }
         dispatch(spotActions.setSpotImagesThunk(spotImage))
       })
-
-        
         // setAddress('')
         // setCity('')
         // setState('')

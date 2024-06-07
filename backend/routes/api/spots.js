@@ -632,11 +632,12 @@ router.post('/:spotId/reviews', requireAuth, async(req,res,next)=>{
 
 router.post('/', requireAuth, validateSpot, async(req,res,next)=>{
 
-    console.log('we are here \n\n\n\n')
-    const {address, city, state, country, lat= null, lng= null, name, description, price, previewImage} = req.body;
+    // console.log('we are here \n\n\n\n')
+    const {address, city, state, country, lat, lng, name, description, price, previewImage, SpotImages} = req.body;
+    console.log(lat, lng)
     const ownerId = req.user.id;
 
-    const newSpot = await Spot.create({ownerId, address, city, state, country, lat, lng, name, description, price});
+    const newSpot = await Spot.create({ownerId, address, city, state, country, lat, lng, name, description, price, previewImage, SpotImages});
     res.status(201);
     const formattedResponse = {
         id: newSpot.id,
