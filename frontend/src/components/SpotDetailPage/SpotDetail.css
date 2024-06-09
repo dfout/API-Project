@@ -1,7 +1,6 @@
 
 
 .spot-detail{
-   
     margin:0;
     padding-left: 8%;
      padding-right:8%;
@@ -18,18 +17,8 @@
     
 }
 
-.spot-images{
-    position:relative;
-    display:flex;
-    height: 40vh;
-    background-color: beige;
-    width:100%;
-    flex-direction: row;
-    /* max-width: 800px; */
-    padding-bottom: 1%;
-    
-}
-.first-image {
+
+/* .first-image {
     width:100%;
     height:100%;
     
@@ -37,9 +26,9 @@
     
     border-top-right-radius: 0%;
     border-bottom-right-radius: 0%;
-}
+} */
 
-.other-images-container{
+/* .other-images-container{
     position:relative;
     width:100%;
     height:100%;
@@ -49,7 +38,7 @@
     gap:1%;;
     padding-left:1%;
    
-}
+} */
 
 #spot-details{
     display:flex;
@@ -71,24 +60,13 @@
 
 
 
-.other-image{
-    border-radius:0%;
-    width:48%;
-    height: 49%;
-}
 
 
 .description{
     color:black;
 }
 
-#image-2{
-   border-top-right-radius: 10px;
-}
 
-#image-4{
-    border-bottom-right-radius:10px;
-}
 
 
 #reserve-button{
@@ -111,3 +89,67 @@
     padding-top: 10px;
     padding-left:10px;
 }
+
+/*
+Images
+*/
+
+.spot-images{
+    position:relative;
+    display:flex;
+    /* background-color: beige; */
+    max-width: 1000px;
+    flex-direction: row;
+    /* max-width: 800px; */
+    padding-bottom: 1%;
+    height: fit-content;
+    
+    /* flex: 1; */
+    
+}
+.first-image{
+    /* background-color: blue; */
+    object-fit:cover;
+    display:flex;
+    /* flex-grow:1; */
+    flex:1;
+    width:50%;
+    overflow:hidden;
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
+}
+
+#image1{
+   position:relative;
+   width:100%;
+   height:100%;
+   border-top-left-radius:10px ;
+}
+
+
+.other-images-container{
+    /* width: 50%; */
+    display:flex;
+    flex:1;
+    /* flex-direction:  */
+    /* height:100%; */
+    background-color: blue;
+    flex-wrap: wrap;
+    margin:0;
+    /* display:flex; */
+}
+.other-image{
+    position: relative;
+    border-radius:0%;
+    width:50%;
+    height: 50%;
+}
+
+
+#image-2{
+    border-top-right-radius: 10px;
+ }
+ 
+ #image-4{
+     border-bottom-right-radius:10px;
+ }

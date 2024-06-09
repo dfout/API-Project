@@ -16,7 +16,7 @@ function OpenModalMenuItem({
 
   const { setModalContent, setOnModalClose } = useModal();
 
-  const [isHovered, setsIsHovered] = useState(false)
+  const [isHovered, setIsHovered] = useState(false)
 
   const handleMouseEnter = () =>{
     setIsHovered(true)

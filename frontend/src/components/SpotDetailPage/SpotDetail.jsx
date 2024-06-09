@@ -129,7 +129,7 @@ const SpotDetail =()=>{
             </div>
             <div className='spot-images'>
                 <span className='first-image'>
-                    <img src={previewImage} alt={`${name} in ${city, state}`} title={`${name} in ${city, state}`}/>
+                    <img id="img1"src={previewImage} alt={`${name} in ${city, state}`} title={`${name} in ${city, state}`}/>
                 </span>
                 {SpotImages?.length > 0 && (
                     <div className='other-images-container'>

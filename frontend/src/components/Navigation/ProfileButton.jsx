@@ -21,12 +21,14 @@ const ProfileButton = ({user}) => {
     const dispatch = useDispatch();
     const ulRef = useRef()
     const navigate = useNavigate();
+    // console.log(showMenu)
 
     useEffect(()=>{
+        console.log("UPDATING STATE", showMenu)
         if(!showMenu) return;
         
         // Function that will close the menu, available to useEffect
-        const closeMenu = (e) => {
+        const closeOutsideClick = (e) => {
             // Apply logic to: only close the menu if the click does not contain any HTML elements of the drop-down Menu
             if (ulRef.current && !ulRef.current.contains(e.target)){
                 // Setting the showMenu to false will trigger the closing of the dropdown menu. 
@@ -34,7 +36,7 @@ const ProfileButton = ({user}) => {
             }
         }
         // Add an event Listener that will close the menu when the user clicks anywhere else on the page
-        document.addEventListener('click', closeMenu);
+        document.addEventListener('click', closeOutsideClick);
 
         // useEffect clean-up function will be used to then remove the event listener when the user then clicks away from the drop down. 
         return ()=> document.removeEventListener('click', closeMenu);
@@ -48,15 +50,22 @@ const ProfileButton = ({user}) => {
 
     const toggleMenu = (e) => {
         e.stopPropagation();
-        setShowMenu(!showMenu)
+        setShowMenu(!showMenu) 
+
     }
 
     const logout = async(e)=> {
         e.preventDefault()
         await dispatch(sessionActions.logoutUserThunk())
         closeMenu()
+
         navigate('/')
     }
+
+    // const login = ()=>{
+    //     setShowMenu(false)
+    //     console.log("MENU",showMenu)
+    // }
 
     const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
     
