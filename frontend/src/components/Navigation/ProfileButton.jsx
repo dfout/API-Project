@@ -77,23 +77,30 @@ const ProfileButton = ({user}) => {
             <div className={ulClassName} ref={ulRef}>
                
                 {user ? (
-                    <div id='user-info'>
-                        <span>Hello, {user.firstName}</span>
+                    <div id='user-menu'>
+                        <span id="greeting">Hello, {user.firstName}</span>
+                        <div id="user-info">
                         <span>{user.username}</span>
                         <span>{user.firstName} {user.lastName}</span>
                         <span>{user.email}</span>
-                        <Link to='/spots/manage'>Manage Spots</Link>
-                        <button onClick={logout}>Log Out</button>
+                        </div>
+                        <div className="menu-links">
+                        <Link to='/spots/manage'id="manage-spots" className="link">Manage Spots </Link>
+                        <button id="logout-button" 
+                        className="link"onClick={logout}>Log Out</button>
+                        </div>
                 
                     </div>
                 ): (
                     <>
                         <div id='log-in-sign-up'>
-                            <OpenModalMenuItem className='modal-text bolded item' itemText='Log in' onButtonClick={closeMenu} 
-                            style={{cursor:'pointer'}}modalComponent={<LoginFormModal/>}/>
+                            <OpenModalMenuItem 
+                            className='link' itemText='Log in' onButtonClick={closeMenu} 
+                        style={{cursor:'pointer', textDecoration: 'none'}}modalComponent={<LoginFormModal/>}/>
                             <OpenModalMenuItem 
                             style={{cursor: 'pointer'}}itemText='Sign up' className='modal-text item'onButtonClick={closeMenu} modalComponent={<SignupFormModal/>}/>
                         </div>
+   
                         <div className="extra-info">
                             {/* <span>Gift Cards</span>
                             <span>Squatspot your home</span>

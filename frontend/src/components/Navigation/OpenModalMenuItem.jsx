@@ -1,5 +1,8 @@
 // import React from 'react';
+import { useState } from 'react';
 import { useModal } from '../../context/Modal';
+import '../Navigation/OpenModalMenuItem.css'
+
 
 function OpenModalMenuItem({
   modalComponent, // component to render inside the modal
@@ -8,7 +11,28 @@ function OpenModalMenuItem({
   onModalClose, // optional: callback function that will be called once the modal is closed
   style
 }) {
+
+
+
   const { setModalContent, setOnModalClose } = useModal();
+
+  const [isHovered, setsIsHovered] = useState(false)
+
+  const handleMouseEnter = () =>{
+    setIsHovered(true)
+  };
+
+  const handleMouseLeave = ()=>{
+    setIsHovered(false)
+  }
+
+  const spanStyle ={
+    ...style,
+    cursor: 'pointer',
+    textDecoration: isHovered ? "underline" : 'none'
+
+  }
+
 
   const onClick = () => {
     if (onModalClose) setOnModalClose(onModalClose);
@@ -17,7 +41,11 @@ function OpenModalMenuItem({
   };
 
   return (
-    <span style={style}onClick={onClick}>{itemText}</span>
+    <span className='modal-link'onClick={onClick}
+    onMouseEnter={handleMouseEnter}
+    onMouseLeave={handleMouseLeave}
+    >{itemText}
+    </span>
   );
 }
 

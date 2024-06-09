@@ -67,8 +67,8 @@
     /* right:95px; */
     right:0;
     margin-left:auto;
-    height:fit-content;
-    width:200px;
+    height:200px;
+    width:180px;
     background-color: white;
     box-shadow:  0px 0px 5px rgba(73, 72, 72, 0.181);
     border-radius:10px;
@@ -100,7 +100,8 @@ ul{
     flex-direction:column;
     justify-content: space-around;
     padding-left:2%;
-    
+    align-items: center;
+
 }
 /* 
 .bolded-menu{
@@ -115,4 +116,76 @@ ul{
 
 .model-text.item:hover{
 cursor: pointer;
+}
+
+
+#user-menu:hover{
+cursor: default;
+}
+
+#user-menu{
+    display:flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: center;
+    padding: 5%;
+}
+
+#manage-spots{
+    text-decoration: none;
+    color: black;
+}
+
+#manage-spots:hover{
+    text-decoration: underline;
+}
+
+
+#greeting{
+    font-size: 12pt;
+    padding-top: 5%;
+}
+
+#user-info{
+    display:flex;
+    flex-direction:column;
+    align-items: center;
+    /* background-color:blue; */
+    padding-bottom: 10%;
+    padding-top:5%;
+    border:1px solid #d5d5d5;
+    border-top: none;
+    border-left:none;
+    border-right:none;
+}
+
+
+#logout-button{
+    background:none;
+    border: none;
+    color:inherit;
+    font: inherit;
+    padding:0;
+    text-decoration: none;
+}
+
+
+#logout-button:hover{
+    text-decoration: underline;
+}
+
+
+.link{
+    font: 12pt;
+}
+.link:hover{
+    text-decoration:underline;
+
+}
+
+.menu-links{
+    display:flex;
+    flex-direction:column;
+    gap: 10px;
+    padding-top: 5%;
 }
