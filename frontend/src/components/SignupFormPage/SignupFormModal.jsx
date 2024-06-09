@@ -5,6 +5,7 @@ import * as sessionActions from '../../store/session'
 import './SignupForm.css'
 import { useEffect } from "react";
 import { useModal } from "../../context/Modal";
+import {FaEye, FaEyeSlash} from 'react-icons/fa'
 
 
 const SignupFormModal= () => {
@@ -17,6 +18,8 @@ const SignupFormModal= () => {
     const [confirmPassword, setConfirmPassword] = useState('')
     const [errors, setErrors] = useState({})
     const [hasSubmitted, setHasSubmitted] = useState(false)
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const dispatch = useDispatch();
     const {closeModal} =useModal();
@@ -87,30 +90,41 @@ const SignupFormModal= () => {
         <h1>Sign Up</h1>
             <form id='sign-up-form' onSubmit={handleSubmit}>
                 <label>Email
-                    <input type='text' value={email} onChange={(e)=> setEmail(e.target.value)} required />
+                    <input type='text' value={email} onChange={(e)=> setEmail(e.target.value)} className="custom-input"required />
                 </label>
                 {hasSubmitted && errors.email && <p>{errors.email}</p>}
                 <label>Username
-                    <input type='text' value={username} onChange={(e)=> setUsername(e.target.value)} required />
+                    <input type='text' value={username} onChange={(e)=> setUsername(e.target.value)} className="custom-input"required />
                 </label>
                 {hasSubmitted && errors.username && <p>{errors.username}</p>}
                 <label>First Name
-                    <input type='text' value={firstName} onChange={(e)=> setFirstName(e.target.value)} required />
+                    <input type='text' value={firstName} onChange={(e)=> setFirstName(e.target.value)} className="custom-input"required />
                 </label>
                 {hasSubmitted && errors.firstName && <p>{errors.firstName}</p>}
                 <label>Last Name
-                    <input type='text' value={lastName} onChange={(e)=> setLastName(e.target.value)} required />
+                    <input type='text' value={lastName} onChange={(e)=> setLastName(e.target.value)} className="custom-input" required />
                 </label>
-                <div>
                 {hasSubmitted && errors.lastName && <p>{errors.lastName}</p>}
-                </div>
-                <label>Password 
-                    <input type='password' value={password} onChange={(e)=> setPassword(e.target.value)} required />
+                <label>Password
+                    <div className="password-container">
+                        <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} className="custom-input" required />
+                        <button type="button" onClick={() => setShowPassword(!showPassword)} className="password-toggle">
+                            {showPassword ? <FaEyeSlash /> : <FaEye />}
+                        </button>
+                    </div>
                 </label>
                 {hasSubmitted && errors.password && <p>{errors.password}</p>}
+              
                 <label>Confirm Password 
-                    <input type='password' value={confirmPassword} onChange={(e)=> setConfirmPassword(e.target.value)} required />
+                <div className="password-container">
+                        <input type={showConfirmPassword ? 'text' : 'password'} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="custom-input" required />
+                        <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="password-toggle">
+                            {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                        </button>
+                    </div>
+                
                 </label>
+
                 {hasSubmitted && errors.confirmPassword && <p>{errors.confirmPassword}</p>}
                 <button type='submit' disabled={!isFormValid()}>Sign Up</button>
             </form>

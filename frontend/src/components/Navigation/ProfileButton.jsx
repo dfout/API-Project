@@ -89,13 +89,15 @@ const ProfileButton = ({user}) => {
                 ): (
                     <>
                         <div id='log-in-sign-up'>
-                            <OpenModalMenuItem className='modal-text bolded' itemText='Log in' onButtonClick={closeMenu} modalComponent={<LoginFormModal/>}/>
-                            <OpenModalMenuItem itemText='Sign up' className='modal-text'onButtonClick={closeMenu} modalComponent={<SignupFormModal/>}/>
+                            <OpenModalMenuItem className='modal-text bolded item' itemText='Log in' onButtonClick={closeMenu} 
+                            style={{cursor:'pointer'}}modalComponent={<LoginFormModal/>}/>
+                            <OpenModalMenuItem 
+                            style={{cursor: 'pointer'}}itemText='Sign up' className='modal-text item'onButtonClick={closeMenu} modalComponent={<SignupFormModal/>}/>
                         </div>
                         <div className="extra-info">
-                            <span>Gift Cards</span>
+                            {/* <span>Gift Cards</span>
                             <span>Squatspot your home</span>
-                            <span>Help Center</span>
+                            <span>Help Center</span> */}
                         </div>
                         </>
                 )}

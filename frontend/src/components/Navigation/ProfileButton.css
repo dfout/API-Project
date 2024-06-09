@@ -113,3 +113,6 @@ ul{
 
 
 
+.model-text.item:hover{
+cursor: pointer;
+}

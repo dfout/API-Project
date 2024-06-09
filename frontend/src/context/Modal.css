@@ -7,7 +7,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    
+    /* width: 20000px; */
+    /* gap: 10px; */
   }
   
   #modal-background {
@@ -23,4 +24,10 @@
     position: absolute;
     background-color: white;
     border-radius: 10px;
+    display:flex;
+    width:50vw;
   }
+
+  /* #model-content:hover{
+    cursor:pointer;
+  } */

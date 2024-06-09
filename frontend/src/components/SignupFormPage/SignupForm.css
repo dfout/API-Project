@@ -1,13 +1,26 @@
-#sign-up-modal{
-    /* height:50vh;
-    width: 50vw; */
-    /* display:flex; */
+#sign-up-form{
+    display: grid;
+ 
+}
+  
+  
+.form-label input {
+    margin-top: 5px; 
+}
+  
+
+
+#sign-up-form p {
+    color: red;
+    font-size: 0.9em;
+    margin: 5px 0;
 }
 
-#sign-up-form{
-    display:flex;
-    /* flex-direction:row; */
+
+.custom-input{
+    height:20%;
 }
+
 
 label{
     margin:0;
