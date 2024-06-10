@@ -150,8 +150,9 @@ function CreateSpotPage() {
 
       // const spotImages = await dispatch(spotActions.setSpotImagesThunk(createdPreviewImage))
       const spotId=createdSpotId
+      const createdSpot = responseBody
       
-      await dispatch(spotActions.setSpotImagesThunk(images,spotId))
+      await dispatch(spotActions.setSpotImagesThunk(images,spotId,createdSpot))
 
 
         
