@@ -62,7 +62,9 @@ export default function ManageSpots (){
                 </Link>
 
                 <div id='buttons'>
-                <button id='update-button'><Link to={`/spots/${id}/edit`} id='link'style={{textDecoration:'none', color: 'black', width:100}}>Update</Link></button>
+                <Link to={`/spots/${id}/edit`} id='link'style={{textDecoration:'none', color: 'black'}}>
+                    <button id='update-button'>Update</button>
+                    </Link>
                 <OpenModalButton id='delete-button' buttonText='Delete' onButtonClick={closeMenu} modalComponent={<DeleteModal spotId={id}/>}/>
                 </div>
 
