@@ -50,6 +50,15 @@ const SpotDetail =()=>{
     const closeMenu = useModal();
 
     const [timeCheck, setTimeCheck] = useState(true);
+   
+    // const getSpotImagesList = useSelector((state)=>state.spots[spotId].SpotImages)
+    // console.log(getSpotImagesList)
+
+   
+
+
+    
+
 
     let sessionUser = useSelector((state) => state.session.user);
     if (sessionUser === null) {
@@ -68,7 +77,7 @@ const SpotDetail =()=>{
     useEffect(() => {
         let timeout;
        
-        if (!spot || !spot.Owner || !spot.Reviews) {
+        if (!spot || !spot.Owner || !spot.Reviews || !spot.SpotImages) {
             timeout = setTimeout(() => setTimeCheck(false), 3000);
             
         }
@@ -76,13 +85,19 @@ const SpotDetail =()=>{
         return () => clearTimeout(timeout);
     }, [spot, reviews]);
 
-    if (!spot || !spot.Owner || !reviews && timeCheck) return <h1>Loading...</h1>;
-    else if (!spot || !spot.Owner || !reviews && !timeCheck) return <h1>Sorry, please refresh the page</h1>;
+    if (!spot || !spot.Owner || !spot.SpotImages || !reviews && timeCheck) return <h1>Loading...</h1>;
+    else if (!spot || !spot.Owner || !reviews || !spot.SpotImages && !timeCheck) return <h1>Sorry, please refresh the page</h1>;
     
    
     
-    const { name, city, state, country, Owner, price, description,previewImage, SpotImages, ownerId } = spot;
-
+    const { name, city, state, country, Owner, price, description, ownerId, previewImage, SpotImages } = spot;
+    // const prevImg = SpotImages.find((img)=> img.preview === true);
+    // console.log(prevImg)
+    // const previewUrl = prevImg.url
+    // const imagesObj = {};
+    // SpotImages.forEach((img)=> imagesObj[img.id]=img)
+    // delete imagesObj[prevImg.id]
+    // const notPreviewImages = Object.values(imagesObj)
 
     const isCreator =(sessionUser, ownerId)=>{
         if(sessionUser){
@@ -115,6 +130,7 @@ const SpotDetail =()=>{
         }
 
     }
+    
 
     const canPostReview = (sessionUser, ownerId, reviews) => sessionUser && !isCreator(sessionUser, ownerId) && !alreadyReviewed(sessionUser, reviews)
 

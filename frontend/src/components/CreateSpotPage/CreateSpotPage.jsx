@@ -90,21 +90,19 @@ function CreateSpotPage() {
     // setHasSubmitted(false)
    
     setValidationErrors(errors)
+    console.log(previewImage)
   },[country, address, city, state, lat, lng, description, name, price, previewImage, SpotImages, spotImage1, spotImage2, spotImage3, spotImage4])
 
-
+  // console.log("PREVIEW",previewImage)
 
   const handleSubmit = async(e) => {
     e.preventDefault();
     setHasSubmitted(true)
 
-    const images = [];
-    if(spotImage1.length) images.push(spotImage1)
-    if(spotImage2.length) images.push(spotImage2)
-    if(spotImage3.length) images.push(spotImage3)
-    if(spotImage4.length) images.push(spotImage4)
+    console.log("PREVIEWIMAGE",previewImage)
+    
 
-    setSpotImages(images)
+   
 
     if(!Object.values(validationErrors).length){
 
@@ -122,8 +120,7 @@ function CreateSpotPage() {
         name,
         description,
         price,
-        previewImage, 
-        SpotImages
+        previewImage,
       }
      const responseBody = await dispatch(spotActions.createSpotThunk(newSpot))
      if(!responseBody.id){
@@ -138,15 +135,29 @@ function CreateSpotPage() {
         preview:true, 
         spotId: createdSpotId
       }
-      dispatch(spotActions.setSpotImagesThunk(createdPreviewImage))
-      SpotImages.forEach((image)=>{
-        const spotImage = {
-          url:image,
-          preview:false,
-          spotId: createdSpotId
-        }
-        dispatch(spotActions.setSpotImagesThunk(spotImage))
+      const images = [];
+      if(spotImage1.length) images.push({
+        url:spotImage1,
+        preview:false,
+        spotId:createdSpotId
       })
+      if(spotImage2.length) images.push({url:spotImage2, preview:false, spotId:createdSpotId})
+      if(spotImage3.length) images.push({url:spotImage3, preview:false,spotId:createdSpotId})
+      if(spotImage4.length) images.push({url:spotImage4,preview:false, spotId:createdSpotId})
+      images.push(createdPreviewImage)
+
+      setSpotImages(images)
+
+      // const spotImages = await dispatch(spotActions.setSpotImagesThunk(createdPreviewImage))
+      const spotId=createdSpotId
+      const createdSpot = responseBody
+      
+      await dispatch(spotActions.setSpotImagesThunk(images,spotId,createdSpot))
+
+
+        
+      
+
         // setAddress('')
         // setCity('')
         // setState('')
