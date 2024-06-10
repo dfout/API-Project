@@ -5,7 +5,7 @@ import { createSelector } from 'reselect';
 const GET_SPOTS = 'spots/getAllSpots';
 // const LOG_OUT = 'session/log-out';
 const GET_SPOT_DETAIL = 'spots/:spotId'
-const SET_SPOT_IMAGES = 'spots/images'
+const ADD_IMAGE_TO_SPOT = "spots/ADD_IMAGE_TO_SPOT";
 const UPDATE_SPOT = 'spots/:spotId/update'
 const DELETE_SPOT = "/spots/:spotId/delete"
 
@@ -26,12 +26,13 @@ const getSpotDetails = (spot) => {
     })
 }
 
-const setImages = (image) => {
-    return ({
-        type: SET_SPOT_IMAGES,
-        image
-    })
-}
+const addImageToSpot = (image, spotId) => {
+    return {
+      type: ADD_IMAGE_TO_SPOT,
+      image,
+      spotId,
+    };
+  };
 
 const updateSpot = (spot) =>{
     return ({
@@ -92,7 +93,7 @@ export const getOneSpotThunk = (id) => async (dispatch) => {
 }
 
 export const createSpotThunk = (spot) => async (dispatch) => {
-    const { address, city, state, country, lat, lng, name, description, price, previewImage, SpotImages } = spot;
+    const { address, city, state, country, lat, lng, name, description, price, previewImage} = spot;
     // try {
         const response = await csrfFetch('/api/spots', {
             method: 'POST',
@@ -107,7 +108,6 @@ export const createSpotThunk = (spot) => async (dispatch) => {
                 description,
                 price,
                 previewImage, 
-                SpotImages
             })
         });
 
@@ -200,28 +200,38 @@ export const DeleteSpotThunk = (spot) => async(dispatch) =>{
 }
 
 
-export const setSpotImagesThunk = (spotImage) => async (dispatch) => {
-    const { url, preview, spotId } = spotImage;
-    const response = await csrfFetch(`/api/spots/${spotId}/images`, {
-        method: "POST",
-        body: JSON.stringify({
-            url,
-            preview,
-        })
-    })
-    //! HAD TO CHANGE? WILL IT AFFECT CREATING A SPOT OR UPDATING? MAYBE
-    // if(response.ok){
-    //     const data = await response.json();
-    //     dispatch(setImages(spotImage))
-    //     return data
-    // }
-    dispatch(setImages(spotImage))
-    return response
+export const setSpotImagesThunk = (images, spotId) => async (dispatch) => {
+    await Promise.all(images.map(async (img) => {
+      try {
+        const response = await csrfFetch(`/api/spots/${spotId}/images`, {
+          method: "POST",
+          body: JSON.stringify(img),
+        });
+  
+        if (!response.ok) {
+          throw new Error(`Error creating spot image: ${response.statusText}`); // Or handle non-200 status codes here
+        }
+  
+        const newImage = await response.json();
+        dispatch(addImageToSpot(newImage, spotId));
+        
+        return newImage; // Return the created image object
+      } catch (error) {
+        console.error('Error creating spot image:', error);
+        // Dispatch an error action here
+        return null; // Or handle the error differently
+      }
+    }));
+  
+    // Handle the results of all image uploads (imageResults)
+    // You can check for errors or successful creations here based on the returned values
+
+    // ... (dispatch actions based on imageResults)
+  };
+
     // const data = await response.json();
     // dispatch(setImages)
     // return response
-
-}
 
 
 
@@ -258,6 +268,8 @@ const spotReducer = (state = initialState, action) => {
     }
 
 }
+
+
 
 
 

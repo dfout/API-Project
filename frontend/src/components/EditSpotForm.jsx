@@ -42,7 +42,7 @@ export default function EditSpotForm (){
     const [spotImage4, setSpotImage4] = useState(spot.SpotImages[3]? spot.SpotImages[3].url:'')
 
 
-
+    
     
 
 

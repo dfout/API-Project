@@ -24,7 +24,7 @@ const ProfileButton = ({user}) => {
     // console.log(showMenu)
 
     useEffect(()=>{
-        console.log("UPDATING STATE", showMenu)
+       
         if(!showMenu) return;
         
         // Function that will close the menu, available to useEffect
