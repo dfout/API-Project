@@ -10,6 +10,8 @@ import { DeleteModal } from "../DeleteModal/DeleteModal";
 import OpenModalButton from "../OpenModalButton";
 import {useModal} from '../../context/Modal'
 
+import '../ManageSpots/ManageSpots.css'
+
 
 export default function ManageSpots (){
 
@@ -35,7 +37,7 @@ export default function ManageSpots (){
 
     return(
         <>
-        <h2>Manage Your Spots</h2>
+        <h2 id="page-title">Manage Your Spots</h2>
 
         {userSpots.length === 0 &&
         (<button onClick={handleCreateButton}>Create a New Spot</button>)
@@ -43,7 +45,7 @@ export default function ManageSpots (){
 
         <ul className='all-spots'>
         {userSpots?.map(({id, previewImage, city, state, avgRating, price, name })=>(
-            <li className='spot-tile' key={id}><Link to={`/spots/${id}`}className='link-tile'>
+            <li className='manage-spot-tile' key={id}><Link to={`/spots/${id}`}className='link-tile'>
                 <div className='image-container'>
                 <img id='preview-image' src={previewImage} alt={`${name} in ${city, state}`} title={`${name} in ${city, state}`}/>
                 </div>
@@ -59,8 +61,14 @@ export default function ManageSpots (){
                 </div>
                 </Link>
 
-                <button><Link to={`/spots/${id}/edit`}>Update</Link></button>
+                <div id='buttons'>
+                <Link to={`/spots/${id}/edit`} id='link'style={{textDecoration:'none', color: 'black'}}>
+                    <button id='update-button'>Update</button>
+                    </Link>
                 <OpenModalButton id='delete-button' buttonText='Delete' onButtonClick={closeMenu} modalComponent={<DeleteModal spotId={id}/>}/>
+                </div>
+
+  
                 
                 </li>
 

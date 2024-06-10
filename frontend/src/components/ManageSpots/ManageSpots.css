@@ -1,0 +1,83 @@
+.manage-spot-tile{
+    height:380px;
+    width:200px;
+    border-radius:5px;
+    /* padding-left:5%;
+    padding-right:5%; */
+    padding-bottom: 2%;
+    position:relative; 
+    /* background-color: blue; */
+  
+ 
+
+}
+#page-title{
+    padding-left:5%;
+    padding-top: 3%;
+}
+
+.all-spots{
+    position:relative;
+    
+    width:100vw;
+    display:flex;
+    flex-direction:row;
+    
+    flex-wrap:wrap;
+    margin:0;
+    gap: 20px;
+    padding-left: 5%;
+    margin-right: 5%;
+    padding-top: 2%; 
+    /* margin-left: 5%;
+    margin-right:5%; */
+
+}
+#buttons{
+    margin:0;
+    padding:0;
+    /* background-color: beige; */
+   position:absolute;
+   bottom:0;
+    display:flex;
+    flex-direction:column;
+    gap:0;
+    align-self: flex-end;
+    width:100%;
+}
+#buttons:hover{
+   cursor:pointer;
+}
+#update-button{
+    display:block;
+    width:100%;
+    background-color: #ccc;
+    border: none;
+    border-radius: 5px; /* Add rounded corners for a modern look */
+    /* margin-bottom: 20px; */
+    margin-top: 20px;
+    padding: 10px 20px; /* Increase padding for better clickability */
+    color: white;
+    font-size: 16px; /* Increase font size for emphasis */
+    /* text-transform: uppercase;  */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Add subtle shadow for depth */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+   
+    
+}
+#update-button:hover{
+    cursor:pointer;
+}
+
+#update-button:hover {
+    background-color: #979595; /* Darken color on hover */
+    transform: translateY(-2px); /* Lift button slightly on hover */
+    cursor:pointer;
+}
+
+#link:hover{
+    cursor: pointer;
+}
+#link{
+    width:100%;
+}
