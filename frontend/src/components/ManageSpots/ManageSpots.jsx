@@ -37,7 +37,7 @@ export default function ManageSpots (){
 
     return(
         <>
-        <h2>Manage Your Spots</h2>
+        <h2 id="page-title">Manage Your Spots</h2>
 
         {userSpots.length === 0 &&
         (<button onClick={handleCreateButton}>Create a New Spot</button>)
@@ -45,7 +45,7 @@ export default function ManageSpots (){
 
         <ul className='all-spots'>
         {userSpots?.map(({id, previewImage, city, state, avgRating, price, name })=>(
-            <li className='spot-tile' key={id}><Link to={`/spots/${id}`}className='link-tile'>
+            <li className='manage-spot-tile' key={id}><Link to={`/spots/${id}`}className='link-tile'>
                 <div className='image-container'>
                 <img id='preview-image' src={previewImage} alt={`${name} in ${city, state}`} title={`${name} in ${city, state}`}/>
                 </div>

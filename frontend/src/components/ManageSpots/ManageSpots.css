@@ -1,16 +1,20 @@
-.spot-tile{
+.manage-spot-tile{
     height:380px;
     width:200px;
     border-radius:5px;
     /* padding-left:5%;
     padding-right:5%; */
     padding-bottom: 2%;
+    position:relative; 
     /* background-color: blue; */
   
  
 
 }
-
+#page-title{
+    padding-left:5%;
+    padding-top: 3%;
+}
 
 .all-spots{
     position:relative;
@@ -33,11 +37,12 @@
     margin:0;
     padding:0;
     /* background-color: beige; */
-   
+   position:absolute;
+   bottom:0;
     display:flex;
     flex-direction:column;
     gap:0;
-    margin-top:auto;
+    align-self: flex-end;
 }
 #buttons:hover{
    cursor:pointer;
