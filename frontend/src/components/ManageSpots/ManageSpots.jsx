@@ -10,6 +10,8 @@ import { DeleteModal } from "../DeleteModal/DeleteModal";
 import OpenModalButton from "../OpenModalButton";
 import {useModal} from '../../context/Modal'
 
+import '../ManageSpots/ManageSpots.css'
+
 
 export default function ManageSpots (){
 
@@ -59,8 +61,12 @@ export default function ManageSpots (){
                 </div>
                 </Link>
 
-                <button><Link to={`/spots/${id}/edit`}>Update</Link></button>
+                <div id='buttons'>
+                <button id='update-button'><Link to={`/spots/${id}/edit`} id='link'style={{textDecoration:'none', color: 'black', width:100}}>Update</Link></button>
                 <OpenModalButton id='delete-button' buttonText='Delete' onButtonClick={closeMenu} modalComponent={<DeleteModal spotId={id}/>}/>
+                </div>
+
+  
                 
                 </li>
 

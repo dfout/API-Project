@@ -42,7 +42,7 @@ const SignupFormModal= () => {
         if(password !== confirmPassword) validationErrors.confirmPassword = "Confirm Password field must be the same as the Password Field"
 
         setErrors({...validationErrors})
-        console.log("IN USE EFFECT",errors)
+       
     },[firstName, lastName,username, password, confirmPassword])
 
     console.log("ERRORS BEFORE SUBMIT", errors)
