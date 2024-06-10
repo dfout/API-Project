@@ -165,7 +165,8 @@ const SpotDetail =()=>{
 
                 <div className='reserve-box'>
                     <div className='reserve-box-info'>
-                        <span>${price}night</span>
+                        <span>${price} night</span>
+                        <div>
                         <IoIosStar />
                         {numReviews!==0 &&
                             (<span>{avgRating}</span>)
@@ -179,8 +180,12 @@ const SpotDetail =()=>{
                             
                         </>
                         )}
+                        </div>
+              
                     </div>
+                    <div id='reserve-container'>
                     <OpenModalButton id='reserve-button' buttonText='Reserve' onButtonClick={closeMenu} modalComponent={<FeatureComingModal/>}/>
+                    </div>
                 </div>
             </div>
         </section>

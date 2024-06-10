@@ -54,11 +54,26 @@
 
 .reserve-box{
     margin-left:auto;
-    border:1px solid black;
-    max-width: 100px;
+    border:1px solid rgba(108, 108, 108, 0.181);
+    border-radius: 10px;
+    width: 200px;
+    position:relative;
+    padding: 2%;
 }
+.reserve-box-info{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    
+}
+/* #reserve-container{
+    width:fit-content;
+    background-color: aqua;
+} */
 
-
+#reserve-button{
+    width: 100%;
+}
 
 
 
@@ -69,9 +84,9 @@
 
 
 
-#reserve-button{
+/* #reserve-button{
    color:none;
-}
+} */
 
 .review-info{
     color:black;
@@ -184,8 +199,11 @@ Images
 
   #post-your-review-button{
     align-items: start;
+    width: 200px;
+    /* background-color: aqua; */
   }
 
   .reviews-for-spot{
     height: 500px;
+    padding-left:6%;
   }
