@@ -31,17 +31,17 @@ const SignupFormModal= () => {
     // if(sessionUser) return <Navigate to='/' replace={true} />
 
     useEffect(()=>{
-        const onlyAlpha = /^\D*$/;
+        const onlyAlpha = /^[a-zA-Z]+$/;
         const validationErrors = {};
         if(!firstName.length) validationErrors.firstName = "Please provide your first name"
         if(!onlyAlpha.test(firstName)) validationErrors.firstName = "First name can only include letters"
         if (!lastName.length) validationErrors.lastName = "Please provide your last name"
-        if(!onlyAlpha.test(lastName)) validationErrors.lastName == "Last name can only include letters"
+        if(!onlyAlpha.test(lastName)) validationErrors.lastName = "Last name can only include letters"
         if(username.length < 4) validationErrors.username="Username must be at least 4 characters long"
         if(password.length < 6) validationErrors.password="Password must be at least 6 characters"
         if(password !== confirmPassword) validationErrors.confirmPassword = "Confirm Password field must be the same as the Password Field"
 
-        setErrors(validationErrors)
+        setErrors({...validationErrors})
         console.log("IN USE EFFECT",errors)
     },[firstName, lastName,username, password, confirmPassword])
 
@@ -60,13 +60,12 @@ const SignupFormModal= () => {
                 return dispatch(signUpUserThunk({username, firstName, lastName, email, password})).then(closeModal).catch(
                     async(res)=>{
                         const data = await res.json();
-                        if(res.status !== 200){
-                            console.log("RESPONSE DATA", data)
+                        
+                            
                             setErrors(data.errors)
                             console.log(errors)
                             return null
                           
-                        }
                     }
                 )
 
