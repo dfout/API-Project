@@ -185,9 +185,12 @@ const SpotDetail =()=>{
             </div>
         </section>
         {/* <SpotReviews reviewsState= {reviews} avgRating={avgRating} numReviews={numReviews} ownerId={Owner.id} spotId={Number(spotId)}/> */}
-        <>
+
+
+        <section className='reviews-for-spot'>
         <div id='review-intro'>
-        <IoIosStar/>
+            <div id='rating-info'>
+            <IoIosStar/>
         {numReviews !== 0 &&(
             <span>{avgRating}</span>
         )}
@@ -200,8 +203,12 @@ const SpotDetail =()=>{
                             
                         </>
                         )}
+
+            </div>
+
         {!sessionUser && (
         //  <button id='review-button' disabled={true}>Sign-in to post a Review</button>
+        
         <OpenModalButton buttonText='Sign-in to post a Review' className='modal-text'onButtonClick={closeMenu} modalComponent={<LoginFormModal/>}/>
         )
         }
@@ -209,10 +216,14 @@ const SpotDetail =()=>{
             <button id='review-button' disabled={true}>Review Submitted</button>
         )}
         {isCreator(sessionUser, ownerId) && (
-            <button disabled={true}>You own this spot. Check out the reviews</button>
+            <button id='review-button' disabled={true}>You own this spot. Check out the reviews</button>
         )}
         {canPostReview(sessionUser, ownerId, reviews) && (
-            <OpenModalButton id='review-button' buttonText={'Post Your Review'} onButtonClick={closeMenu} modalComponent={<ReviewModal spotId={spotId}/>}/>
+            <div id='post-your-review-button'>
+                            <OpenModalButton id='review-button' disabled={false} buttonText={'Post Your Review'} onButtonClick={closeMenu} style={{alignSelf:'left'}} modalComponent={<ReviewModal spotId={spotId}/>}/>
+
+            </div>
+
         )} 
 
         </div>
@@ -238,9 +249,8 @@ const SpotDetail =()=>{
                 );
             })}
         </ul>
-        
-        </>
-        </>
+        </section>
+    </>
     )
 }
 

@@ -42,7 +42,10 @@ const SignupFormModal= () => {
         if(password !== confirmPassword) validationErrors.confirmPassword = "Confirm Password field must be the same as the Password Field"
 
         setErrors(validationErrors)
+        console.log("IN USE EFFECT",errors)
     },[firstName, lastName,username, password, confirmPassword])
+
+    console.log("ERRORS BEFORE SUBMIT", errors)
 
     const handleSubmit = async(e)=>{
         e.preventDefault();
@@ -51,13 +54,17 @@ const SignupFormModal= () => {
             setErrors({})
             // const response = dispatch(signUpUserThunk({username, firstName, lastName, email, password}));
             // console.log("AFTER DISPATCH", response)
+            console.log(errors)
+
             if(!Object.values(errors).length){
                 return dispatch(signUpUserThunk({username, firstName, lastName, email, password})).then(closeModal).catch(
                     async(res)=>{
                         const data = await res.json();
                         if(res.status !== 200){
-                            
+                            console.log("RESPONSE DATA", data)
                             setErrors(data.errors)
+                            console.log(errors)
+                            return null
                           
                         }
                     }
@@ -89,25 +96,28 @@ const SignupFormModal= () => {
         <div id="sign-up-modal">
         <h1>Sign Up</h1>
             <form id='sign-up-form' onSubmit={handleSubmit}>
-                <label>Email
+                <div id='inputs'
+                >
+                     <label className="sign-up-label">Email
                     <input type='text' value={email} onChange={(e)=> setEmail(e.target.value)} className="custom-input"required />
                 </label>
                 {hasSubmitted && errors.email && <p>{errors.email}</p>}
-                <label>Username
+                <label className="sign-up-label">Username
                     <input type='text' value={username} onChange={(e)=> setUsername(e.target.value)} className="custom-input"required />
                 </label>
                 {hasSubmitted && errors.username && <p>{errors.username}</p>}
-                <label>First Name
+                <label className="sign-up-label">First Name
                     <input type='text' value={firstName} onChange={(e)=> setFirstName(e.target.value)} className="custom-input"required />
                 </label>
                 {hasSubmitted && errors.firstName && <p>{errors.firstName}</p>}
-                <label>Last Name
+                <label className="sign-up-label">Last Name
                     <input type='text' value={lastName} onChange={(e)=> setLastName(e.target.value)} className="custom-input" required />
                 </label>
                 {hasSubmitted && errors.lastName && <p>{errors.lastName}</p>}
-                <label>Password
+                <div id='passwords'>
+                <label className="sign-up-label">Password
                     <div className="password-container">
-                        <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} className="custom-input" required />
+                        <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)}  required />
                         <button type="button" onClick={() => setShowPassword(!showPassword)} className="password-toggle">
                             {showPassword ? <FaEyeSlash /> : <FaEye />}
                         </button>
@@ -115,18 +125,19 @@ const SignupFormModal= () => {
                 </label>
                 {hasSubmitted && errors.password && <p>{errors.password}</p>}
               
-                <label>Confirm Password 
+                <label className="sign-up-label">Confirm Password 
                 <div className="password-container">
-                        <input type={showConfirmPassword ? 'text' : 'password'} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="custom-input" required />
+                        <input type={showConfirmPassword ? 'text' : 'password'} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}  required />
                         <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="password-toggle">
                             {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
                         </button>
                     </div>
-                
-                </label>
+                    </label>
 
+                </div>
+                </div>
                 {hasSubmitted && errors.confirmPassword && <p>{errors.confirmPassword}</p>}
-                <button type='submit' disabled={!isFormValid()}>Sign Up</button>
+                <button type='submit' className='sign-up-button' disabled={!isFormValid()}>Sign Up</button>
             </form>
         </div>
     )
