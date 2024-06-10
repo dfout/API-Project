@@ -84,9 +84,16 @@ export const signUpUserThunk = (user) => async (dispatch)=>{
             password
         })
     })
-    const data = await response.json();
-    dispatch(setUser(data.user));
-    return response
+    if(response.ok){
+        const data = await response.json();
+        dispatch(setUser(data.user));
+        return response
+    }else {
+        const error = await response.json();
+        console.log(error)
+        return error
+    }
+
 }
 
 // Log_Out User Thunk

@@ -43,3 +43,30 @@ h1{
     text-decoration: underline;
     padding-bottom: 7%;
 }
+
+#login-button:hover{
+    background-color: rgba(255, 33, 52, 1); /* Darken color on hover */
+    transform: translateY(-2px); /* Lift button slightly on hover */
+
+}
+#login-button:disabled{
+    background-color: #ccc; /* Grey background color when button is disabled */
+    cursor: not-allowed; /* Cursor style */
+    color: #fff; /* Text color */
+}
+  /* Styling for submit button */
+  #login-button {
+    background-color: rgba(255, 33, 52, 0.8);
+    border: none;
+    border-radius: 5px; /* Add rounded corners for a modern look */
+    margin-bottom: 20px;
+    margin-top: 20px;
+    padding: 10px 20px; /* Increase padding for better clickability */
+    color: white;
+    font-size: 16px; /* Increase font size for emphasis */
+    /* text-transform: uppercase;  */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Add subtle shadow for depth */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 400px;
+    align-self: center;
+  }

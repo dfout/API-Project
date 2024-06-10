@@ -54,11 +54,26 @@
 
 .reserve-box{
     margin-left:auto;
-    border:1px solid black;
-    max-width: 100px;
+    border:1px solid rgba(108, 108, 108, 0.181);
+    border-radius: 10px;
+    width: 200px;
+    position:relative;
+    padding: 2%;
 }
+.reserve-box-info{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    
+}
+/* #reserve-container{
+    width:fit-content;
+    background-color: aqua;
+} */
 
-
+#reserve-button{
+    width: 100%;
+}
 
 
 
@@ -69,9 +84,9 @@
 
 
 
-#reserve-button{
+/* #reserve-button{
    color:none;
-}
+} */
 
 .review-info{
     color:black;
@@ -154,3 +169,41 @@ Images
  #image-4{
      border-bottom-right-radius:10px;
  }
+
+
+ #review-button{
+    background-color: rgba(255, 33, 52, 0.8);
+    border: none;
+    border-radius: 5px; /* Add rounded corners for a modern look */
+    margin-bottom: 20px;
+    margin-top: 20px;
+    padding: 10px 20px; /* Increase padding for better clickability */
+    color: white;
+    font-size: 16px; /* Increase font size for emphasis */
+    /* text-transform: uppercase;  */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Add subtle shadow for depth */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 400px;
+}
+
+#review-button:disabled {
+    background-color: #ccc; /* Grey background color when button is disabled */
+    cursor: not-allowed; /* Cursor style */
+    color: #fff; /* Text color */
+  }
+
+  #review-intro{
+    display:flex;
+    flex-direction:column;
+  }
+
+  #post-your-review-button{
+    align-items: start;
+    width: 200px;
+    /* background-color: aqua; */
+  }
+
+  .reviews-for-spot{
+    height: 500px;
+    padding-left:6%;
+  }
