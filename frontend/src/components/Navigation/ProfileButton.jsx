@@ -75,7 +75,7 @@ const ProfileButton = ({user}) => {
     // Add a style key directly if need be
     return(
         <div id= 'profile-bar'>
-            <button className='profile-button'onClick={toggleMenu}>
+            <button className='profile-button' id='profile-button' onClick={toggleMenu}>
                 <span className='menu-icon'>
                 <IoIosMenu />
                 </span>
@@ -107,7 +107,7 @@ const ProfileButton = ({user}) => {
                             className='link' itemText='Log in' onButtonClick={closeMenu} 
                         style={{cursor:'pointer', textDecoration: 'none'}}modalComponent={<LoginFormModal/>}/>
                             <OpenModalMenuItem 
-                            style={{cursor: 'pointer'}}itemText='Sign up' className='modal-text item'onButtonClick={closeMenu} modalComponent={<SignupFormModal/>}/>
+                            style={{cursor: 'pointer', textDecoration:'none'}}itemText='Sign up' className='modal-text item'onButtonClick={closeMenu} modalComponent={<SignupFormModal/>}/>
                         </div>
    
                         <div className="extra-info">

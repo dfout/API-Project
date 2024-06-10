@@ -42,6 +42,7 @@ function OpenModalMenuItem({
 
   return (
     <span className='modal-link'onClick={onClick}
+    style={spanStyle}
     onMouseEnter={handleMouseEnter}
     onMouseLeave={handleMouseLeave}
     >{itemText}

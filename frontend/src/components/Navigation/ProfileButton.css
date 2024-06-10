@@ -11,6 +11,10 @@
     /* height:400px; */
 }
 
+#profile-button:hover{
+    cursor:pointer;
+}
+
 .profile-button{
     /* position:absolute; */
     position:relative;
@@ -138,6 +142,7 @@ cursor: default;
 
 #manage-spots:hover{
     text-decoration: underline;
+    cursor:pointer;
 }
 
 
