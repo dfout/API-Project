@@ -213,8 +213,11 @@ const SpotDetail =()=>{
 
         {!sessionUser && (
         //  <button id='review-button' disabled={true}>Sign-in to post a Review</button>
-        
-        <OpenModalButton buttonText='Sign-in to post a Review' className='modal-text'onButtonClick={closeMenu} modalComponent={<LoginFormModal/>}/>
+        <div id= 'post-your-review-button'>
+                    <OpenModalButton buttonText='Sign-in to post a Review' className='modal-text'onButtonClick={closeMenu} modalComponent={<LoginFormModal/>}/>
+
+        </div>
+
         )
         }
         {alreadyReviewed(sessionUser, reviews) &&(
