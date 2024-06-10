@@ -22,7 +22,7 @@ const Navigation = ({isLoaded})=>{
             <li id='logo'>
                 <NavLink to='/' className='logo-link'>
                     <img id="logo-image" src="https://squatspot.s3.us-east-2.amazonaws.com/Untitled-4+(1).png"/>
-                    <h1>squatspot</h1>
+                    <h1 id="text">squatspot</h1>
                     </NavLink>
                 
             </li>

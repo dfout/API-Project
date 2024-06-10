@@ -13,7 +13,6 @@
 
 }
 
-
 .logo-link{
     text-decoration: none;
     display:flex;
@@ -25,6 +24,10 @@
     /* background-color:blue; */
     /* color: #f80000; */
 }
+
+.logo-link:hover{
+    cursor:pointer;
+}
 #logo-image{
     top: 10px;
     height:30px;
@@ -33,7 +36,13 @@
     align-self: center;
 }
 
+#text:hover{
+    cursor:pointer;
+}
 
+#logo-image:hover{
+    cursor:pointer;
+}
 
 .create-link{
     color:black;
