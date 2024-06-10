@@ -19,12 +19,12 @@
 }
 
 .spot-tile{
-    height:fit-content;
-    width:fit-content;
+    height:280px;
+    width:200px;
     border-radius:5px;
     /* padding-left:5%;
     padding-right:5%; */
-    padding-bottom: 5%;
+    padding-bottom: 2%;
  
 
 }
@@ -66,13 +66,18 @@ h3{
 
 .spot-info{
     display:flex;
+    padding-left:4px;
     
+}
+.spot-price{
+    padding: 4px;
 }
 
 #ratings{
     margin-left:auto;
     display:flex;
     gap: 2px;
+    padding-right: 4px;
 }
 
 .link-tile:hover{
