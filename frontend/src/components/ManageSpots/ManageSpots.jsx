@@ -43,7 +43,7 @@ export default function ManageSpots (){
         (<button onClick={handleCreateButton}>Create a New Spot</button>)
         }
 
-        <ul className='all-spots'>
+        <ul className='all-user-spots'>
         {userSpots?.map(({id, previewImage, city, state, avgRating, price, name })=>(
             <li className='manage-spot-tile' key={id}><Link to={`/spots/${id}`}className='link-tile'>
                 <div className='image-container'>
